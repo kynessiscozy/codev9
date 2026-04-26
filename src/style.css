@@ -1,3 +1,10 @@
+:root{
+  --gold:#c9a227;--gl:#f0d060;--gd:#8a6e1a;
+  --bg:#050810;--bgc:#0f1628;--bgc2:#141c35;
+  --txt:#e8dfc0;--dim:#626870;
+  --bdr:rgba(201,162,39,.2);--bdrB:rgba(201,162,39,.52);
+  --common:#9ca3af;--rare:#3b82f6;--epic:#8b5cf6;--legend:#f59e0b;--apex:#ef4444;
+  --hc:#10b981;--ha:#ec4899;--twin:#f0abfc;--triple:#e2e8f0;--divine:#ffd700;
   --r100:#a78bfa;--r1k:#60a5fa;--r10k:#34d399;--r100k:#fbbf24;
   --r1m:#f87171;--rUnk:#e879f9;--rGod:#fffbeb;--rCosmic:#00ffff;
   --herb:#22c55e;
