@@ -45,6 +45,7 @@ export { renderBag, useItem, equipItem, renderBagPage } from "./ui/bag.js";
 export { showModal, closeModal, renderModalContent } from "./ui/modals.js";
 export { renderSidebar, toggleSidebar, updateSidebar } from "./ui/sidebar.js";
 export { renderGrimoire, discoverSoul, discoverRing, discoverBone } from "./ui/grimoire.js";
+export { getSoulIcon, hasSoulIcon, getSoulTheme, registerSoulIcon, SOUL_ICONS } from "./ui/soul-icons.js";
 
 // ──── GM模块 ────
 export { executeGMCommand, showGMConsole, initGMShortcut } from "./gm/console.js";

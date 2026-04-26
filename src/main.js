@@ -218,6 +218,13 @@ window.discoverSoul = Modules.discoverSoul;
 window.discoverRing = Modules.discoverRing;
 window.discoverBone = Modules.discoverBone;
 
+// ──── 武魂SVG图标系统 ────
+window.getSoulIcon = Modules.getSoulIcon;
+window.hasSoulIcon = Modules.hasSoulIcon;
+window.getSoulTheme = Modules.getSoulTheme;
+window.registerSoulIcon = Modules.registerSoulIcon;
+window.SOUL_ICONS = Modules.SOUL_ICONS;
+
 // ──── GM模块 ────
 window.executeGMCommand = Modules.executeGMCommand;
 window.showGMConsole = Modules.showGMConsole;
