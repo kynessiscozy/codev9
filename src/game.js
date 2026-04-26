@@ -1211,7 +1211,10 @@ function mergeTaskModulesIntoHunt(){
 // ══════════════════════════════════════════════════
 //  AWAKENING
 // ══════════════════════════════════════════════════
-function triggerAwaken(){
+// game.js 版本保留但不直接覆盖模块版 triggerAwaken
+// 模块版 triggerAwaken（在 awakening.js 中）是主要实现
+// 此函数作为备用，通过 window.triggerAwakenGame 暴露
+function triggerAwakenGame(){
   try {
     const saEl=$('SA');
     const c=saEl?saEl.querySelector('.aw-c'):null;
@@ -1235,8 +1238,7 @@ function triggerAwaken(){
     };
     G.awakenDone=true;G.level=Math.max(G.level,G.soul.initPow);
     addExp(G.soul.initPow*60);updateHUD();
-    // v9: Grant soul fragment on awaken
-    addSoulFragment(qk,1);
+    if(typeof addSoulFragment==='function') addSoulFragment(qk,1);
 
     // show result
     const orB=document.getElementById('or-b');
@@ -1244,7 +1246,7 @@ function triggerAwaken(){
     
     const orIE=document.getElementById('or-i');
     if(orIE){
-      try{orIE.innerHTML=getSoulIcon?getSoulIcon(sd.n,qk,{sizeClass:'size-large'}):sd.i||'⚡';}catch(e){orIE.innerHTML=sd.i||'⚡';}
+      try{orIE.innerHTML=typeof getSoulIcon==='function'?getSoulIcon(sd.n,qk,{sizeClass:'size-large'}):(sd.i||'⚡');}catch(e){orIE.innerHTML=sd.i||'⚡';}
       orIE.style.display='flex';orIE.style.alignItems='center';orIE.style.justifyContent='center';
     }
     
@@ -1270,16 +1272,15 @@ function triggerAwaken(){
     if(orEl)orEl.classList.add('show');
     
     if(typeof spawnBurst==='function')spawnBurst(qc.c,110);
-
+    
     if(['legend','apex','hc','ha','twin','triple'].includes(qk)){
       const m={legend:'🌟 传说武魂！',apex:'🔥 顶级武魂！震撼！',hc:'🟢 隐藏武魂！',ha:'💗 顶级隐藏！',twin:'✨ 双生武魂！旷世奇才！',triple:'🌈 三生武魂！天命之子！'};
       setTimeout(()=>notify(m[qk],'divine'),250);
     }
-    saveG();
+    if(typeof saveG==='function') saveG();
     console.log('[觉醒] 觉醒完成:',sd.n,qc.n);
   } catch(err) {
-    console.error('[觉醒] triggerAwaken 错误:',err);
-    alert('觉醒失败: '+(err.message||err));
+    console.error('[觉醒] triggerAwakenGame 错误:',err);
   }
 }
 

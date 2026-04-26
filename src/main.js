@@ -366,11 +366,17 @@ function injectGameScript() {
       console.error('❌ game.js 内容为空，无法注入');
       return;
     }
+    // 保存模块版 triggerAwaken（防止被 game.js 覆盖）
+    const _modTriggerAwaken = window.triggerAwaken;
     const script = document.createElement('script');
     script.textContent = gameScript;
     script.id = 'game-js-injected';
     document.body.appendChild(script);
     console.log('📜 game.js 已注入，完整UI系统就绪');
+    // 恢复模块版 triggerAwaken（优先使用模块版）
+    if (_modTriggerAwaken) {
+      window.triggerAwaken = _modTriggerAwaken;
+    }
   } catch (err) {
     console.error('❌ 注入 game.js 失败:', err);
   }
