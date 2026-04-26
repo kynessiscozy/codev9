@@ -165,7 +165,32 @@ window.notifyError = Modules.notifyError;
 window.notifyEpic = Modules.notifyEpic;
 
 // ──── 系统模块 ────
-window.triggerAwaken = Modules.triggerAwaken;
+// 觉醒函数：带错误处理的包装版本
+const _moduleTriggerAwaken = Modules.triggerAwaken;
+window.triggerAwaken = function safeTriggerAwaken() {
+  try {
+    console.log('[觉醒] 触发武魂觉醒...');
+    _moduleTriggerAwaken();
+    console.log('[觉醒] 觉醒完成');
+  } catch (err) {
+    console.error('[觉醒] 模块版本失败:', err.message || err);
+    // 如果模块版本失败，尝试直接操作 DOM 显示结果
+    try {
+      const orEl = document.getElementById('OR');
+      if (orEl) orEl.classList.add('show');
+      notify('武魂觉醒中...', 'normal');
+    } catch (e2) {
+      alert('觉醒功能出错: ' + (err.message || err));
+    }
+  }
+};
+// 防止被 game.js 覆盖：在 game.js 注入后恢复
+Object.defineProperty(window, 'triggerAwaken', { 
+  configurable: true,
+  writable: true,
+  value: window.triggerAwaken 
+});
+
 window.closeResult = Modules.closeResult;
 window.genSkills = Modules.genSkills;
 window.getQK = Modules.getQK;
@@ -366,11 +391,21 @@ function injectGameScript() {
       console.error('❌ game.js 内容为空，无法注入');
       return;
     }
+    
+    // 保存模块系统的觉醒函数（防止被 game.js 覆盖）
+    const _savedTriggerAwaken = window.triggerAwaken;
+    
     const script = document.createElement('script');
     script.textContent = gameScript;
     script.id = 'game-js-injected';
     document.body.appendChild(script);
     console.log('📜 game.js 已注入，完整UI系统就绪');
+    
+    // 恢复模块系统的觉醒函数
+    if (_savedTriggerAwaken) {
+      window.triggerAwaken = _savedTriggerAwaken;
+      console.log('✅ 已恢复模块版 triggerAwaken');
+    }
   } catch (err) {
     console.error('❌ 注入 game.js 失败:', err);
   }
