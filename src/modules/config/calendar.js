@@ -24,6 +24,6 @@ export function getCalendarReward(day) {
 }
 
 // 获取签到天数对应的奖励索引
-export function getCalendarDay Reward(day) {
+export function getCalendarDayReward(day) {
   return CAL_REWARDS[(day - 1) % CAL_REWARDS.length];
 }
