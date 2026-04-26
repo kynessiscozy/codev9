@@ -284,23 +284,23 @@ window.getCurrentSeason = Modules.getCurrentSeason;
 window.getSeasonBonus = Modules.getSeasonBonus;
 
 // ──── UI模块 ────
-window.renderNavigation = Modules.renderNavigation;
-window.switchPage = Modules.switchPage;
-window.updateNavigation = Modules.updateNavigation;
+window.renderNavigation = Modules.navTo;
+window.switchPage = Modules.navTo;
+window.updateNavigation = Modules.updateNavActive;
 
 window.renderSoulPage = Modules.renderSoulPage;
-window.selectSoul = Modules.selectSoul;
-window.upgradeSoul = Modules.upgradeSoul;
-window.renderSoulDetails = Modules.renderSoulDetails;
+window.selectSoul = Modules.openSoulDetail || function(){};
+window.upgradeSoul = Modules.doSecondAwaken || function(){};
+window.renderSoulDetails = Modules.openSoulDetail || function(){};
 
 window.renderBag = Modules.renderBag;
-window.useItem = Modules.useItem;
-window.equipItem = Modules.equipItem;
-window.renderBagPage = Modules.renderBagPage;
+window.useItem = Modules.useBagItem;
+window.equipItem = Modules.useBagItem;
+window.renderBagPage = Modules.renderBag;
 
-window.showModal = Modules.showModal;
+window.showModal = Modules.openModal;
 window.closeModal = Modules.closeModal;
-window.renderModalContent = Modules.renderModalContent;
+window.renderModalContent = Modules.openModal;
 
 window.renderSidebar = Modules.renderSidebar;
 window.toggleSidebar = Modules.toggleSidebar;
@@ -308,7 +308,7 @@ window.updateSidebar = Modules.updateSidebar;
 
 window.renderGrimoire = Modules.renderGrimoire;
 window.discoverSoul = Modules.discoverSoul;
-window.grimoireDiscover = Modules.grimoireDiscover;
+window.grimoireDiscover = Modules.discoverSoul;
 window.discoverRing = Modules.discoverRing;
 window.discoverBone = Modules.discoverBone;
 
