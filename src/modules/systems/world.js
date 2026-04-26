@@ -1,5 +1,23 @@
 // ─── 世界探索系统模块 ───
 
+import { G, saveG } from '../core/state.js';
+import { notify } from '../core/notify.js';
+import { addSP, addExp } from '../core/power.js';
+import { pick, ri, spawnBurst } from '../core/utils.js';
+import { HERBS, RESOURCES } from '../data/items.js';
+import { progressTask } from './tasks.js';
+import { addHerbToBag, addResourceToBag, renderBag } from '../ui/bag.js';
+
+let worldPage = 0;
+
+function updateCultUI() {
+  // 占位：由 game.js 覆盖
+}
+
+function grantActivityDew(source) {
+  // 占位：由 game.js 覆盖
+}
+
 /**
  * 探索世界
  */

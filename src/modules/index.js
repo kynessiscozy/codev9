@@ -3,9 +3,15 @@
 //  整合所有模块，提供统一入口
 // ═════════════════════════════════════════════════
 
+// 本地导入（供内部函数使用，避免 require）
+import { on } from './core/events.js';
+import { saveG, loadG, initState, migrateState } from './core/state.js';
+import { updateHUD } from './core/exp.js';
+import { notify, notifySuccess, notifyError, notifyEpic } from './core/notify.js';
+
 // ──── 核心基础设施 ────
 export { on, once, off, emit, emitAsync, clearAll as clearAllEvents, getHistory as getEventHistory, getEventNames, getListenerCount } from "./core/events.js";
-export { defState, migrateState, saveG, loadG, initState } from "./core/state.js";
+export { defState, migrateState, saveG, loadG, initState, G } from "./core/state.js";
 export { $, $set, $style, $show, $hide, $addCls, $remCls, ri, pick as utilsPick, wPick, bagPush, afterAction, debounce, throttle, clearElementCache } from "./core/utils.js";
 export { calcPower, addSP, getPowerMultiplier } from "./core/power.js";
 export { calcResonancePower, addSoulFragment, getResonanceInfo, getSoulEvolution, RESONANCE_CFG, FRAGMENT_SOURCES } from "./core/resonance.js";
@@ -31,21 +37,45 @@ export { HERBS, RESOURCES, ARTS, TITLES, getHerb, getResource, getArtifact, getT
 export { triggerAwaken, closeResult, genSkills, getQK } from "./systems/awakening.js";
 export { hunt, rollRing, renderRecentRings, updateGodPath } from "./systems/hunt.js";
 export { doLotSmart, doLot, renderLotPage, goLotPool, updateLotPoolUI } from "./systems/lottery.js";
-export { fuseRings, renderFusion, selectFusionSoul } from "./systems/fusion.js";
-export { startTrial, renderGodPath, claimGodReward } from "./systems/god.js";
-export { exploreWorld, renderWorldMap, unlockWorldArea } from "./systems/world.js";
-export { startAbyss, renderAbyss, claimAbyssReward } from "./systems/abyss.js";
-export { progressTask, renderTasks, claimTaskReward } from "./systems/tasks.js";
-export { updateSeason, getSeasonRewards, renderSeasonPage } from "./systems/seasons.js";
+export { openFusion, closeFusion, selFR, pickFR, addFH, pickFH, execFusion } from "./systems/fusion.js";
+export { showGodPath, startTrial, awardTitle, allGodTrialsCleared, showGodExamSelect, selectGodExam, openGodExam, doGodExam, renderSpecialPaths } from "./systems/god.js";
+export { explore, renderWorldPage, renderArenaPage, startArenaMatch, renderWorldDots, setWorldPage, unlockHiddenTask, claimHidden } from "./systems/world.js";
+export { showAbyssLayer, fightAbyssStage, renderAbyssPage, allAbyssCleared, claimAbyssReward } from "./systems/abyss.js";
+export { setTaskDot, progressTask, renderTasks, claimTaskReward, initSeasonalTasks, triggerSeasonal, renderSeasonalTasks } from "./systems/tasks.js";
+export { stopSbGeo, initSeasonalGeo, renderSeasonalActivities, getCurrentSeason, getSeasonBonus } from "./systems/seasons.js";
 
 // ──── UI模块 ────
-export { renderNavigation, switchPage, updateNavigation } from "./ui/navigation.js";
-export { renderSoulPage, selectSoul, upgradeSoul, renderSoulDetails } from "./ui/soulPage.js";
-export { renderBag, useItem, equipItem, renderBagPage } from "./ui/bag.js";
-export { showModal, closeModal, renderModalContent } from "./ui/modals.js";
+export { navTo, initBottomNav, updateNavActive, initBackToTop, scrollToTop } from "./ui/navigation.js";
+export { renderSoulPage, showSoulGeo, hideSoulGeo, doSecondAwaken, openSoulResonance, openSoulEvolution, openSoulDetail } from "./ui/soulPage.js";
+export { renderBag, filterBag, openBagItem, useBagItem, discardBagItem } from "./ui/bag.js";
+export { openModal, closeModal, openSelectModal, openConfirmModal, openInputModal, showNotifyModal } from "./ui/modals.js";
 export { renderSidebar, toggleSidebar, updateSidebar } from "./ui/sidebar.js";
 export { renderGrimoire, discoverSoul, discoverRing, discoverBone } from "./ui/grimoire.js";
 export { getSoulIcon, hasSoulIcon, getSoulTheme, registerSoulIcon, SOUL_ICONS } from "./ui/soul-icons.js";
+
+// ──── 特效模块 ────
+export {
+  initParticleSystem, destroyParticleSystem,
+  createEmitter, destroyEmitter,
+  fxAwakenBurst, fxLevelUp, fxRealmBreakthrough,
+  fxCombatHit, fxRingObtained, fxLotteryFlash,
+  fxAmbientParticles, getParticleStats
+} from "./fx/particles.js";
+export {
+  flip3D, enableCardFloat3D, createShowcase3D,
+  animateResultOverlay3D, animateSoulIcon3D,
+  createRingOrbit3D, shake3D, applyLegendaryResult3D,
+  reset3D, enableSoulCards3D
+} from "./fx/3d-effects.js";
+export {
+  initAudio, sfxClick, sfxOpen, sfxClose,
+  sfxAwaken, sfxLevelUp, sfxRealmBreak,
+  sfxCombatHit, sfxCrit, sfxRingObtained,
+  sfxLottery, sfxError, sfxSuccess, sfxSPGain, sfxFusion,
+  playAmbient, stopAmbient,
+  setMute, toggleMute, setVolume, getVolume, getMuteState,
+  autoBindSFX, createMuteButton
+} from "./fx/audio.js";
 
 // ──── GM模块 ────
 export { executeGMCommand, showGMConsole, initGMShortcut } from "./gm/console.js";
@@ -99,17 +129,21 @@ export function initializeGameModules() {
   console.log("   ✅ 数据模块 (4个): souls, rings, bones, items");
   console.log("   ✅ 系统模块 (9个): awakening, hunt, lottery, fusion, god, world, abyss, tasks, seasons");
   console.log("   ✅ UI模块 (6个): navigation, soulPage, bag, modals, sidebar, grimoire");
+  console.log("   ✅ 特效模块 (3个): particles, 3d-effects, audio");
   console.log("   ✅ GM模块 (1个): console");
   console.log("");
-  console.log("🎉 模块化完成！共 34 个模块文件");
+  console.log("🎉 模块化完成！共 37 个模块文件");
 
   // 注册核心事件监听器
   setupCoreEventListeners();
 
+  // 初始化特效系统
+  setupFXSystem();
+
   return {
-    version: "v9-modular-optimized",
-    modulesLoaded: 34,
-    totalModules: 34,
+    version: "v9-modular-fx",
+    modulesLoaded: 37,
+    totalModules: 37,
     progress: "100%",
     events: GameEvents,
   };
@@ -119,8 +153,6 @@ export function initializeGameModules() {
  * 设置核心事件监听器
  */
 function setupCoreEventListeners() {
-  const { on } = require('./core/events.js');
-
   // 监听经验获得事件
   on(GameEvents.EXP_GAINED, (data) => {
     console.log(`[Events] 经验获得: +${data.exp}`);
@@ -149,16 +181,71 @@ function setupCoreEventListeners() {
   console.log("[Events] 核心事件监听器已注册");
 }
 
+/**
+ * 初始化特效系统（延迟加载，避免阻塞）
+ */
+function setupFXSystem() {
+  // 使用动态导入避免循环依赖
+  Promise.all([
+    import('./fx/particles.js'),
+    import('./fx/audio.js'),
+    import('./fx/3d-effects.js'),
+    import('./core/events.js'),
+  ]).then(([Particles, Audio, FX3D, Events]) => {
+    // 初始化音频（需要用户交互后才能播放）
+    document.addEventListener('click', () => Audio.initAudio(), { once: true });
+    document.addEventListener('touchstart', () => Audio.initAudio(), { once: true });
+
+    // 绑定特效到游戏事件
+    const { on } = Events;
+
+    on(GameEvents.SOUL_AWAKENED, (data) => {
+      const qc = data.qualityConfig || {};
+      Particles.fxAwakenBurst(qc.c || '#ffd700');
+      Audio.sfxAwaken(data.quality);
+      if (['legend', 'apex', 'twin', 'triple'].includes(data.quality)) {
+        setTimeout(() => FX3D.applyLegendaryResult3D('OR'), 100);
+      }
+    });
+
+    on(GameEvents.LEVEL_UP, () => {
+      Particles.fxLevelUp();
+      Audio.sfxLevelUp();
+    });
+
+    on(GameEvents.REALM_BREAKTHROUGH, () => {
+      Particles.fxRealmBreakthrough();
+      Audio.sfxRealmBreak();
+    });
+
+    on(GameEvents.RING_OBTAINED, (data) => {
+      Particles.fxRingObtained(window.innerWidth / 2, window.innerHeight * 0.5, data.color || '#ffd700');
+      Audio.sfxRingObtained(data.tier);
+    });
+
+    on(GameEvents.LOTTERY_DRAWN, (data) => {
+      const isRare = ['legend', 'apex', 'divine', 'cosmic'].includes(data.quality);
+      if (isRare) {
+        Particles.fxLotteryFlash(window.innerWidth / 2, window.innerHeight * 0.4, data.color || '#ffd700');
+      }
+      Audio.sfxLottery(isRare);
+    });
+
+    // 自动绑定点击音效
+    setTimeout(() => Audio.autoBindSFX(), 500);
+
+    console.log('✨ 特效系统已初始化（WebGL粒子 + 3D动画 + 音效）');
+  }).catch(err => {
+    console.warn('特效系统初始化失败:', err);
+  });
+}
+
 // ──── 批量导入辅助函数 ────
 /**
  * 创建游戏API对象，提供统一的API接口
  * @returns {Object} 游戏API对象
  */
 export function createGameAPI() {
-  const { on, once, off, emit, emitAsync, clearAllEvents, getEventHistory, getEventNames, getListenerCount } = require('./core/events.js');
-  const { saveG, loadG, initState, migrateState } = require('./core/state.js');
-  const { updateHUD, notify, notifySuccess, notifyError, notifyEpic } = require('./core/notify.js');
-
   return {
     // 事件系统
     events: {
@@ -192,7 +279,7 @@ export function createGameAPI() {
     },
 
     // 版本信息
-    version: "v9-modular-optimized",
+    version: "v9-modular-fx",
     buildTime: new Date().toISOString(),
   };
 }
@@ -200,7 +287,7 @@ export function createGameAPI() {
 // 默认导出
 export default {
   name: "武魂模拟器模块系统",
-  version: "v9-modular-optimized",
+  version: "v9-modular-fx",
   initialize: initializeGameModules,
   createAPI: createGameAPI,
 };

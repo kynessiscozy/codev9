@@ -1,5 +1,12 @@
 // ──── 融合系统模块 ────
 
+import { G, saveG } from '../core/state.js';
+import { $, $set, $style, pick, spawnBurst } from '../core/utils.js';
+import { notify } from '../core/notify.js';
+import { RT } from '../data/rings.js';
+import { renderBag } from '../ui/bag.js';
+import { cRSM } from '../ui/modals.js';
+
 // 融合状态
 let fusState = { a: null, b: null, herbs: [] };
 let fusSelTgt = null;

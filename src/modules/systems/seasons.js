@@ -1,5 +1,12 @@
 // ─── 季节系统模块 ───
 
+import { $, spawnBurst } from '../core/utils.js';
+import { notify } from '../core/notify.js';
+import { saveG } from '../core/state.js';
+import { addTicketToBag } from './lottery.js';
+import { renderBag } from '../ui/bag.js';
+import { renderSeasonalTasks } from './tasks.js';
+
 // 季节几何动画
 let _sbGeoRaf = null;
 const _sbGeoAng = [];
@@ -110,4 +117,19 @@ export function getSeasonBonus() {
     winter: { exp: 1.0, sp: 1.3, desc: '冬日寒冷，需要更多魂力' }
   };
   return bonuses[season] || bonuses.spring;
+}
+
+export function stopCwGeo() {
+  // 占位：由 game.js 覆盖
+}
+
+export function initCwGeo() {
+  // 占位：由 game.js 覆盖
+}
+
+/**
+ * 检查新手礼包（占位，完整版由 game.js 覆盖）
+ */
+export function checkNewbieGift() {
+  // game.js 注入后会覆盖此函数
 }

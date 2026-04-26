@@ -1,5 +1,8 @@
 // ─── 侧边栏UI模块（框架版）───
 
+import { G } from '../core/state.js';
+import { calcPower } from '../core/power.js';
+
 /**
  * 渲染侧边栏
  */

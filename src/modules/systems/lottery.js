@@ -1,5 +1,115 @@
 // ──── 抽奖系统模块 ────
 
+import { G, saveG } from '../core/state.js';
+import { notify } from '../core/notify.js';
+import { updateHUD } from '../core/exp.js';
+
+// 抽奖全局状态
+let _lotCurPool = 0;
+let curLotMode = 0;
+
+// 奖池配置
+export const LOT = [
+  { name: "普通奖池", sub: "基础奖励", bg: "linear-gradient(135deg,rgba(156,163,175,.16),rgba(59,130,246,.09))", cost: 100,
+    pool: [
+      { w: 32, fn: () => ({ t: 'sp', v: 100, l: "100魂力" }) },
+      { w: 22, fn: () => ({ t: 'ringbone', ti: 1, l: "千年魂环+千年魂骨", bone: true }) },
+      { w: 16, fn: () => ({ t: 'ring', ti: 2, l: "万年魂环" }) },
+      { w: 12, fn: () => ({ t: 'ringbone', ti: 3, l: "低潮+十万年魂骨", bone: true }) },
+      { w: 8, fn: () => ({ t: 'herb', grade: 'common', l: "随机普通药草" }) },
+      { w: 7, fn: () => ({ t: 'resource', grade: 'common', l: "随机普通资源" }) },
+      { w: 0.5, fn: () => ({ t: 'artifact', l: "随机神器" }) },
+      { w: 1, fn: () => ({ t: 'title', pool: 'rare', l: "稀有称号(紫)" }) },
+    ],
+    detail: [
+      { n: "100魂力", p: "32%" }, { n: "千年魂环+魂骨", p: "22%" }, { n: "万年魂环", p: "16%" },
+      { n: "低潮+魂骨", p: "12%" }, { n: "随机普通药草", p: "8%" }, { n: "随机普通资源", p: "7%" },
+      { n: "随机神器", p: "0.5%" }, { n: "稀有称号", p: "1%" },
+    ]},
+  { name: "高级奖池", sub: "精英奖励", bg: "linear-gradient(135deg,rgba(59,130,246,.2),rgba(139,92,246,.12))", cost: 500,
+    pool: [
+      { w: 28, fn: () => ({ t: 'sp', v: 250, l: "250魂力" }) },
+      { w: 20, fn: () => ({ t: 'sp', v: 500, l: "500魂力" }) },
+      { w: 16, fn: () => ({ t: 'ringbone', ti: 2, l: "万年魂环+万年魂骨", bone: true }) },
+      { w: 12, fn: () => ({ t: 'ring', ti: 3, l: "低潮" }) },
+      { w: 8, fn: () => ({ t: 'ringbone', ti: 4, l: "百万年魂环+百万年魂骨", bone: true, bonus: true }) },
+      { w: 6, fn: () => ({ t: 'herb', grade: 'rare', l: "随机稀有药草" }) },
+      { w: 5, fn: () => ({ t: 'resource', grade: 'rare', l: "随机稀有资源" }) },
+      { w: 1, fn: () => ({ t: 'artifact', l: "随机神器" }) },
+      { w: 1, fn: () => ({ t: 'title', pool: 'advanced', l: "高级称号(金)" }) },
+      { w: 0.001, fn: () => ({ t: 'title', pool: 'special', l: "欧皇称号" }) },
+    ],
+    detail: [
+      { n: "250魂力", p: "28%" }, { n: "500魂力", p: "20%" }, { n: "万年魂环+魂骨", p: "16%" },
+      { n: "低潮", p: "12%" }, { n: "涨潮", p: "8%" },
+      { n: "随机稀有药草", p: "6%" }, { n: "随机稀有资源", p: "5%" },
+      { n: "随机神器", p: "1%" }, { n: "高级称号(金)", p: "1%" }, { n: "欧皇称号", p: "0.001%" },
+    ]},
+  { name: "顶级奖池", sub: "绝世奖励", bg: "linear-gradient(135deg,rgba(245,158,11,.25),rgba(239,68,68,.16))", cost: 1000,
+    pool: [
+      { w: 22, fn: () => ({ t: 'sp', v: 500, l: "500魂力" }) },
+      { w: 16, fn: () => ({ t: 'sp', v: 1000, l: "1000魂力" }) },
+      { w: 14, fn: () => ({ t: 'ringbone', ti: 3, l: "十万年魂骨+低潮", bone: true }) },
+      { w: 10, fn: () => ({ t: 'ringbone', ti: 4, l: "百万年魂环+百万年魂骨", bone: true, bonus: true }) },
+      { w: 1.5, fn: () => ({ t: 'artifact', l: "随机神器" }) },
+      { w: 6, fn: () => ({ t: 'herb', grade: 'advanced', l: "随机高级药草" }) },
+      { w: 6, fn: () => ({ t: 'resource', grade: 'advanced', l: "随机高级资源" }) },
+      { w: 0.5, fn: () => ({ t: 'title', pool: 'legend', l: "传说称号(红)" }) },
+      { w: 4, fn: () => ({ t: 'ring', ti: 5, l: "怒潮", bonus: true }) },
+      { w: 0.01, fn: () => ({ t: 'title', pool: 'special', ouhuangSpecial: true, l: "欧皇称号(特殊保底)" }) },
+      { w: 0.001, fn: (ten) => ({ t: 'ring', cosmic: true, l: "宇宙之核(唯一)" + (ten ? "[十连]" : "") }) },
+    ],
+    detail: [
+      { n: "500魂力", p: "22%" }, { n: "1000魂力", p: "16%" }, { n: "十万年魂骨+魂环", p: "14%" },
+      { n: "涨潮", p: "10%" }, { n: "随机神器", p: "1.5%" },
+      { n: "随机高级药草", p: "6%" }, { n: "随机高级资源", p: "6%" },
+      { n: "传说称号(红)", p: "0.5%" }, { n: "怒潮", p: "4%" },
+      { n: "欧皇称号", p: "0.01%" }, { n: "宇宙之核(唯一)", p: "0.001%" },
+    ]},
+];
+
+export const LOT_POOL_COL = ['#9ca3af', '#a78bfa', '#f59e0b'];
+export const LOT_POOL_WASH = ['rgba(156,163,175,.06)', 'rgba(139,92,246,.08)', 'rgba(245,158,11,.08)'];
+export const LOT_GEO_CFG = [
+  { rgb: [156, 163, 175], rings: [{ rx: 105, ry: 76, spd: 0.0018, dir: 1, op: 0.13, dash: false }, { rx: 152, ry: 110, spd: 0.0011, dir: -1, op: 0.08, dash: false }, { rx: 202, ry: 146, spd: 0.0007, dir: 1, op: 0.05, dash: true }, { rx: 258, ry: 186, spd: 0.0004, dir: -1, op: 0.03, dash: false }] },
+  { rgb: [167, 139, 250], rings: [{ rx: 95, ry: 68, spd: 0.0024, dir: 1, op: 0.18, dash: false }, { rx: 140, ry: 100, spd: 0.0015, dir: -1, op: 0.12, dash: false }, { rx: 190, ry: 136, spd: 0.0009, dir: 1, op: 0.08, dash: true }, { rx: 245, ry: 176, spd: 0.0005, dir: -1, op: 0.05, dash: false }, { rx: 305, ry: 220, spd: 0.0003, dir: 1, op: 0.03, dash: true }] },
+  { rgb: [245, 158, 11], rings: [{ rx: 85, ry: 60, spd: 0.0028, dir: 1, op: 0.22, dash: false }, { rx: 130, ry: 92, spd: 0.0018, dir: -1, op: 0.15, dash: false }, { rx: 180, ry: 128, spd: 0.0011, dir: 1, op: 0.1, dash: true }, { rx: 235, ry: 168, spd: 0.0006, dir: -1, op: 0.06, dash: false }, { rx: 295, ry: 212, spd: 0.0004, dir: 1, op: 0.04, dash: true }] },
+];
+
+function poolTicketName(p) { return p === 'common' ? '普通星运券' : p === 'advanced' ? '高级星运券' : '顶级星运券'; }
+function poolTicketIcon(p) { return p === 'common' ? '🎟️' : p === 'advanced' ? '🎫' : '🏆'; }
+function poolTicketColor(p) { return p === 'common' ? '#9ca3af' : p === 'advanced' ? '#3b82f6' : '#ef4444'; }
+
+export function addTicketToBag(pool, count, ten = false) {
+  const ticketId = 'ticket_' + pool + (ten ? '_ten' : '');
+  const name = poolTicketName(pool) + (ten ? '（十连）' : '');
+  if (ten) {
+    const ex = G.bag.find(i => i.type === 'ticket' && i.data?.pool === pool && i.data?.ten);
+    if (ex) ex.count += count;
+    else G.bag.push({ type: 'ticket', data: { id: ticketId, pool, n: name, i: poolTicketIcon(pool), c: poolTicketColor(pool), ten: true }, count, id: Date.now() + Math.random() });
+  } else {
+    const ex = G.bag.find(i => i.type === 'ticket' && i.data?.pool === pool && !i.data?.ten);
+    if (ex) ex.count += count;
+    else G.bag.push({ type: 'ticket', data: { id: ticketId, pool, n: poolTicketName(pool), i: poolTicketIcon(pool), c: poolTicketColor(pool) }, count, id: Date.now() + Math.random() });
+  }
+}
+
+function updateTidalUI(idx) {
+  // 占位：由 game.js 覆盖
+}
+
+function renderLotDrawGrid(idx) {
+  // 占位：由 game.js 覆盖
+}
+
+export function renderLotHist() {
+  // 占位：由 game.js 覆盖
+}
+
+export function stopLotGeo() {
+  // 占位：由 game.js 覆盖
+}
+
 /**
  * 智能抽奖（优先使用券）
  * @param {number} times - 抽奖次数 (1或10)

@@ -78,3 +78,25 @@ export function rankStr(lv) {
   if (lv >= 11) return "魂师";
   return "魂士";
 }
+
+/**
+ * 更新境界徽章（占位，完整版在 game.js）
+ */
+export function updateRealmBadge() {
+  // 由 game.js 覆盖实现
+}
+
+/**
+ * 显示境界突破覆盖层（占位，完整版在 game.js）
+ */
+export function showRealmOverlay(r, lv) {
+  console.log(`[realm] 境界突破: ${r.n} (Lv.${lv})`);
+}
+
+/**
+ * 关闭境界突破覆盖层（占位，完整版在 game.js）
+ */
+export function closeRealmOverlay() {
+  const ov = document.getElementById('realm-ov');
+  if (ov) ov.classList.remove('show');
+}

@@ -10,6 +10,7 @@ import { calcResonancePower } from './resonance.js';
 import { notify, notifySuccess, notifyError, notifyEpic } from './notify.js';
 import { calcPower } from './power.js';
 import { $set, $style, spawnBurst } from './utils.js';
+import { emit } from './events.js';
 
 // 战力里程碑
 const POWER_MILESTONES = [10000, 50000, 100000, 200000, 300000, 500000, 700000, 1000000];
@@ -95,9 +96,13 @@ export function addExp(v) {
   
   while (G.exp >= expForLv(G.level)) {
     G.exp -= expForLv(G.level);
+    const oldLevel = G.level;
     G.level++;
     leveled = true;
-    
+
+    // 发射升级事件
+    emit('level:up', { oldLevel, newLevel: G.level });
+
     // 境界突破或普通升级
     checkRealmBreakthrough(G.level);
     triggerSeasonal('level');
@@ -133,9 +138,19 @@ export function checkRealmBreakthrough(lv) {
     spawnBurst('#ffd700', 45);
     return;
   }
-  
+
   const r = getCurrentRealm(lv);
+  const oldRealm = getCurrentRealm(lv - 1);
   spawnBurst(r.col, 100);
+
+  // 发射境界突破事件
+  emit('realm:breakthrough', {
+    oldRealm: oldRealm?.n || '未知',
+    newRealm: r.n,
+    level: lv,
+    color: r.col,
+  });
+
   setTimeout(() => showRealmOverlay(r, lv), 250);
 }
 

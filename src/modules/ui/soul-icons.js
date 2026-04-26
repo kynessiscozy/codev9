@@ -14,8 +14,9 @@
  * @param {string} [className] - CSS类名
  * @returns {string}
  */
-function createSVG(innerSVG, viewBox = "0 0 64 64", className = "soul-icon") {
-  return `<svg class="${className}" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">${innerSVG}</svg>`;
+function createSVG(innerSVG, viewBox = "0 0 64 64", className = "soul-icon", dataTheme = "") {
+  const themeAttr = dataTheme ? ` data-theme="${dataTheme}"` : "";
+  return `<svg class="${className}" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg"${themeAttr}>${innerSVG}</svg>`;
 }
 
 // ════════════════════════════════════════════════
@@ -2880,17 +2881,19 @@ export const SOUL_ICONS = {
  * @returns {string} SVG HTML字符串
  */
 export function getSoulIcon(soulName, quality = "common", options = {}) {
-  const { size = 64, animated = true } = options;
+  const { size = 64, animated = true, sizeClass = "" } = options;
   const iconData = SOUL_ICONS[soulName];
 
   if (!iconData) {
-    return createDefaultIcon(soulName, quality, size);
+    return createDefaultIcon(soulName, quality, size, "");
   }
 
   const qualityClass = `quality-${quality}`;
   const animClass = animated ? "soul-icon-animated" : "";
+  const szClass = sizeClass || "";
+  const theme = iconData.theme || "";
 
-  return createSVG(iconData.svg, "0 0 64 64", `soul-icon ${qualityClass} ${animClass}`);
+  return createSVG(iconData.svg, "0 0 64 64", `soul-icon ${qualityClass} ${animClass} ${szClass}`.trim(), theme);
 }
 
 /**
@@ -2900,7 +2903,7 @@ export function getSoulIcon(soulName, quality = "common", options = {}) {
  * @param {number} size - 大小
  * @returns {string}
  */
-function createDefaultIcon(soulName, quality, size) {
+function createDefaultIcon(soulName, quality, size, theme = "") {
   const initial = soulName.charAt(0);
   const colors = {
     common: "#9ca3af",
@@ -2914,8 +2917,9 @@ function createDefaultIcon(soulName, quality, size) {
     triple: "#e2e8f0",
   };
   const color = colors[quality] || colors.common;
+  const themeAttr = theme ? ` data-theme="${theme}"` : "";
 
-  return `<svg class="soul-icon quality-${quality} soul-icon-animated" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  return `<svg class="soul-icon quality-${quality} soul-icon-animated" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"${themeAttr}>
     <defs>
       <radialGradient id="defaultGrad" cx="50%" cy="50%">
         <stop offset="0%" style="stop-color:${color};stop-opacity:0.2"/>

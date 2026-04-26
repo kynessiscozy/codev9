@@ -1,5 +1,36 @@
 // ──── 导航系统模块 ────
 
+import { $ } from '../core/utils.js';
+import { stopLotGeo } from '../systems/lottery.js';
+import { hideSoulGeo } from '../ui/soulPage.js';
+import { stopCwGeo } from '../systems/seasons.js';
+import { stopSbGeo, initSeasonalGeo } from '../systems/seasons.js';
+import { renderSoulPage } from '../ui/soulPage.js';
+import { renderRecentRings, updateGodPath } from '../systems/hunt.js';
+import { renderLotPage } from '../systems/lottery.js';
+import { renderTasks } from '../systems/tasks.js';
+import { renderSeasonalTasks } from '../systems/tasks.js';
+import { renderAbyssPage } from '../systems/abyss.js';
+import { renderBag } from '../ui/bag.js';
+
+let _bagOpen = false;
+let _cwGeoRaf = null;
+let _sbGeoRaf = null;
+
+function toggleBagFab() {
+  _bagOpen = !_bagOpen;
+  const fab = $('bag-fab');
+  if (fab) fab.style.transform = _bagOpen ? 'rotate(45deg)' : '';
+}
+
+function updateCultUI() {
+  // 占位：由 game.js 覆盖
+}
+
+function renderCalendar() {
+  // 占位：由 game.js 覆盖
+}
+
 /**
  * 导航到指定页面
  * @param {string} page - 页面名称

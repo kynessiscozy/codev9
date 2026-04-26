@@ -12,6 +12,8 @@ import { addSoulFragment } from '../core/resonance.js';
 import { notify, notifyDivine } from '../core/notify.js';
 import { renderSoulPage } from '../ui/soulPage.js';
 import { grimoireDiscover } from '../ui/grimoire.js';
+import { emit } from '../core/events.js';
+import { getSoulIcon, getSoulTheme } from '../ui/soul-icons.js';
 
 /**
  * 触发武魂觉醒
@@ -56,7 +58,13 @@ export function triggerAwaken() {
   
   // 显示结果
   document.getElementById('or-b').style.setProperty('--bc', qc.bc);
-  document.getElementById('or-i').textContent = sd.i;
+  const orIco = document.getElementById('or-i');
+  if (orIco) {
+    orIco.innerHTML = getSoulIcon(sd.n, qk, { sizeClass: 'size-xlarge' });
+    orIco.style.display = 'flex';
+    orIco.style.alignItems = 'center';
+    orIco.style.justifyContent = 'center';
+  }
   document.getElementById('or-q').textContent = qc.n + ' 品质';
   document.getElementById('or-q').style.color = qc.c;
   document.getElementById('or-n').textContent = sd.n;
@@ -67,7 +75,10 @@ export function triggerAwaken() {
   document.getElementById('or-q2').textContent = qc.n;
   $('OR').classList.add('show');
   spawnBurst(qc.c, 110);
-  
+
+  // 发射觉醒事件（供特效系统响应）
+  emit('soul:awakened', { quality: qk, qualityConfig: qc, soul: G.soul });
+
   if (['legend', 'apex', 'hc', 'ha', 'twin', 'triple'].includes(qk)) {
     const m = {
       legend: '🌟 传说武魂！',

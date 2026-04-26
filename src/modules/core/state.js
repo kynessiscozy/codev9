@@ -1,7 +1,15 @@
 // ──── GAME STATE MANAGEMENT ────
 // 游戏状态管理：默认状态、状态迁移、存档读写
 
-import { GOD_TRIALS } from "../systems/godpath.js";
+// 成神之路试炼配置
+export const GOD_TRIALS = [
+  { id: "t1", n: "苦难之关", i: "🔥", d: "承受烈焰淬炼，坚守心中意志不熄灭。", rew: "经验+2000,战力+300,获得灵石×5", rsp: 500, cleared: false },
+  { id: "t2", n: "孤独之关", i: "❄️", d: "在极寒孤独中修炼，感受寂静之力。", rew: "经验+3000,战力+500,获得稀有称号", rsp: 800, cleared: false },
+  { id: "t3", n: "诱惑之关", i: "💛", d: "抵御一切诱惑，守住本心方可通关。", rew: "经验+4000,战力+800,获得神器", rsp: 1000, cleared: false },
+  { id: "t4", n: "死亡之关", i: "💀", d: "面对虚拟死亡恐惧，突破生死界限。", rew: "经验+8000,战力+1500,解锁神级属性", rsp: 1500, cleared: false },
+  { id: "t5", n: "超越之关", i: "🌟", d: "超越自我极限，触碰神之领域边缘。", rew: "经验+15000,战力+3000,神之子称号", rsp: 2000, cleared: false },
+  { id: "t6", n: "虚无之关", i: "🌌", d: "在虚无中找寻存在意义，完成最终蜕变。", rew: "经验+30000,战力+8000,半神称号+成神道路解锁", rsp: 3000, cleared: false },
+];
 
 // 默认游戏状态
 export function defState() {
@@ -151,3 +159,6 @@ export function initState() {
   const loaded = migrateState(loadG());
   return loaded || defState();
 }
+
+// 全局游戏状态实例
+export let G = initState();

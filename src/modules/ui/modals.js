@@ -1,5 +1,14 @@
 // ──── 模态框UI模块（框架版）───
 
+import { $, $style } from '../core/utils.js';
+
+/**
+ * 关闭魂环选择模态框
+ */
+export function cRSM() {
+  $style('RSM', 'display', 'none');
+}
+
 /**
  * 打开模态框
  * @param {string} html - 模态框内容HTML

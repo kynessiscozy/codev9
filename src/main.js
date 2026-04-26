@@ -14,6 +14,15 @@ import * as Types from './modules/core/types.js';
 // ════════════════════════════════════════════════
 
 const moduleInfo = Modules.initializeGameModules();
+
+// ══════════════════════════════════════════════
+// 将 G 暴露到全局（使用 getter 保持同步）
+// ══════════════════════════════════════════════
+Object.defineProperty(window, 'G', {
+  get() { return Modules.G; },
+  set(val) { console.warn('[main.js] 请通过模块系统修改 G，不要直接赋值 window.G'); }
+});
+console.log('🌐 window.G 已绑定到模块状态');
 console.log('📊 模块初始化信息:', moduleInfo);
 
 // ════════════════════════════════════════════════
@@ -166,29 +175,58 @@ window.renderLotPage = Modules.renderLotPage;
 window.goLotPool = Modules.goLotPool;
 window.updateLotPoolUI = Modules.updateLotPoolUI;
 
-window.fuseRings = Modules.fuseRings;
-window.renderFusion = Modules.renderFusion;
-window.selectFusionSoul = Modules.selectFusionSoul;
+// 融合系统
+window.openFusion = Modules.openFusion;
+window.closeFusion = Modules.closeFusion;
+window.selFR = Modules.selFR;
+window.pickFR = Modules.pickFR;
+window.addFH = Modules.addFH;
+window.pickFH = Modules.pickFH;
+window.execFusion = Modules.execFusion;
 
+// 成神系统
+window.showGodPath = Modules.showGodPath;
 window.startTrial = Modules.startTrial;
-window.renderGodPath = Modules.renderGodPath;
-window.claimGodReward = Modules.claimGodReward;
+window.awardTitle = Modules.awardTitle;
+window.allGodTrialsCleared = Modules.allGodTrialsCleared;
+window.showGodExamSelect = Modules.showGodExamSelect;
+window.selectGodExam = Modules.selectGodExam;
+window.openGodExam = Modules.openGodExam;
+window.doGodExam = Modules.doGodExam;
+window.renderSpecialPaths = Modules.renderSpecialPaths;
 
-window.exploreWorld = Modules.exploreWorld;
-window.renderWorldMap = Modules.renderWorldMap;
-window.unlockWorldArea = Modules.unlockWorldArea;
+// 世界探索系统
+window.explore = Modules.explore;
+window.renderWorldPage = Modules.renderWorldPage;
+window.renderArenaPage = Modules.renderArenaPage;
+window.startArenaMatch = Modules.startArenaMatch;
+window.renderWorldDots = Modules.renderWorldDots;
+window.setWorldPage = Modules.setWorldPage;
+window.unlockHiddenTask = Modules.unlockHiddenTask;
+window.claimHidden = Modules.claimHidden;
 
-window.startAbyss = Modules.startAbyss;
-window.renderAbyss = Modules.renderAbyss;
+// 深渊系统
+window.showAbyssLayer = Modules.showAbyssLayer;
+window.fightAbyssStage = Modules.fightAbyssStage;
+window.renderAbyssPage = Modules.renderAbyssPage;
+window.allAbyssCleared = Modules.allAbyssCleared;
 window.claimAbyssReward = Modules.claimAbyssReward;
 
+// 任务系统
+window.setTaskDot = Modules.setTaskDot;
 window.progressTask = Modules.progressTask;
 window.renderTasks = Modules.renderTasks;
 window.claimTaskReward = Modules.claimTaskReward;
+window.initSeasonalTasks = Modules.initSeasonalTasks;
+window.triggerSeasonal = Modules.triggerSeasonal;
+window.renderSeasonalTasks = Modules.renderSeasonalTasks;
 
-window.updateSeason = Modules.updateSeason;
-window.getSeasonRewards = Modules.getSeasonRewards;
-window.renderSeasonPage = Modules.renderSeasonPage;
+// 季节系统
+window.stopSbGeo = Modules.stopSbGeo;
+window.initSeasonalGeo = Modules.initSeasonalGeo;
+window.renderSeasonalActivities = Modules.renderSeasonalActivities;
+window.getCurrentSeason = Modules.getCurrentSeason;
+window.getSeasonBonus = Modules.getSeasonBonus;
 
 // ──── UI模块 ────
 window.renderNavigation = Modules.renderNavigation;
@@ -215,6 +253,7 @@ window.updateSidebar = Modules.updateSidebar;
 
 window.renderGrimoire = Modules.renderGrimoire;
 window.discoverSoul = Modules.discoverSoul;
+window.grimoireDiscover = Modules.grimoireDiscover;
 window.discoverRing = Modules.discoverRing;
 window.discoverBone = Modules.discoverBone;
 
@@ -224,6 +263,60 @@ window.hasSoulIcon = Modules.hasSoulIcon;
 window.getSoulTheme = Modules.getSoulTheme;
 window.registerSoulIcon = Modules.registerSoulIcon;
 window.SOUL_ICONS = Modules.SOUL_ICONS;
+
+// ──── 特效模块 ────
+window.fxParticles = {
+  init: Modules.initParticleSystem,
+  destroy: Modules.destroyParticleSystem,
+  createEmitter: Modules.createEmitter,
+  destroyEmitter: Modules.destroyEmitter,
+  awakenBurst: Modules.fxAwakenBurst,
+  levelUp: Modules.fxLevelUp,
+  realmBreakthrough: Modules.fxRealmBreakthrough,
+  combatHit: Modules.fxCombatHit,
+  ringObtained: Modules.fxRingObtained,
+  lotteryFlash: Modules.fxLotteryFlash,
+  ambient: Modules.fxAmbientParticles,
+  getStats: Modules.getParticleStats,
+};
+window.fx3D = {
+  flip: Modules.flip3D,
+  enableCardFloat: Modules.enableCardFloat3D,
+  createShowcase: Modules.createShowcase3D,
+  animateResultOverlay: Modules.animateResultOverlay3D,
+  animateSoulIcon: Modules.animateSoulIcon3D,
+  createRingOrbit: Modules.createRingOrbit3D,
+  shake: Modules.shake3D,
+  applyLegendaryResult: Modules.applyLegendaryResult3D,
+  reset: Modules.reset3D,
+  enableSoulCards: Modules.enableSoulCards3D,
+};
+window.fxAudio = {
+  init: Modules.initAudio,
+  click: Modules.sfxClick,
+  open: Modules.sfxOpen,
+  close: Modules.sfxClose,
+  awaken: Modules.sfxAwaken,
+  levelUp: Modules.sfxLevelUp,
+  realmBreak: Modules.sfxRealmBreak,
+  combatHit: Modules.sfxCombatHit,
+  crit: Modules.sfxCrit,
+  ringObtained: Modules.sfxRingObtained,
+  lottery: Modules.sfxLottery,
+  error: Modules.sfxError,
+  success: Modules.sfxSuccess,
+  spGain: Modules.sfxSPGain,
+  fusion: Modules.sfxFusion,
+  playAmbient: Modules.playAmbient,
+  stopAmbient: Modules.stopAmbient,
+  setMute: Modules.setMute,
+  toggleMute: Modules.toggleMute,
+  setVolume: Modules.setVolume,
+  getVolume: Modules.getVolume,
+  getMuteState: Modules.getMuteState,
+  autoBind: Modules.autoBindSFX,
+  createMuteButton: Modules.createMuteButton,
+};
 
 // ──── GM模块 ────
 window.executeGMCommand = Modules.executeGMCommand;
@@ -254,6 +347,28 @@ if (typeof window !== 'undefined' && window.__DEV__) {
 }
 
 // ════════════════════════════════════════════════
+// 加载传统游戏脚本（game.js 包含完整UI实现）
+// ════════════════════════════════════════════════
+
+// 动态注入 game.js，使其与模块系统共存
+// game.js 提供完整的UI渲染，模块系统提供新功能（SVG图标、特效等）
+import gameScript from './game.js?raw';
+
+function injectGameScript() {
+  const script = document.createElement('script');
+  script.textContent = gameScript;
+  script.id = 'game-js-injected';
+  document.body.appendChild(script);
+  console.log('📜 game.js 已注入，完整UI系统就绪');
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', injectGameScript);
+} else {
+  injectGameScript();
+}
+
+// ════════════════════════════════════════════════
 // 导出默认对象（供模块化使用）
 // ════════════════════════════════════════════════
 
@@ -262,9 +377,11 @@ console.log('🎮 武魂模拟器模块系统已加载！');
 console.log('📦 所有函数已暴露到全局作用域');
 console.log('🔗 事件系统已初始化');
 console.log('📝 JSDoc类型定义已加载');
+console.log('✨ WebGL粒子 + 3D动画 + 音效系统已就绪');
 console.log('');
 console.log('💡 使用 window.__GAME_API__ 访问统一API');
 console.log('💡 使用 window.gameEvents 访问事件系统');
+console.log('💡 使用 window.fxParticles / fx3D / fxAudio 访问特效系统');
 console.log('');
 
 export default {

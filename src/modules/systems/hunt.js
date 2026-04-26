@@ -14,6 +14,7 @@ import { notify, notifyEpic, notifyLegend, notifyDivine, notifyCosmic } from '..
 import { addSoulFragment } from '../core/resonance.js';
 import { progressTask, triggerSeasonal } from './tasks.js';
 import { renderBag } from '../ui/bag.js';
+import { emit } from '../core/events.js';
 
 /**
  * 执行狩猎
@@ -197,6 +198,10 @@ export function hunt(zone) {
   
   // 添加到背包
   G.bag.push({ type: 'ring', data: ringObj, count: 1, id: Date.now() + 30 });
+
+  // 发射魂环获得事件
+  const tierColor = getRingColor(ring.n);
+  emit('ring:obtained', { tier: ring.n, color: tierColor, ring: ringObj });
   G.recentRings.unshift(ringObj);
   if (G.recentRings.length > 12) G.recentRings.pop();
   G.stats.rings++;

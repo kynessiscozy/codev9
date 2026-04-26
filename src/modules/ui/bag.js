@@ -1,5 +1,11 @@
 // ──── 背包系统UI模块（框架版）───
 
+import { G, saveG } from '../core/state.js';
+import { notify } from '../core/notify.js';
+import { openModal, closeModal } from './modals.js';
+
+let curBagFilter = 'all';
+
 /**
  * 渲染背包页面
  */
@@ -140,4 +146,20 @@ export function discardBagItem(id) {
   saveG();
   renderBag();
   closeModal();
+}
+
+/**
+ * 添加药草到背包（占位，完整版由 game.js 覆盖）
+ */
+export function addHerbToBag(herb) {
+  if (!G || !G.bag) return;
+  G.bag.push({ type: 'herb', data: herb, count: 1, id: Date.now() });
+}
+
+/**
+ * 添加资源到背包（占位，完整版由 game.js 覆盖）
+ */
+export function addResourceToBag(res) {
+  if (!G || !G.bag) return;
+  G.bag.push({ type: 'resource', data: res, count: 1, id: Date.now() });
 }

@@ -1,5 +1,51 @@
 // ──── 成神系统模块 ────
 
+import { G, saveG } from '../core/state.js';
+import { $, $set, $style, pick, spawnBurst } from '../core/utils.js';
+import { notify } from '../core/notify.js';
+import { calcPower, addSP } from '../core/power.js';
+import { addExp } from '../core/exp.js';
+import { updateHUD } from '../core/exp.js';
+import { renderSoulPage } from '../ui/soulPage.js';
+import { TITLES } from '../data/items.js';
+import { ARTS } from '../data/items.js';
+
+// 成神之路试炼配置（从 state.js 复用）
+import { GOD_TRIALS } from '../core/state.js';
+
+// 特殊道路配置
+const SPECIAL_PATHS = [
+  { id: "p_chaos", n: "混沌之路", i: "🌀", col: "#c084fc", req: "混沌属性武魂", desc: "游走于秩序规则之外，通过混沌试炼获取混沌之力。" },
+];
+
+// 神位考试配置
+const GOD_EXAMS = [
+  {
+    id: "exam_poseidon", n: "海神九考", i: "🌊", col: "#38bdf8", godName: "海神", godIcon: "🌊",
+    desc: "掌控海洋之力，统御万水之源。",
+    godTitle: { n: "海神", i: "🌊", pw: 150000, col: "#38bdf8" },
+    trials: [
+      { n: "第一考·潮汐之试", d: "承受海神潮汐的冲击", cost: 1000, rew: "经验+5000,战力+10000" },
+    ]
+  },
+  {
+    id: "exam_destroyer", n: "破坏神九考", i: "⚔️", col: "#ef4444", godName: "破坏神", godIcon: "⚔️",
+    desc: "掌握毁灭之力，破而后立。",
+    godTitle: { n: "破坏神", i: "⚔️", pw: 150000, col: "#ef4444" },
+    trials: [
+      { n: "第一考·破灭之试", d: "承受破坏神力的冲击", cost: 1000, rew: "经验+5000,战力+10000" },
+    ]
+  },
+  {
+    id: "exam_life", n: "生命神九考", i: "🌿", col: "#34d399", godName: "生命神", godIcon: "🌿",
+    desc: "掌控生命之力，万物复苏。",
+    godTitle: { n: "生命神", i: "🌿", pw: 150000, col: "#34d399" },
+    trials: [
+      { n: "第一考·生机之试", d: "承受生命神力的洗礼", cost: 1000, rew: "经验+5000,战力+10000" },
+    ]
+  },
+];
+
 /**
  * 显示成神之路
  */

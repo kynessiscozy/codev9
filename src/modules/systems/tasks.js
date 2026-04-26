@@ -1,5 +1,13 @@
 // ──── 任务系统模块 ────
 
+import { G, saveG } from '../core/state.js';
+import { notify } from '../core/notify.js';
+import { addSP, addExp } from '../core/power.js';
+import { spawnBurst } from '../core/utils.js';
+import { addTicketToBag } from './lottery.js';
+import { renderBag } from '../ui/bag.js';
+
+
 /**
  * 设置任务点
  * @param {boolean} has - 是否有待完成任务

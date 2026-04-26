@@ -4,10 +4,11 @@
  */
 
 import { G } from '../core/state.js';
-import { $, $set, renderRarityBadge } from '../core/utils.js';
-import { SOULS_DB } from '../data/souls.js';
-import { RINGS_CFG } from '../data/rings.js';
-import { BONES_DB } from '../data/bones.js';
+import { $, $set } from '../core/utils.js';
+import { SD, getAllSouls } from '../data/souls.js';
+import { RT } from '../data/rings.js';
+import { BONE_POOL } from '../data/bones.js';
+import { getSoulIcon, hasSoulIcon } from './soul-icons.js';
 
 // 图鉴状态
 let grimoireTab = 'souls';
@@ -66,28 +67,30 @@ function renderSoulsGrimoire(container) {
   const grid = document.createElement('div');
   grid.className = 'grimoire-grid';
   grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;';
-  
-  SOULS_DB.forEach(soul => {
+
+  const souls = getAllSouls();
+  souls.forEach(soul => {
     const card = document.createElement('div');
     card.className = 'grimoire-card';
     card.style.cssText = 'background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px;cursor:pointer;transition:all .2s;';
-    
+
     const isDiscovered = G.grimoire?.souls?.includes(soul.id) || false;
-    
+    const svgIcon = isDiscovered ? getSoulIcon(soul.n, soul.q, { sizeClass: 'size-medium' }) : '<span style="font-size:28px;">❓</span>';
+
     card.innerHTML = `
-      <div style="font-size:48px;text-align:center;margin-bottom:8px;">
-        ${isDiscovered ? soul.icon : '❓'}
+      <div style="display:flex;align-items:center;justify-content:center;height:48px;margin-bottom:8px;">
+        ${svgIcon}
       </div>
       <div style="text-align:center;font-weight:700;color:${isDiscovered ? '#fbbf24' : '#64748b'}">
-        ${isDiscovered ? soul.name : '未解锁'}
+        ${isDiscovered ? soul.n : '未解锁'}
       </div>
       ${isDiscovered ? `
         <div style="font-size:12px;color:#94a3b8;text-align:center;margin-top:4px;">
-          ${soul.element} · ${soul.position}
+          ${(soul.a || []).join(' · ')}
         </div>
       ` : ''}
     `;
-    
+
     if (isDiscovered) {
       card.onmouseenter = () => {
         card.style.borderColor = '#fbbf24';
@@ -98,10 +101,10 @@ function renderSoulsGrimoire(container) {
         card.style.transform = 'none';
       };
     }
-    
+
     grid.appendChild(card);
   });
-  
+
   container.appendChild(grid);
 }
 
@@ -113,7 +116,7 @@ function renderRingsGrimoire(container) {
   grid.className = 'grimoire-grid';
   grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;';
   
-  RINGS_CFG.forEach(ring => {
+  RT.forEach(ring => {
     const card = document.createElement('div');
     card.className = 'grimoire-card';
     card.style.cssText = 'background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px;';
@@ -144,7 +147,8 @@ function renderBonesGrimoire(container) {
   grid.className = 'grimoire-grid';
   grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;';
   
-  BONES_DB.forEach(bone => {
+  const allBones = Object.values(BONE_POOL).flat();
+  allBones.forEach(bone => {
     const card = document.createElement('div');
     card.className = 'grimoire-card';
     card.style.cssText = 'background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px;';
@@ -168,15 +172,20 @@ function renderBonesGrimoire(container) {
 
 /**
  * 发现武魂（添加到图鉴）
+ * @param {string} soulName - 武魂名称
+ * @param {string} quality - 品质
  */
-export function discoverSoul(soulId) {
+export function grimoireDiscover(soulName, quality) {
   if (!G.grimoire) G.grimoire = { souls: [], rings: [], bones: [] };
-  if (!G.grimoire.souls.includes(soulId)) {
-    G.grimoire.souls.push(soulId);
+  if (!G.grimoire.souls.includes(soulName)) {
+    G.grimoire.souls.push(soulName);
     return true;
   }
   return false;
 }
+
+// 别名导出，兼容不同调用方式
+export const discoverSoul = grimoireDiscover;
 
 /**
  * 发现魂环（添加到图鉴）

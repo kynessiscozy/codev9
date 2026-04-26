@@ -631,7 +631,7 @@ function openSoulResonance(){
 
   const sourcesH=FRAGMENT_SOURCES.map(s=>`
     <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03)">
-      <span style="font-size:14px;flex-shrink:0">${s.icon}</span>
+      <span style="display:flex;align-items:center;flex-shrink:0">${getSoulIcon(s.name,s.quality,{sizeClass:'size-small'})}</span>
       <div>
         <div style="font-size:10px;font-weight:600;color:var(--txt)">${s.label}</div>
         <div style="font-size:9px;color:var(--dim)">${s.desc}</div>
@@ -662,10 +662,10 @@ function openSoulEvolution(){
   }
   const canEvolve=frags>=ev.fragCost&&G.level>=ev.reqLv;
   openModal(`<div class="m-title" style="color:var(--gl)">🌟 武魂传承</div>
-    <div class="m-sub">${G.soul.icon} ${G.soul.name} → ${ev.to}</div>
+    <div class="m-sub" style="display:flex;align-items:center;justify-content:center;gap:6px;"><span style="display:flex;align-items:center;">${getSoulIcon(G.soul.name,G.soul.quality,{sizeClass:'size-small'})}</span> <span>${G.soul.name} → ${ev.to}</span></div>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:16px 0">
       <div style="text-align:center">
-        <div style="font-size:44px">${G.soul.icon}</div>
+        <div style="display:flex;align-items:center;justify-content:center;">${getSoulIcon(G.soul.name,G.soul.quality,{sizeClass:'size-large'})}</div>
         <div style="font-size:11px;color:var(--dim);margin-top:4px">${G.soul.name}</div>
       </div>
       <div style="font-size:22px;color:var(--gl)">→</div>
@@ -1237,7 +1237,7 @@ function triggerAwaken(){
 
   // show result
   document.getElementById('or-b').style.setProperty('--bc',qc.bc);
-  document.getElementById('or-i').textContent=sd.i;
+  const orIE=document.getElementById('or-i');if(orIE){orIE.innerHTML=getSoulIcon(sd.n,qk,{sizeClass:'size-large'});orIE.style.display='flex';orIE.style.alignItems='center';orIE.style.justifyContent='center';}
   document.getElementById('or-q').textContent=qc.n+' 品质';
   document.getElementById('or-q').style.color=qc.c;
   document.getElementById('or-n').textContent=sd.n;
@@ -1473,7 +1473,7 @@ function renderSoulPage(){
         <div class="sol-dot s2" style="background:${qt.col};opacity:.6;--s:90deg;animation-name:solDotOrbit2"></div>
         <div class="sol-dot s2" style="background:${qt.col};opacity:.6;--s:270deg;animation-name:solDotOrbit2"></div>
         <div class="sol-glow" style="background:radial-gradient(ellipse at 40% 35%,${qt.bg1},transparent 70%)"></div>
-        <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qt.glow}) drop-shadow(0 4px 8px rgba(0,0,0,.6))">${s.icon}</div>
+        <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qt.glow}) drop-shadow(0 4px 8px rgba(0,0,0,.6));display:flex;align-items:center;justify-content:center;">${getSoulIcon(s.name,s.quality,{sizeClass:'size-large'})}</div>
         ${awakenFXH}
       </div>
       <!-- Identity -->
@@ -1801,7 +1801,7 @@ function openSoulDetail(){
       ${s.attrs.map(a=>`<div class="m-at"><div class="m-an">属性</div><div class="m-av" style="font-size:11px">${a}</div></div>`).join('')}
     </div>
     <div class="m-sec"><div class="m-sec-t">魂技列表</div>${skH||'<div style="font-size:11px;color:var(--dim)">暂无</div>'}</div>`,
-    `<span style="color:${qc.c}">${s.icon}</span> ${s.name} · ${qc.n}品质`);
+    `<span style="display:flex;align-items:center;gap:8px;"><span style="display:flex;align-items:center;">${getSoulIcon(s.name,s.quality,{sizeClass:'size-small'})}</span><span>${s.name} · ${qc.n}品质</span></span>`);
 }
 
 function equipArt(id){
@@ -4941,7 +4941,7 @@ function updateSidebar(){
   const s=G.soul;
   const hasSoul=!!s;
   // Soul icon & name
-  $set('ls-ico-txt','textContent',hasSoul?s.icon:'🌀');
+  const lsIco=$('ls-soul-ico');if(lsIco){const glow=lsIco.querySelector('.ls-soul-glow');lsIco.innerHTML=(glow?glow.outerHTML:'')+(hasSoul?getSoulIcon(s.name,s.quality,{sizeClass:'size-medium'}):'<span style="font-size:32px">🌀</span>');lsIco.style.display='flex';lsIco.style.alignItems='center';lsIco.style.justifyContent='center';}
   $set('ls-soul-name','textContent',hasSoul?s.name:'尚未觉醒');
   // Rank pills
   const rankEl=$('ls-soul-rank');
@@ -5155,7 +5155,7 @@ function gsRenderGrid(){
       style="${isFound?`--qr:${qc.r};--qg:${qc.g};--qb:${qc.b};--qbdr:${qc.c}55;--sd:${5+i%6}s;--dl:${delay}s`:''}"
       onclick="${isFound?`gsShowDetail('${encodeURIComponent(s.n)}')`:''}"
     >
-      <div class="gc-ico">${isFound?s.i:'❓'}</div>
+      <div class="gc-ico" style="display:flex;align-items:center;justify-content:center;height:40px;">${isFound?getSoulIcon(s.n,s.q,{sizeClass:'size-small'}):'<span style="font-size:28px;">❓</span>'}</div>
       <div class="gc-name">${isFound?s.n:'???'}</div>
       <div class="gc-q" style="${isFound?`color:${qc.c}`:''}">
         ${isFound?qc.n:'未知'}
@@ -5176,7 +5176,7 @@ function gsShowDetail(encodedName){
   $set('gs-d-content','innerHTML',`
     <div class="gs-d-top">
       <div class="gs-d-ico-wrap">
-        <span class="gs-d-ico">${s.i}</span>
+        <span class="gs-d-ico" style="display:flex;align-items:center;justify-content:center;">${getSoulIcon(s.n,s.q,{sizeClass:'size-large'})}</span>
         <div class="gs-d-glow" style="--qglow:${qc.glow}"></div>
       </div>
       <div class="gs-d-info">
@@ -5755,7 +5755,7 @@ function renderArenaPage(){
     return`<div class="arena-match-card" onclick="startArenaMatch('${e.n}')">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <div style="text-align:center;flex:1">
-          <div style="font-size:26px">${G.soul?.icon||'⚡'}</div>
+          <div style="display:flex;align-items:center;justify-content:center;">${G.soul?getSoulIcon(G.soul.name,G.soul.quality,{sizeClass:'size-small'}):'<span style="font-size:26px">⚡</span>'}</div>
           <div style="font-size:10px;font-weight:700;color:var(--gl);margin-top:2px">${G.soul?.name||'魂师'}</div>
           <div style="font-size:9px;color:var(--dim)">${pw.toLocaleString()}</div>
         </div>
@@ -5917,7 +5917,7 @@ function openShareCard(){
   // Update DOM elements
   const card=$('share-card');
   if(card)card.style.setProperty('--sc-col',col);
-  $set('sc-ico','textContent',hasSoul?s.icon:'🌀');
+  const scIco=$('sc-ico');if(scIco){scIco.innerHTML=hasSoul?getSoulIcon(s.name,s.quality,{sizeClass:'size-large'}):'<span style=\"font-size:88px\">🌀</span>';scIco.style.display='flex';scIco.style.alignItems='center';scIco.style.justifyContent='center';}
   $set('sc-name','textContent',hasSoul?s.name:'尚未觉醒');
   $set('sc-name','style.color',col);
 

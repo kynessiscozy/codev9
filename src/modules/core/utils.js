@@ -119,3 +119,10 @@ export function clearElementCache(id) {
     }
   }
 }
+
+/**
+ * 粒子爆发效果（占位，完整版由 game.js 覆盖）
+ */
+export function spawnBurst(col, n) {
+  // game.js 注入后会覆盖此函数
+}

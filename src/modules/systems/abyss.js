@@ -1,5 +1,31 @@
 // ──── 异界深渊系统模块 ────
 
+import { G, saveG } from '../core/state.js';
+import { notify } from '../core/notify.js';
+import { calcPower, addSP } from '../core/power.js';
+import { addExp } from '../core/exp.js';
+import { updateHUD } from '../core/exp.js';
+import { spawnBurst } from '../core/utils.js';
+
+// 深渊层配置
+const ABYSS_LAYERS = [
+  { id: 1, n: "幽冥边境", col: "#c084fc", req: 30, i: "👻",
+    stages: [
+      { id: "1-1", n: "幽魂初遇", type: "normal", cost: 1, enemy: { n: "幽冥游魂", i: "👻", hp: 7200, atk: 780, spd: 14 }, reward: "经验+100,魂力+200" },
+      { id: "1-2", n: "边境守卫", type: "normal", cost: 1, enemy: { n: "边境守卫", i: "💀", hp: 8500, atk: 900, spd: 12 }, reward: "经验+150,魂力+300" },
+      { id: "1-BOSS", n: "幽冥领主", type: "boss", cost: 3, enemy: { n: "幽冥领主", i: "👹", hp: 25000, atk: 1500, spd: 10 }, reward: "经验+500,魂力+1000" },
+    ]
+  },
+  { id: 2, n: "熔岩地狱", col: "#ef4444", req: 40, i: "🔥",
+    stages: [
+      { id: "2-1", n: "火焰小径", type: "normal", cost: 1, enemy: { n: "火焰精灵", i: "🔥", hp: 12000, atk: 1100, spd: 15 }, reward: "经验+200,魂力+400" },
+      { id: "2-BOSS", n: "地狱炎魔", type: "boss", cost: 3, enemy: { n: "地狱炎魔", i: "👺", hp: 40000, atk: 2200, spd: 8 }, reward: "经验+800,魂力+1500" },
+    ]
+  },
+];
+
+const GOD_LAYERS = ABYSS_LAYERS.filter(l => l.req >= 80);
+
 /**
  * 显示深渊层
  * @param {number} layerId - 深渊层ID

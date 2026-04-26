@@ -1,24 +1,34 @@
 // ──── 武魂页面UI模块 ────
 
+import { G, saveG } from '../core/state.js';
+import { QC } from '../config/quality.js';
+import { rankStr } from '../config/realms.js';
+import { spawnBurst } from '../core/utils.js';
+import { updateHUD } from '../core/exp.js';
+import { openModal, closeModal } from './modals.js';
+import { notify } from '../core/notify.js';
+import { getSoulIcon, getSoulTheme } from './soul-icons.js';
+
 /**
  * 渲染武魂页面（简化版，完整版需从game.js提取更多代码）
  */
 export function renderSoulPage() {
   const p = document.getElementById('page-soul');
   if (!p) return;
-  
+
   if (!G.awakenDone || !G.soul) {
     p.innerHTML = '<div class="empty-st"><div class="ei">🌀</div><div class="em">尚未觉醒武魂</div></div>';
     hideSoulGeo();
     return;
   }
-  
-  // 简化版渲染 - 完整版需要从game.js提取更多代码
+
   const s = G.soul;
   const qc = QC[s.quality] || QC.common;
+  const svgIcon = getSoulIcon(s.name, s.quality, { sizeClass: 'size-large' });
+
   p.innerHTML = `
     <div class="soul-v2-hero">
-      <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qc.c})">${s.icon}</div>
+      <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qc.c});display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
       <div class="sol-name" style="color:${qc.c}">${s.name}</div>
       <div class="sol-meta">
         <div class="sol-quality-tag" style="border-color:${qc.c}">${qc.n}</div>
@@ -36,7 +46,7 @@ export function renderSoulPage() {
       <div class="sv2-action" onclick="openAssignRing()">装配 +</div>
     </div>
   `;
-  
+
   updateHUD();
   spawnBurst(qc.c, 50);
 }
@@ -99,8 +109,12 @@ export function openSoulEvolution() {
 export function openSoulDetail() {
   if (!G.soul) return;
   const s = G.soul;
+  const svgIcon = getSoulIcon(s.name, s.quality, { sizeClass: 'size-medium' });
   openModal(`
-    <div class="m-title" style="color:${QC[s.quality]?.c || '#fff'}">${s.icon} ${s.name}</div>
+    <div class="m-title" style="color:${QC[s.quality]?.c || '#fff'};display:flex;align-items:center;gap:8px;">
+      <span style="display:flex;align-items:center;">${svgIcon}</span>
+      <span>${s.name}</span>
+    </div>
     <div class="m-sub">${s.desc}</div>
     <div style="font-size:11px;color:var(--dim);line-height:1.8">
       <div>属性：${(s.attrs || []).join('·')}</div>
