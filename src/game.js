@@ -5325,7 +5325,15 @@ function initCwGeo(){
   draw();
 }
 
-if(G.awakenDone)$('SA').style.display='none';
+// 安全地隐藏觉醒屏幕（如果已觉醒）
+try {
+  if (G.awakenDone) {
+    const saEl = document.getElementById('SA');
+    if (saEl) saEl.style.display = 'none';
+  }
+} catch(e) {
+  console.error('初始化觉醒页面状态失败:', e);
+}
 // v9: All state migration handled by migrateState() called at load time.
 // Legacy compat — belt-and-suspenders for fields that pre-date migration
 if(!G.godTrials)G.godTrials=JSON.parse(JSON.stringify(GOD_TRIALS));

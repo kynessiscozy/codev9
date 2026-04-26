@@ -374,6 +374,29 @@ function injectGameScript() {
   }
 }
 
+// 确保页面加载后正确处理觉醒屏幕的显示状态
+function ensureAwakeningScreen() {
+  try {
+    const G = window.G || { awakenDone: false };
+    const saEl = document.getElementById('SA');
+    if (!saEl) return;
+    
+    if (G.awakenDone) {
+      saEl.style.display = 'none';
+      // 确保主应用显示
+      const appEl = document.getElementById('app');
+      if (appEl) appEl.style.display = 'flex';
+    } else {
+      saEl.style.display = 'flex';
+    }
+  } catch (e) {
+    console.error('检查觉醒屏幕状态失败:', e);
+  }
+}
+
+// 在 DOM 和 game.js 都加载后，再次检查觉醒屏幕状态
+setTimeout(ensureAwakeningScreen, 500);
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', injectGameScript);
 } else {
