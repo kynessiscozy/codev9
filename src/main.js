@@ -172,6 +172,7 @@ window.triggerAwaken = Modules.triggerAwaken;
 window.closeResult = Modules.closeResult;
 window.genSkills = Modules.genSkills;
 window.getQK = Modules.getQK;
+window.execSoulEvo = Modules.execSoulEvolution;
 
 window.hunt = Modules.hunt;
 window.rollRing = Modules.rollRing;

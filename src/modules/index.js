@@ -14,7 +14,7 @@ export { on, once, off, emit, emitAsync, clearAllEvents, getEventHistory, getEve
 export { defState, migrateState, saveG, loadG, initState, G } from "./core/state.js";
 export { $, $set, $style, $show, $hide, $addCls, $remCls, ri, pick as utilsPick, wPick, bagPush, afterAction, debounce, throttle, clearElementCache } from "./core/utils.js";
 export { calcPower, addSP, getPowerMultiplier } from "./core/power.js";
-export { calcResonancePower, addSoulFragment, getResonanceInfo, getSoulEvolution, RESONANCE_CFG, FRAGMENT_SOURCES } from "./core/resonance.js";
+export { calcResonancePower, addSoulFragment, getResonanceInfo, getSoulEvolution, execSoulEvolution, SOUL_EVOLUTIONS, RESONANCE_CFG, FRAGMENT_SOURCES } from "./core/resonance.js";
 export { expForLv, addExp, checkRealmBreakthrough, checkContentUnlocks, updateHUD, updateExpBar, checkPowerMilestones } from "./core/exp.js";
 export { notify, notifySuccess, notifyError, notifyEpic } from "./core/notify.js";
 

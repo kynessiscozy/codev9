@@ -1,7 +1,13 @@
 // ──── SOUL RESONANCE (v9) ────
 // 武魂共鸣系统
 
-import { QC, getQualityConfig } from "../config/quality.js";
+import { QC, getQualityConfig, getQualityColor } from "../config/quality.js";
+import { G, saveG, initState } from "./state.js";
+import { updateHUD } from "./exp.js";
+import { notify, notifyDivine } from "./notify.js";
+import { renderSoulPage } from "../ui/soulPage.js";
+import { genSkills } from "../systems/awakening.js";
+import { SD } from "../data/souls.js";
 
 // 共鸣配置：每种品质的碎片需求和等级奖励
 export const RESONANCE_CFG = {
@@ -78,18 +84,56 @@ export function getResonanceInfo(quality) {
   return { quality, cfg, frags, lv, pct, pw, nextFrag };
 }
 
+// 武魂进化链配置
+export const SOUL_EVOLUTIONS = {
+  "蓝银草": { to: "蓝银皇", fragCost: 15, reqLv: 30, toQ: "legend" },
+  "镰刀": { to: "铁锤", fragCost: 8, reqLv: 10, toQ: "common" },
+  "白虎": { to: "白虎", fragCost: 10, reqLv: 20, toQ: "rare" },
+  "火凤凰": { to: "极品火凤凰", fragCost: 12, reqLv: 40, toQ: "legend" },
+  "冰凤凰": { to: "极品火凤凰", fragCost: 12, reqLv: 40, toQ: "legend" },
+  "七宝琉璃塔": { to: "九宝琉璃塔", fragCost: 10, reqLv: 35, toQ: "legend" },
+  "蓝电霸王龙": { to: "金龙王", fragCost: 8, reqLv: 45, toQ: "legend" },
+  "昊天锤": { to: "昊天九绝锤", fragCost: 6, reqLv: 50, toQ: "ha" },
+  "六翼天使": { to: "神圣天使", fragCost: 5, reqLv: 50, toQ: "apex" },
+};
+
 // 获取武魂进化链
 export function getSoulEvolution(soulName) {
-  const SOUL_EVOLUTIONS = {
-    "蓝银草": { to: "蓝银皇", fragCost: 15, reqLv: 30, toQ: "legend" },
-    "镰刀": { to: "铁锤", fragCost: 8, reqLv: 10, toQ: "common" },
-    "白虎": { to: "白虎", fragCost: 10, reqLv: 20, toQ: "rare" },
-    "火凤凰": { to: "极品火凤凰", fragCost: 12, reqLv: 40, toQ: "legend" },
-    "冰凤凰": { to: "极品火凤凰", fragCost: 12, reqLv: 40, toQ: "legend" },
-    "七宝琉璃塔": { to: "九宝琉璃塔", fragCost: 10, reqLv: 35, toQ: "legend" },
-    "蓝电霸王龙": { to: "金龙王", fragCost: 8, reqLv: 45, toQ: "legend" },
-    "昊天锤": { to: "昊天九绝锤", fragCost: 6, reqLv: 50, toQ: "ha" },
-    "六翼天使": { to: "神圣天使", fragCost: 5, reqLv: 50, toQ: "apex" },
-  };
   return SOUL_EVOLUTIONS[soulName] || null;
+}
+
+// 执行武魂进化
+export function execSoulEvolution() {
+  if (!G.soul) return;
+  const ev = SOUL_EVOLUTIONS[G.soul.name];
+  if (!ev) return;
+  const frags = Object.values(G.soulFragments || {}).reduce((a, b) => a + b, 0);
+  if (frags < ev.fragCost || G.level < ev.reqLv) { notify('条件不满足', 'normal'); return; }
+  // 扣除碎片
+  let remain = ev.fragCost;
+  for (const k of Object.keys(G.soulFragments || {})) {
+    if (remain <= 0) break;
+    const v = G.soulFragments[k] || 0;
+    const use = Math.min(v, remain);
+    G.soulFragments[k] = v - use;
+    remain -= use;
+  }
+  // 找到目标武魂
+  const newSd = (SD[ev.toQ] || []).find(s => s.n === ev.to) || (SD[ev.toQ] || [])[0];
+  if (!newSd) { notify('进化目标武魂不存在', 'error'); return; }
+  G.soul = {
+    ...G.soul,
+    name: newSd.n,
+    icon: newSd.i,
+    quality: ev.toQ,
+    desc: newSd.d,
+    attrs: [...(newSd.a || [])],
+    initPow: Math.max(G.soul.initPow, newSd.p || 1),
+    skills: genSkills(newSd, ev.toQ),
+  };
+  G.awakenDone = true;
+  updateHUD();
+  saveG();
+  notify(`🌟 武魂传承成功！${G.soul.name}（${getQualityConfig(ev.toQ)?.n || ''}）`, 'divine');
+  renderSoulPage();
 }
