@@ -3,6 +3,10 @@
  * 使用统一的模块索引，提供更清晰的全局API
  */
 
+// 导入 CSS（Vite 会处理并打包）
+import './modules/ui/soul-icon-effects.css';
+import './modules/fx/effects.css';
+
 // 导入统一的模块索引
 import * as Modules from './modules/index.js';
 
