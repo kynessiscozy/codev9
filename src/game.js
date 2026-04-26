@@ -1794,15 +1794,14 @@ function openSoulDetail(){
       <div class="ski-params">${(sk.params||[]).map(p=>`<span class="ski-p">${p}</span>`).join('')}</div>
     </div>`).join('');
   openModal(`
-    <div class="m-title" style="color:${qc.c}">${s.icon} ${s.name}</div>
-    <div class="m-sub">魂技详情 · ${qc.n}品质</div>
     <div style="font-size:11px;color:var(--dim);text-align:center;margin-bottom:11px;line-height:1.7">${s.desc}</div>
     <div class="m-ag" style="margin-bottom:11px">
       <div class="m-at"><div class="m-an">初始魂力</div><div class="m-av">${s.initPow}</div></div>
       <div class="m-at"><div class="m-an">品质</div><div class="m-av" style="color:${qc.c};font-size:12px">${qc.n}</div></div>
       ${s.attrs.map(a=>`<div class="m-at"><div class="m-an">属性</div><div class="m-av" style="font-size:11px">${a}</div></div>`).join('')}
     </div>
-    <div class="m-sec"><div class="m-sec-t">魂技列表</div>${skH||'<div style="font-size:11px;color:var(--dim)">暂无</div>'}</div>`);
+    <div class="m-sec"><div class="m-sec-t">魂技列表</div>${skH||'<div style="font-size:11px;color:var(--dim)">暂无</div>'}</div>`,
+    `<span style="color:${qc.c}">${s.icon}</span> ${s.name} · ${qc.n}品质`);
 }
 
 function equipArt(id){
@@ -3796,7 +3795,12 @@ function doSpecialTrial(pathId,idx){
     updateHUD();saveG();
   }
 }
-function openModal(html){
+function openModal(html, title){
+  if(title){
+    $set('modal-title','innerHTML',title);
+  } else {
+    $set('modal-title','innerHTML','');
+  }
   $set('modal-body','innerHTML',html);
   $addCls('modal','show');
 }

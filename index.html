@@ -795,19 +795,24 @@
   <div class="or-tap">点击任意处继续</div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL (面板式) -->
 <div id="modal" onclick="cModal(event)">
-  <div class="msheet" onclick="event.stopPropagation()">
-    <div class="mh"></div>
+  <div class="mpanel" onclick="event.stopPropagation()">
+    <div class="mp-header">
+      <div class="mp-title" id="modal-title"></div>
+      <div class="mp-close" onclick="cModal()">✕</div>
+    </div>
     <div id="modal-body"></div>
   </div>
 </div>
 
-<!-- RING SEL MODAL -->
-<div id="RSM" onclick="cRSM()" style="position:fixed;inset:0;z-index:350;background:rgba(0,0,0,.9);display:none;align-items:flex-end;justify-content:center">
-  <div class="msheet" onclick="event.stopPropagation()" style="max-height:72vh">
-    <div class="mh"></div>
-    <div class="m-title" id="rsm-title">选择魂环</div>
+<!-- RING SEL MODAL (面板式) -->
+<div id="RSM" onclick="cRSM()" style="position:fixed;inset:0;z-index:350;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center">
+  <div class="mpanel" onclick="event.stopPropagation()" style="max-height:80vh;overflow-y:auto">
+    <div class="mp-header">
+      <div class="mp-title" id="rsm-title">选择魂环</div>
+      <div class="mp-close" onclick="cRSM()">✕</div>
+    </div>
     <div id="rsm-list" style="margin-top:10px"></div>
   </div>
 </div>

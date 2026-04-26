@@ -335,14 +335,17 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 .bag-item .bn{font-size:8px;color:var(--dim);margin-top:2px;text-align:center;line-height:1.2}
 .bag-item .bc{position:absolute;top:2px;right:2px;font-size:8px;font-weight:700;color:var(--gl);background:rgba(0,0,0,.5);border-radius:3px;padding:1px 3px}
 
-/* MODAL */
-#modal{position:fixed;inset:0;z-index:280;background:rgba(0,0,0,.86);display:none;align-items:flex-end;justify-content:center}
+/* MODAL (面板式) */
+#modal{position:fixed;inset:0;z-index:280;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center}
 #modal.show{display:flex}
-.msheet{width:100%;max-width:430px;background:linear-gradient(180deg,#0e1525,#080d1a);border-top:1px solid var(--bdr);border-radius:18px 18px 0 0;padding:16px;max-height:82vh;overflow-y:auto;animation:sUp .28s ease}
-@keyframes sUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
-.msheet::-webkit-scrollbar{display:none}
-.mh{width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin:0 auto 13px}
-.m-title{font-family:'Ma Shan Zheng',serif;font-size:19px;text-align:center;margin-bottom:2px}
+.mpanel{width:100%;max-width:430px;background:linear-gradient(180deg,#0e1525,#080d1a);border:1px solid var(--bdr);border-radius:13px;padding:14px;max-height:85vh;overflow-y:auto;margin:0 10px}
+.mpanel::-webkit-scrollbar{display:none}
+.mp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.mp-title{font-family:'Ma Shan Zheng',serif;font-size:17px;color:var(--gl);letter-spacing:1px}
+.mp-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--dim);cursor:pointer;transition:all .2s}
+.mp-close:hover{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.3);color:#f87171}
+/* 保留旧样式兼容 */
+.m-title{font-family:'Ma Shan Zheng',serif;font-size:17px;text-align:center;margin-bottom:2px}
 .m-sub{text-align:center;font-size:10px;color:var(--dim);margin-bottom:12px}
 .m-sec{margin-bottom:11px}
 .m-sec-t{font-size:10px;color:var(--dim);display:flex;align-items:center;gap:5px;margin-bottom:6px}
@@ -1585,9 +1588,12 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 [data-theme="light"] .ntf.cosmic{background:rgba(236,254,255,.92);border-color:rgba(14,116,144,.25);color:#155e75}
 
 /* ── 模态框 ── */
-[data-theme="light"] .msheet{background:linear-gradient(180deg,#f4f5f7,#eef0f3);box-shadow:0 -4px 24px rgba(0,0,0,.06)}
-[data-theme="light"] .mh{background:rgba(0,0,0,.06)}
-[data-theme="light"] #modal{background:rgba(0,0,0,.25)}
+[data-theme="light"] .mpanel{background:linear-gradient(180deg,#f4f5f7,#eef0f3);box-shadow:0 4px 20px rgba(0,0,0,.1)}
+[data-theme="light"] .mp-close{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);color:rgba(0,0,0,.4)}
+[data-theme="light"] .mp-close:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#dc2626}
+[data-theme="light"] .mp-header{border-bottom-color:rgba(0,0,0,.06)}
+[data-theme="light"] .mp-title{color:#1f2937}
+[data-theme="light"] #modal{background:rgba(0,0,0,.35)}
 [data-theme="light"] .m-title{color:var(--txt)}
 [data-theme="light"] .m-at{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.06)}
 [data-theme="light"] .m-an{color:var(--dim)}
@@ -1777,7 +1783,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 [data-theme="light"] .sb-ico{filter:drop-shadow(0 2px 6px rgba(244,114,182,.25))}
 /* 春分灵露 inline style 浅粉色 → 深粉色 */
 [data-theme="light"] .sb-detail [style*="fce7f3"]{color:#9d174d!important}
-[data-theme="light"] .msheet [style*="f9a8d4"]{color:#db2777!important}
+[data-theme="light"] .mpanel [style*="f9a8d4"]{color:#db2777!important}
 
 /* ── 日历/修炼 ── */
 [data-theme="light"] .cal-widget{background:linear-gradient(135deg,rgba(201,162,39,.04),rgba(201,162,39,.015));border-color:rgba(201,162,39,.12)}
@@ -1824,8 +1830,8 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 [data-theme="light"] .bag-item .bc{background:rgba(255,255,255,.75);color:var(--legend)}
 [data-theme="light"] .ring-item{background:rgba(255,255,255,.65);border-color:rgba(0,0,0,.06)}
 /* 魂骨总览弹窗格子 inline style 覆盖 */
-[data-theme="light"] .msheet [style*="var(--bgc)"]{background:rgba(255,255,255,.55)!important;border-color:rgba(0,0,0,.06)!important}
-[data-theme="light"] .msheet [style*="rgba(251,191,36"]{background:rgba(201,162,39,.04)!important;border-color:rgba(201,162,39,.2)!important}
+[data-theme="light"] .mpanel [style*="var(--bgc)"]{background:rgba(255,255,255,.55)!important;border-color:rgba(0,0,0,.06)!important}
+[data-theme="light"] .mpanel [style*="rgba(251,191,36"]{background:rgba(201,162,39,.04)!important;border-color:rgba(201,162,39,.2)!important}
 [data-theme="light"] .ring-pow{color:var(--legend)}
 
 /* ── 天赋/融合/道路 ── */
@@ -1898,7 +1904,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 /* 异界层级 tab 按钮 */
 [data-theme="light"] #wtab-0{border-color:rgba(124,58,237,.4)!important;background:rgba(124,58,252,.08)!important;color:#7c3aed!important}
 /* 异界关卡弹窗 inline style */
-[data-theme="light"] .msheet [style*="border-bottom:1px solid rgba(255,255,255"]{border-bottom-color:rgba(0,0,0,.06)!important}
+[data-theme="light"] .mpanel [style*="border-bottom:1px solid rgba(255,255,255"]{border-bottom-color:rgba(0,0,0,.06)!important}
 
 /* ── FAB / 汉堡菜单 / 通用 ── */
 [data-theme="light"] #bag-fab{background:rgba(255,255,255,.75);border-color:rgba(0,0,0,.08);color:var(--legend)}
