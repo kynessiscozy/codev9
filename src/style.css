@@ -1,0 +1,92 @@
+/* 武魂模拟器 - 样式文件 */
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+:root{
+  --gold:#c9a227;--gl:#f0d060;--gd:#8a6e1a;
+  --bg:#050810;--bgc:#0f1628;--bgc2:#141c35;
+  --txt:#e8dfc0;--dim:#626870;
+  --bdr:rgba(201,162,39,.2);--bdrB:rgba(201,162,39,.52);
+  --common:#9ca3af;--rare:#3b82f6;--epic:#8b5cf6;--legend:#f59e0b;--apex:#ef4444;
+  --hc:#10b981;--ha:#ec4899;--twin:#f0abfc;--triple:#e2e8f0;--divine:#ffd700;
+  --r100:#a78bfa;--r1k:#60a5fa;--r10k:#34d399;--r100k:#fbbf24;
+  --r1m:#f87171;--rUnk:#e879f9;--rGod:#fffbeb;--rCosmic:#00ffff;
+  --herb:#22c55e;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'Noto Sans SC',sans-serif;color:var(--txt);user-select:none}
+canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
+#SB{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twk var(--d) ease infinite var(--dl)}
+@keyframes twk{0%,100%{opacity:var(--mn)}50%{opacity:var(--mx)}}
+#app{position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column;max-width:430px;margin:0 auto;background:linear-gradient(180deg,#050810,#08101a)}
+
+/* TOP BAR */
+#topbar{flex-shrink:0;background:linear-gradient(180deg,rgba(5,8,16,.98),rgba(10,15,30,.95));border-bottom:1px solid var(--bdr);padding:9px 14px 7px;z-index:50}
+.tb-row{display:flex;align-items:center;justify-content:space-between}
+.tb-title{font-family:'Ma Shan Zheng',serif;font-size:19px;background:linear-gradient(135deg,var(--gl),var(--gold),var(--gd));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px}
+.tb-pills{display:flex;gap:6px}
+.pill{display:flex;align-items:center;gap:3px;background:rgba(201,162,39,.09);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px;font-size:10px;color:var(--gl)}
+.pill.pow{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.07);color:#fca5a5}
+.exp-row{margin:8px -14px 0;display:flex;align-items:center}
+.exp-wrap{flex:1;height:2px;background:rgba(255,255,255,.05);overflow:hidden}
+.exp-fill{height:100%;background:linear-gradient(90deg,var(--gd),var(--gl));transition:width .6s ease}
+
+/* NOTIF */
+#notif{
+  position:fixed;top:70px;right:10px;z-index:300;
+  width:222px;max-width:calc(100% - 20px);
+  display:flex;flex-direction:column;gap:5px;
+  pointer-events:none;align-items:flex-end;
+}
+.ntf{
+  display:flex;align-items:center;gap:7px;
+  padding:7px 11px 7px 9px;border-radius:22px;
+  font-size:10px;line-height:1.35;font-weight:500;
+  max-width:100%;word-break:break-all;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  background:rgba(8,14,30,.85);
+  border:1px solid rgba(201,162,39,.28);
+  box-shadow:0 2px 12px rgba(0,0,0,.5),0 0 10px rgba(201,162,39,.12);
+  animation:ntfIn .28s cubic-bezier(.34,1.56,.64,1) both,ntfOut .35s ease 2.95s forwards;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ntf::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--ntf-col,var(--gl));box-shadow:0 0 5px var(--ntf-col,var(--gl))}
+.ntf.long{white-space:normal;border-radius:12px;padding:8px 12px 8px 10px;align-items:flex-start}
+.ntf.long::before{margin-top:3px}
+.ntf.normal{--ntf-col:rgba(201,162,39,.75);color:rgba(255,255,255,.62)}
+.ntf.epic{--ntf-col:#a78bfa;border-color:rgba(139,92,246,.38);background:rgba(10,6,24,.88);box-shadow:0 2px 12px rgba(0,0,0,.5),0 0 10px rgba(139,92,246,.16);color:rgba(255,255,255,.82)}
+.ntf.legend{--ntf-col:#f59e0b;border-color:rgba(245,158,11,.42);background:rgba(18,12,2,.88);box-shadow:0 2px 14px rgba(0,0,0,.5),0 0 14px rgba(245,158,11,.2);color:#fef3c7}
+.ntf.divine{--ntf-col:#ffd700;border-color:rgba(255,215,0,.5);background:rgba(16,14,2,.9);box-shadow:0 2px 16px rgba(0,0,0,.55),0 0 18px rgba(255,215,0,.25);color:#fef9c3}
+.ntf.cosmic{--ntf-col:#00ffff;border-color:rgba(0,255,255,.52);background:rgba(0,10,14,.92);box-shadow:0 2px 20px rgba(0,0,0,.6),0 0 22px rgba(0,255,255,.28);color:#e0fffe}
+@keyframes ntfIn{from{opacity:0;transform:translateX(14px) scale(.93)}to{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes ntfOut{to{opacity:0;transform:translateX(10px) scale(.95)}}
+
+/* CONTENT */
+#content{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 0 66px;-webkit-overflow-scrolling:touch}
+#content::-webkit-scrollbar{display:none}
+
+/* BOTTOM NAV */
+#bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:linear-gradient(0deg,rgba(5,8,16,.99),rgba(10,15,28,.96));border-top:1px solid var(--bdr);display:flex;z-index:50;height:58px}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;transition:all .2s;position:relative}
+.ni .ico{width:22px;height:22px;display:flex;align-items:center;justify-content:center;transition:transform .2s;color:var(--dim);flex-shrink:0}
+.ni .ico svg{width:100%;height:100%;display:block;}
+.ni .lbl{font-size:9px;color:var(--dim);letter-spacing:.3px}
+.ni.active .lbl{color:var(--gl)}
+.ni.active .ico{transform:scale(1.1);color:var(--gl)}
+.ni.active::after{content:'';position:absolute;bottom:0;left:18%;right:18%;height:2px;background:linear-gradient(90deg,var(--gd),var(--gl));border-radius:2px 2px 0 0}
+
+/* PAGE */
+.page{display:none;padding:11px}
+#page-soul{padding:0}
+.page.active{display:block}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.st{font-family:'Ma Shan Zheng',serif;font-size:14px;color:var(--gl);display:flex;align-items:center;gap:5px}
+.st::before{content:'';width:3px;height:13px;background:linear-gradient(180deg,var(--gl),var(--gd));border-radius:2px}
+
+/* CARD */
+.card{background:linear-gradient(135deg,var(--bgc),var(--bgc2));border:1px solid var(--bdr);border-radius:12px;padding:12px;margin-bottom:10px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;border-radius:12px;background:linear-gradient(135deg,rgba(201,162,39,.035),transparent 55%);pointer-events:none}
+
+/* AWAKEN SCREEN */
+#SA{position:fixed;inset:0;z-index:200;background:radial-gradient(ellipse at 50% 38%,rgba(18,26,50,.98),#050810);display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.aw-glow{position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(ellipse,rgba(201,162,39,.1),transparent 70%);animation:awG 3s ease infinite}
+@keyframes awG{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}}
