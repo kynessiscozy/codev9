@@ -133,3 +133,21 @@ export function initCwGeo() {
 export function checkNewbieGift() {
   // game.js 注入后会覆盖此函数
 }
+
+/**
+ * 触发季节活动
+ * @param {string} type - 活动类型（如 'level', 'battle', 'explore'）
+ */
+export function triggerSeasonal(type = 'normal') {
+  const season = getCurrentSeason();
+  const bonus = getSeasonBonus();
+  
+  // 根据类型和季节给予奖励
+  if (type === 'level') {
+    // 升级时触发季节加成提示
+    notify(`🌸 当前季节：${season} | 经验加成：${((bonus.exp - 1) * 100).toFixed(0)}%`);
+  }
+  
+  // 可以在这里添加更多季节活动逻辑
+  return bonus;
+}

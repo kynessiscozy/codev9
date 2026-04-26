@@ -164,5 +164,13 @@ export function getQK() {
   return 'common';
 }
 
+/**
+ * 打开天赋选择界面（占位，由 game.js 完善）
+ */
+export function openTalentSelect() {
+  notify('天赋系统即将开启...', 'normal');
+  // game.js 注入后会完善此函数
+}
+
 // 导入循环依赖
 import { checkNewbieGift } from '../systems/seasons.js';
