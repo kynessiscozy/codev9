@@ -4,13 +4,13 @@
 // ═════════════════════════════════════════════════
 
 // 本地导入（供内部函数使用，避免 require）
-import { on } from './core/events.js';
+import { on, once, off, emit, emitAsync, clearAll as clearAllEvents, getHistory as getEventHistory, getEventNames, getListenerCount } from './core/events.js';
 import { saveG, loadG, initState, migrateState } from './core/state.js';
 import { updateHUD } from './core/exp.js';
 import { notify, notifySuccess, notifyError, notifyEpic } from './core/notify.js';
 
 // ──── 核心基础设施 ────
-export { on, once, off, emit, emitAsync, clearAll as clearAllEvents, getHistory as getEventHistory, getEventNames, getListenerCount } from "./core/events.js";
+export { on, once, off, emit, emitAsync, clearAllEvents, getEventHistory, getEventNames, getListenerCount };
 export { defState, migrateState, saveG, loadG, initState, G } from "./core/state.js";
 export { $, $set, $style, $show, $hide, $addCls, $remCls, ri, pick as utilsPick, wPick, bagPush, afterAction, debounce, throttle, clearElementCache } from "./core/utils.js";
 export { calcPower, addSP, getPowerMultiplier } from "./core/power.js";
@@ -193,8 +193,13 @@ function setupFXSystem() {
     import('./core/events.js'),
   ]).then(([Particles, Audio, FX3D, Events]) => {
     // 初始化音频（需要用户交互后才能播放）
-    document.addEventListener('click', () => Audio.initAudio(), { once: true });
-    document.addEventListener('touchstart', () => Audio.initAudio(), { once: true });
+    const initAudioOnce = () => {
+      Audio.initAudio();
+      document.removeEventListener('click', initAudioOnce);
+      document.removeEventListener('touchstart', initAudioOnce);
+    };
+    document.addEventListener('click', initAudioOnce);
+    document.addEventListener('touchstart', initAudioOnce);
 
     // 绑定特效到游戏事件
     const { on } = Events;

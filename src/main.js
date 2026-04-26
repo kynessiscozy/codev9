@@ -12,6 +12,9 @@ import './modules/fx/effects.css';
 // 导入统一的模块索引
 import * as Modules from './modules/index.js';
 
+// 单独导入 once，确保构建后仍能正确引用（避免 Tree Shaking 导致变量丢失）
+import { once as onceFn } from './modules/core/events.js';
+
 // 导入类型定义（用于JSDoc提示）
 import * as Types from './modules/core/types.js';
 
@@ -332,7 +335,7 @@ window.initGMShortcut = Modules.initGMShortcut;
 // ──── 事件系统 ────
 window.gameEvents = {
   on: Modules.on,
-  once: Modules.once,
+  once: onceFn,
   off: Modules.off,
   emit: Modules.emit,
   emitAsync: Modules.emitAsync,
