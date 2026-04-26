@@ -1957,13 +1957,36 @@ function assignRingFromSel(rid){
 function confirmReset(){
   if(confirm('⚠️ 再次觉醒将重置所有游戏数据！\n武魂图鉴记录将永久保留。\n\n确认继续？')){
     if(confirm('最终确认：清除所有进度，保留图鉴？\n此操作不可撤销！')){
-      // Save grimoire before reset
+      // 1. 停止所有定时器
+      stopGameTimers();
+
+      // 2. 停止所有动画帧
+      if(_geoAnimFrame){cancelAnimationFrame(_geoAnimFrame);_geoAnimFrame=null;}
+      if(_gsRaf){cancelAnimationFrame(_gsRaf);_gsRaf=null;}
+      if(_cwGeoRaf){cancelAnimationFrame(_cwGeoRaf);_cwGeoRaf=null;}
+      if(_sbGeoRaf){cancelAnimationFrame(_sbGeoRaf);_sbGeoRaf=null;}
+      if(_lotGeoRaf){cancelAnimationFrame(_lotGeoRaf);_lotGeoRaf=null;}
+      if(_achRaf){cancelAnimationFrame(_achRaf);_achRaf=null;}
+
+      // 3. 保存图鉴
       const kept=localStorage.getItem('dlv3-grimoire');
       localStorage.removeItem('dlv3');
       if(kept)localStorage.setItem('dlv3-grimoire',kept);
-      // Reload grimoire into memory
-      loadGrimoire();
+
+      // 4. 重置状态变量
+      _lotCurPool=0;_lotTouchX=0;_lotMouseX=0;_lotMouseDown=false;
+      curLotMode=0;curBagFilter='all';
+      fusState={a:null,b:null,herbs:[]};
+      fusSelTgt=null;fusHerbTgt=null;
+
+      // 5. 重置游戏状态并立即保存
       G=defState();
+      saveG(); // 立即保存
+
+      // 6. 重新启动定时器
+      startGameTimers();
+
+      // 7. 更新UI
       $style('SA','display','flex');
       updateHUD();updateExpBar();renderSoulPage();renderLotPage();
       notify('✨ 再次觉醒！一切归零，图鉴永存。','divine');
@@ -3977,18 +4000,60 @@ function execFusion(){
 // ══════════════════════════════════════════════════
 //  IDLE & TIMERS
 // ══════════════════════════════════════════════════
-setInterval(()=>{
-  if(G.idleEarned<5000){
-    G.sp+=2;G.idleEarned+=2;G.dailyEarned+=2;
-    const spEl=document.getElementById('hud-sp');if(spEl)spEl.textContent=G.sp;
-    const itEl=$('idle-txt');if(itEl)itEl.textContent=G.idleEarned+'/5000';
-    const ibEl=$('idle-bar');if(ibEl)ibEl.style.width=Math.min(100,G.idleEarned/50)+'%';
-    if(Math.random()<0.001)saveG();
+// 保存定时器引用，以便清理
+let idleIntervalId = null;
+let rewardIntervalId = null;
+let saveIntervalId = null;
+let milestoneIntervalId = null;
+
+// 页面可见性检测
+let pageHidden = false;
+document.addEventListener('visibilitychange', () => {
+  pageHidden = document.hidden;
+  if (!pageHidden) {
+    // 页面重新可见时，立即保存一次
+    saveG();
   }
-},1000);
-setInterval(()=>{addSP(100,'在线奖励');progressTask('earn',100);},60000);
-setInterval(()=>saveG(),10000);
-setInterval(()=>checkPowerMilestones(),5000);
+});
+
+function startGameTimers() {
+  // 避免重复启动
+  if (idleIntervalId) return;
+
+  idleIntervalId = setInterval(() => {
+    if (pageHidden) return; // 页面不可见时跳过
+    if (G.idleEarned < 5000) {
+      G.sp += 2; G.idleEarned += 2; G.dailyEarned += 2;
+      const spEl = document.getElementById('hud-sp'); if (spEl) spEl.textContent = G.sp;
+      const itEl = $('idle-txt'); if (itEl) itEl.textContent = G.idleEarned + '/5000';
+      const ibEl = $('idle-bar'); if (ibEl) ibEl.style.width = Math.min(100, G.idleEarned / 50) + '%';
+    }
+  }, 1000);
+
+  rewardIntervalId = setInterval(() => {
+    if (pageHidden) return;
+    addSP(100, '在线奖励'); progressTask('earn', 100);
+  }, 60000);
+
+  saveIntervalId = setInterval(() => {
+    saveG();
+  }, 10000);
+
+  milestoneIntervalId = setInterval(() => {
+    if (pageHidden) return;
+    checkPowerMilestones();
+  }, 5000);
+}
+
+function stopGameTimers() {
+  if (idleIntervalId) { clearInterval(idleIntervalId); idleIntervalId = null; }
+  if (rewardIntervalId) { clearInterval(rewardIntervalId); rewardIntervalId = null; }
+  if (saveIntervalId) { clearInterval(saveIntervalId); saveIntervalId = null; }
+  if (milestoneIntervalId) { clearInterval(milestoneIntervalId); milestoneIntervalId = null; }
+}
+
+// 启动定时器
+startGameTimers();
 
 // ══════════════════════════════════════════════════
 //  PARTICLES & STARS
