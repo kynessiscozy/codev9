@@ -2,7 +2,7 @@
 
 import { G, saveG } from '../core/state.js';
 import { notify } from '../core/notify.js';
-import { addSP, addExp } from '../core/power.js';
+import { addSP, addExp } from '../core/exp.js';
 import { spawnBurst } from '../core/utils.js';
 import { addTicketToBag } from './lottery.js';
 import { renderBag } from '../ui/bag.js';
