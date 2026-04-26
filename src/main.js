@@ -355,11 +355,19 @@ if (typeof window !== 'undefined' && window.__DEV__) {
 import gameScript from './game.js?raw';
 
 function injectGameScript() {
-  const script = document.createElement('script');
-  script.textContent = gameScript;
-  script.id = 'game-js-injected';
-  document.body.appendChild(script);
-  console.log('📜 game.js 已注入，完整UI系统就绪');
+  try {
+    if (!gameScript) {
+      console.error('❌ game.js 内容为空，无法注入');
+      return;
+    }
+    const script = document.createElement('script');
+    script.textContent = gameScript;
+    script.id = 'game-js-injected';
+    document.body.appendChild(script);
+    console.log('📜 game.js 已注入，完整UI系统就绪');
+  } catch (err) {
+    console.error('❌ 注入 game.js 失败:', err);
+  }
 }
 
 if (document.readyState === 'loading') {
