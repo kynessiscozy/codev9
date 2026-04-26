@@ -23,11 +23,14 @@ export { defState, migrateState, saveG, loadG, initState } from "./core/state.js
 export { $, $set, $style, $show, $hide, $addCls, $remCls, ri, pick as utilsPick, wPick, bagPush, afterAction, debounce, throttle, clearElementCache } from "./core/utils.js";
 export { calcPower, addSP, getPowerMultiplier } from "./core/power.js";
 export { calcResonancePower, addSoulFragment, getResonanceInfo, getSoulEvolution, RESONANCE_CFG, FRAGMENT_SOURCES } from "./core/resonance.js";
+export { expForLv, addExp, checkRealmBreakthrough, checkContentUnlocks, updateHUD, updateExpBar, checkPowerMilestones } from "./core/exp.js";
+export { notify, notifySuccess, notifyError, notifyEpic } from "./core/notify.js";
 
-// ──── 系统模块（待实现）───
-// export { ... } from "./systems/awakening.js";
-// export { ... } from "./systems/hunt.js";
-// export { ... } from "./systems/lottery.js";
+// ──── 系统模块 ────
+export { triggerAwaken, closeResult, genSkills, getQK } from "./systems/awakening.js";
+export { hunt, rollRing, renderRecentRings, updateGodPath } from "./systems/hunt.js";
+export { doLotSmart, doLot, renderLotPage, goLotPool, updateLotPoolUI } from "./systems/lottery.js";
+// TODO: 以下模块待实现
 // export { ... } from "./systems/fusion.js";
 // export { ... } from "./systems/godpath.js";
 // export { ... } from "./systems/abyss.js";
