@@ -7,8 +7,8 @@ import { G, saveG } from './state.js';
 import { QC, getQualityConfig } from '../config/quality.js';
 import { getCurrentRealm, REALMS, REALM_BONUSES, rankStr, showRealmOverlay, closeRealmOverlay } from '../config/realms.js';
 import { calcResonancePower } from './resonance.js';
-import { notify, notifySuccess, notifyError, notifyEpic } from './notify.js';
 import { calcPower } from './power.js';
+import { notify, notifySuccess, notifyError, notifyEpic } from './notify.js';
 import { $set, $style, spawnBurst } from './utils.js';
 import { emit } from './events.js';
 
@@ -24,58 +24,7 @@ export function expForLv(lv) {
   return 200 + (lv - 10) * 100;
 }
 
-/**
- * 计算当前战力
- */
-export function calcPower() {
-  let p = G.level * 80 + G.extraPower;
-  
-  if (G.soul) {
-    const q = QC[G.soul.quality];
-    p += Math.floor((q ? q.p : 1) * 80 * (q ? q.pwMul : 1));
-    (G.soul.rings || []).forEach(r => {
-      const t = RT.find(x => x.n === r.n);
-      p += t ? t.pw : 80;
-    });
-  }
-  
-  // 魂骨战力
-  Object.values(G.equippedBones || {}).forEach(b => {
-    if (b) p += (b.pw || 0);
-  });
-  
-  // 神器战力
-  if (G.equippedArt) {
-    const mul = G.equippedArt.mul || 2;
-    const basePw = G.equippedArt.pw || 0;
-    p += Math.floor(basePw * mul);
-    // 神骨共鸣
-    const godBones = Object.values(G.equippedBones || {}).filter(b => b && b.god);
-    if (godBones.length > 0) {
-      p += Math.floor(basePw * mul * 0.5 * godBones.length);
-    }
-  }
-  
-  // 武魂共鸣被动战力
-  p += calcResonancePower();
-  
-  // 称号战力
-  if (G.equippedTitle && G.equippedTitle.pw) p += G.equippedTitle.pw;
-  
-  // 天赋倍率
-  if (G.talent) {
-    const tm = { power: 1.3, defense: 1.2, speed: 1.15, support: 1.1 };
-    p = Math.floor(p * (tm[G.talent] || 1));
-  }
-  
-  // 觉醒等级奖励
-  if (G.awakenLevel > 0) {
-    const awk = [0, 200, 500, 1000, 2000, 4000, 8000, 15000, 25000, 40000, 60000];
-    p += awk[Math.min(10, G.awakenLevel)] || 0;
-  }
-  
-  return Math.floor(p);
-}
+// calcPower 已从 ./power.js 导入，此处不再重复定义
 
 /**
  * 添加魂力
