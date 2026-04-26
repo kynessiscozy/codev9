@@ -883,8 +883,8 @@ function migrateState(g){
   return g;
 }
 
-let G=migrateState(loadG())||defState();
-let curLotMode=G.lotMode||0;
+// G 由模块系统通过 window.G  getter 提供，此处不再重复声明
+let curLotMode=(window.G&&window.G.lotMode)||0;
 let curBagFilter='all';
 let fusState={a:null,b:null,herbs:[]};
 let fusSelTgt=null, fusHerbTgt=null;
