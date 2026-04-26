@@ -760,20 +760,19 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 .gc-q{font-size:7px;font-weight:700;letter-spacing:.8px;position:relative;z-index:1}
 .gc-owned{position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:7px;color:#000;font-weight:900}
 
-/* Soul detail bottom sheet */
+/* Soul detail inline */
 .gs-detail{
-  position:absolute;bottom:0;left:0;right:0;
+  display:none;
+  position:relative;
   background:linear-gradient(180deg,#0c1428,#080e1c);
-  border-top:1px solid rgba(139,92,246,.25);
-  border-radius:16px 16px 0 0;
+  border-radius:12px;
   padding:13px 15px 22px;
-  transform:translateY(100%);
-  transition:transform .3s cubic-bezier(.4,0,.2,1);
-  z-index:10;max-height:68%;overflow-y:auto;
+  margin:10px 11px;
+  z-index:10;
 }
-.gs-detail::-webkit-scrollbar{display:none}
-.gs-detail.show{transform:translateY(0)}
-.gs-d-handle{width:32px;height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin:0 auto 11px}
+.gs-detail.show{display:block}
+.gs-detail-close{text-align:right;margin-bottom:8px}
+.gs-detail-close span{cursor:pointer;font-size:12px;color:var(--dim);padding:4px 8px;background:rgba(255,255,255,.05);border-radius:4px}
 .gs-d-top{display:flex;align-items:flex-start;gap:11px;margin-bottom:11px}
 .gs-d-ico-wrap{position:relative;flex-shrink:0}
 .gs-d-ico{font-size:50px;line-height:1;display:block}
