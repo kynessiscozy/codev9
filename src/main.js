@@ -184,12 +184,36 @@ window.triggerAwaken = function safeTriggerAwaken() {
     }
   }
 };
-// 防止被 game.js 覆盖：在 game.js 注入后恢复
-Object.defineProperty(window, 'triggerAwaken', { 
-  configurable: true,
-  writable: true,
-  value: window.triggerAwaken 
-});
+
+// 全局点击处理函数（供 index.html 调用）
+window.handleAwakenClick = function() {
+  console.log('[觉醒] 按钮被点击！');
+  
+  // 方法1: 尝试使用模块版本
+  if (typeof _moduleTriggerAwaken === 'function') {
+    try {
+      console.log('[觉醒] 使用模块版本...');
+      _moduleTriggerAwaken();
+      return;
+    } catch (e) {
+      console.error('[觉醒] 模块版本失败:', e);
+    }
+  }
+  
+  // 方法2: 尝试使用全局 triggerAwaken
+  if (typeof window.triggerAwaken === 'function') {
+    try {
+      console.log('[觉醒] 使用全局版本...');
+      window.triggerAwaken();
+      return;
+    } catch (e) {
+      console.error('[觉醒] 全局版本失败:', e);
+    }
+  }
+  
+  // 方法3: 显示错误提示
+  alert('觉醒系统初始化中，请稍后再试...\n\n如持续出现此问题，请按 F5 刷新页面。');
+};
 
 window.closeResult = Modules.closeResult;
 window.genSkills = Modules.genSkills;
