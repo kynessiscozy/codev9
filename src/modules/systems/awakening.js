@@ -20,35 +20,17 @@ import { getSoulIcon, getSoulTheme } from '../ui/soul-icons.js';
  */
 export function triggerAwaken() {
   try {
-    console.log('[觉醒-debug] 1. 开始觉醒流程');
-    
     const saEl = $('SA');
     const c = saEl ? saEl.querySelector('.aw-c') : null;
     if (c) { c.style.transform = 'scale(.94)'; setTimeout(() => c.style.transform = '', 220); }
     
-    console.log('[觉醒-debug] 2. 获取品质...');
     const qk = getQK();
-    console.log('[觉醒-debug] 3. 品质=', qk);
-    
     const pool = SD[qk] || SD.common;
-    console.log('[觉醒-debug] 4. 武魂池大小=', pool ? pool.length : 'undefined');
-    
     const sd = pick(pool);
-    console.log('[觉醒-debug] 5. 选中武魂=', sd ? sd.n : 'undefined');
-    
     const qc = QC[qk];
-    console.log('[觉醒-debug] 6. QC=', qc ? qc.n : 'undefined');
     
-    if (!qc) {
-      console.error('[觉醒-debug] QC 配置缺失:', qk);
-      alert('觉醒出错：品质配置缺失 - ' + qk);
-      return;
-    }
-    if (!sd) {
-      console.error('[觉醒-debug] SD 数据缺失');
-      alert('觉醒出错：武魂数据缺失');
-      return;
-    }
+    if (!qc) { console.error('[觉醒] QC配置缺失:', qk); return; }
+    if (!sd) { console.error('[觉醒] 武魂数据缺失'); return; }
     
     let attrs = [...(sd.a || [])];
     if (Math.random() < 0.06) {
@@ -56,7 +38,6 @@ export function triggerAwaken() {
       notify('⚡ 属性变异！', 'epic');
     }
     
-    console.log('[觉醒-debug] 7. 设置灵魂状态...');
     G.soul = {
       id: Date.now(),
       name: sd.n,
@@ -75,30 +56,19 @@ export function triggerAwaken() {
     G.level = Math.max(G.level, G.soul.initPow);
     addExp(G.soul.initPow * 60);
     updateHUD();
-    
-    // v9: 觉醒时获得武魂碎片
     addSoulFragment(qk, 1);
-    
-    console.log('[觉醒-debug] 8. 显示结果覆盖层...');
     
     // 显示结果
     const orB = document.getElementById('or-b');
     if (orB) orB.style.setProperty('--bc', qc.bc);
-    else console.warn('[觉醒-debug] or-b 元素不存在');
     
     const orIco = document.getElementById('or-i');
     if (orIco) {
-      try {
-        orIco.innerHTML = getSoulIcon(sd.n, qk, { sizeClass: 'size-xlarge' });
-      } catch (iconErr) {
-        console.error('[觉醒-debug] getSoulIcon 失败:', iconErr);
-        orIco.innerHTML = sd.i || '⚡';
-      }
+      try { orIco.innerHTML = getSoulIcon(sd.n, qk, { sizeClass: 'size-xlarge' }); }
+      catch (e) { orIco.innerHTML = sd.i || '⚡'; }
       orIco.style.display = 'flex';
       orIco.style.alignItems = 'center';
       orIco.style.justifyContent = 'center';
-    } else {
-      console.warn('[觉醒-debug] or-i 元素不存在');
     }
     
     const orQ = document.getElementById('or-q');
@@ -119,21 +89,10 @@ export function triggerAwaken() {
     const orQ2 = document.getElementById('or-q2');
     if (orQ2) orQ2.textContent = qc.n;
     
-    console.log('[觉醒-debug] 9. 添加 show 类...');
-    const orEl = $('OR');
-    if (orEl) {
-      orEl.classList.add('show');
-      console.log('[觉醒-debug] 10. OR.show 已添加');
-    } else {
-      console.error('[觉醒-debug] OR 元素不存在！');
-      alert('觉醒出错：OR 元素不存在');
-      return;
-    }
+    $('OR').classList.add('show');
     
-    try { spawnBurst(qc.c, 110); } catch (e) { console.warn('[觉醒-debug] spawnBurst 失败:', e); }
-    
-    // 发射觉醒事件（供特效系统响应）
-    try { emit('soul:awakened', { quality: qk, qualityConfig: qc, soul: G.soul }); } catch (e) { console.warn('[觉醒-debug] emit 失败:', e); }
+    try { spawnBurst(qc.c, 110); } catch (e) { /* 非关键 */ }
+    try { emit('soul:awakened', { quality: qk, qualityConfig: qc, soul: G.soul }); } catch (e) { /* 非关键 */ }
     
     if (['legend', 'apex', 'hc', 'ha', 'twin', 'triple'].includes(qk)) {
       const m = {
@@ -148,9 +107,8 @@ export function triggerAwaken() {
     }
     
     saveG();
-    console.log('[觉醒-debug] 11. 觉醒完成！');
   } catch (err) {
-    console.error('[觉醒-debug] 致命错误:', err);
+    console.error('[觉醒] 错误:', err);
     alert('觉醒失败：' + (err.message || err));
   }
 }

@@ -165,56 +165,7 @@ window.notifyError = Modules.notifyError;
 window.notifyEpic = Modules.notifyEpic;
 
 // ──── 系统模块 ────
-// 觉醒函数：带错误处理的包装版本
-const _moduleTriggerAwaken = Modules.triggerAwaken;
-window.triggerAwaken = function safeTriggerAwaken() {
-  try {
-    console.log('[觉醒] 触发武魂觉醒...');
-    _moduleTriggerAwaken();
-    console.log('[觉醒] 觉醒完成');
-  } catch (err) {
-    console.error('[觉醒] 模块版本失败:', err.message || err);
-    // 如果模块版本失败，尝试直接操作 DOM 显示结果
-    try {
-      const orEl = document.getElementById('OR');
-      if (orEl) orEl.classList.add('show');
-      notify('武魂觉醒中...', 'normal');
-    } catch (e2) {
-      alert('觉醒功能出错: ' + (err.message || err));
-    }
-  }
-};
-
-// 全局点击处理函数（供 index.html 调用）
-window.handleAwakenClick = function() {
-  console.log('[觉醒] 按钮被点击！');
-  
-  // 方法1: 尝试使用模块版本
-  if (typeof _moduleTriggerAwaken === 'function') {
-    try {
-      console.log('[觉醒] 使用模块版本...');
-      _moduleTriggerAwaken();
-      return;
-    } catch (e) {
-      console.error('[觉醒] 模块版本失败:', e);
-    }
-  }
-  
-  // 方法2: 尝试使用全局 triggerAwaken
-  if (typeof window.triggerAwaken === 'function') {
-    try {
-      console.log('[觉醒] 使用全局版本...');
-      window.triggerAwaken();
-      return;
-    } catch (e) {
-      console.error('[觉醒] 全局版本失败:', e);
-    }
-  }
-  
-  // 方法3: 显示错误提示
-  alert('觉醒系统初始化中，请稍后再试...\n\n如持续出现此问题，请按 F5 刷新页面。');
-};
-
+window.triggerAwaken = Modules.triggerAwaken;
 window.closeResult = Modules.closeResult;
 window.genSkills = Modules.genSkills;
 window.getQK = Modules.getQK;
@@ -415,48 +366,15 @@ function injectGameScript() {
       console.error('❌ game.js 内容为空，无法注入');
       return;
     }
-    
-    // 保存模块系统的觉醒函数（防止被 game.js 覆盖）
-    const _savedTriggerAwaken = window.triggerAwaken;
-    
     const script = document.createElement('script');
     script.textContent = gameScript;
     script.id = 'game-js-injected';
     document.body.appendChild(script);
     console.log('📜 game.js 已注入，完整UI系统就绪');
-    
-    // 恢复模块系统的觉醒函数
-    if (_savedTriggerAwaken) {
-      window.triggerAwaken = _savedTriggerAwaken;
-      console.log('✅ 已恢复模块版 triggerAwaken');
-    }
   } catch (err) {
     console.error('❌ 注入 game.js 失败:', err);
   }
 }
-
-// 确保页面加载后正确处理觉醒屏幕的显示状态
-function ensureAwakeningScreen() {
-  try {
-    const G = window.G || { awakenDone: false };
-    const saEl = document.getElementById('SA');
-    if (!saEl) return;
-    
-    if (G.awakenDone) {
-      saEl.style.display = 'none';
-      // 确保主应用显示
-      const appEl = document.getElementById('app');
-      if (appEl) appEl.style.display = 'flex';
-    } else {
-      saEl.style.display = 'flex';
-    }
-  } catch (e) {
-    console.error('检查觉醒屏幕状态失败:', e);
-  }
-}
-
-// 在 DOM 和 game.js 都加载后，再次检查觉醒屏幕状态
-setTimeout(ensureAwakeningScreen, 500);
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', injectGameScript);
