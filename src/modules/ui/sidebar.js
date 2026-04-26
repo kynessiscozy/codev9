@@ -40,6 +40,19 @@ export function renderSidebar() {
 }
 
 /**
+ * 切换侧边栏显示/隐藏
+ */
+export function toggleSidebar() {
+  const sidebar = $('sidebar');
+  if (!sidebar) return;
+  if (sidebar.classList.contains('open')) {
+    closeSidebar();
+  } else {
+    openSidebar();
+  }
+}
+
+/**
  * 打开侧边栏
  */
 export function openSidebar() {
