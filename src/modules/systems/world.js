@@ -2,7 +2,7 @@
 
 import { G, saveG } from '../core/state.js';
 import { notify } from '../core/notify.js';
-import { addSP, addExp } from '../core/power.js';
+import { addSP, addExp } from '../core/exp.js';
 import { pick, ri, spawnBurst } from '../core/utils.js';
 import { HERBS, RESOURCES } from '../data/items.js';
 import { progressTask } from './tasks.js';

@@ -2,7 +2,8 @@
 
 import { G, saveG } from '../core/state.js';
 import { notify } from '../core/notify.js';
-import { calcPower, addSP } from '../core/power.js';
+import { calcPower } from '../core/power.js';
+import { addSP } from '../core/exp.js';
 import { addExp } from '../core/exp.js';
 import { updateHUD } from '../core/exp.js';
 import { spawnBurst } from '../core/utils.js';

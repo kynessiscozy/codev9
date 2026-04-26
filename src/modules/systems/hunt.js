@@ -261,7 +261,7 @@ export function renderRecentRings() {
 }
 
 // 导入循环依赖函数
-import { addSP } from '../core/power.js';
+import { addSP } from '../core/exp.js';
 import { addHerbToBag, addResourceToBag } from '../ui/bag.js';
 
 // 更新成神之路UI
