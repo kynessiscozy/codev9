@@ -5,7 +5,7 @@
 
 // 导入 CSS（Vite 会处理并打包）
 // ⚠️ 必须先导入 style.css，确保全局样式优先加载
-import '../style.css';
+import './style.css';
 import './modules/ui/soul-icon-effects.css';
 import './modules/fx/effects.css';
 
