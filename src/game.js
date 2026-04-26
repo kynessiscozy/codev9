@@ -1212,48 +1212,75 @@ function mergeTaskModulesIntoHunt(){
 //  AWAKENING
 // ══════════════════════════════════════════════════
 function triggerAwaken(){
-  const saEl=$('SA');
-  const c=saEl?saEl.querySelector('.aw-c'):null;
-  if(c){c.style.transform='scale(.94)';setTimeout(()=>c.style.transform='',220);}
+  try {
+    const saEl=$('SA');
+    const c=saEl?saEl.querySelector('.aw-c'):null;
+    if(c){c.style.transform='scale(.94)';setTimeout(()=>c.style.transform='',220);}
 
-  const qk=getQK();
-  const pool=SD[qk]||SD.common;
-  const sd=pick(pool);
-  const qc=QC[qk];
+    const qk=getQK();
+    const pool=SD[qk]||SD.common;
+    const sd=pick(pool);
+    const qc=QC[qk];
+    if(!qc){console.error('[觉醒] QC缺失:',qk);return;}
+    if(!sd){console.error('[觉醒] SD缺失');return;}
 
-  let attrs=[...(sd.a||[])];
-  if(Math.random()<0.06){attrs.push(pick(["混沌","神秘","极致","变异","觉醒","逆天"])+'·'+(attrs[0]||'未知'));notify('⚡ 属性变异！','epic');}
+    let attrs=[...(sd.a||[])];
+    if(Math.random()<0.06){attrs.push(pick(["混沌","神秘","极致","变异","觉醒","逆天"])+'·'+(attrs[0]||'未知'));notify('⚡ 属性变异！','epic');}
 
-  G.soul={
-    id:Date.now(),name:sd.n,icon:sd.i,quality:qk,
-    desc:sd.d,attrs,initPow:Math.min(10,sd.p||1),
-    rings:[],skills:genSkills(sd,qk),
-    secondAwakened:false,divine:false,
-  };
-  G.awakenDone=true;G.level=Math.max(G.level,G.soul.initPow);
-  addExp(G.soul.initPow*60);updateHUD();
-  // v9: Grant soul fragment on awaken
-  addSoulFragment(qk,1);
+    G.soul={
+      id:Date.now(),name:sd.n,icon:sd.i,quality:qk,
+      desc:sd.d,attrs,initPow:Math.min(10,sd.p||1),
+      rings:[],skills:genSkills(sd,qk),
+      secondAwakened:false,divine:false,
+    };
+    G.awakenDone=true;G.level=Math.max(G.level,G.soul.initPow);
+    addExp(G.soul.initPow*60);updateHUD();
+    // v9: Grant soul fragment on awaken
+    addSoulFragment(qk,1);
 
-  // show result
-  document.getElementById('or-b').style.setProperty('--bc',qc.bc);
-  const orIE=document.getElementById('or-i');if(orIE){orIE.innerHTML=getSoulIcon(sd.n,qk,{sizeClass:'size-large'});orIE.style.display='flex';orIE.style.alignItems='center';orIE.style.justifyContent='center';}
-  document.getElementById('or-q').textContent=qc.n+' 品质';
-  document.getElementById('or-q').style.color=qc.c;
-  document.getElementById('or-n').textContent=sd.n;
-  document.getElementById('or-n').style.color=qc.c;
-  document.getElementById('or-d').textContent=sd.d;
-  document.getElementById('or-p').textContent=G.soul.initPow;
-  document.getElementById('or-a').textContent=(attrs.slice(0,2).join('·'));
-  document.getElementById('or-q2').textContent=qc.n;
-  $('OR').classList.add('show');
-  spawnBurst(qc.c,110);
+    // show result
+    const orB=document.getElementById('or-b');
+    if(orB)orB.style.setProperty('--bc',qc.bc);
+    
+    const orIE=document.getElementById('or-i');
+    if(orIE){
+      try{orIE.innerHTML=getSoulIcon?getSoulIcon(sd.n,qk,{sizeClass:'size-large'}):sd.i||'⚡';}catch(e){orIE.innerHTML=sd.i||'⚡';}
+      orIE.style.display='flex';orIE.style.alignItems='center';orIE.style.justifyContent='center';
+    }
+    
+    const orQ=document.getElementById('or-q');
+    if(orQ){orQ.textContent=qc.n+' 品质';orQ.style.color=qc.c;}
+    
+    const orN=document.getElementById('or-n');
+    if(orN){orN.textContent=sd.n;orN.style.color=qc.c;}
+    
+    const orD=document.getElementById('or-d');
+    if(orD)orD.textContent=sd.d;
+    
+    const orP=document.getElementById('or-p');
+    if(orP)orP.textContent=G.soul.initPow;
+    
+    const orA=document.getElementById('or-a');
+    if(orA)orA.textContent=(attrs.slice(0,2).join('·'));
+    
+    const orQ2=document.getElementById('or-q2');
+    if(orQ2)orQ2.textContent=qc.n;
+    
+    const orEl=$('OR');
+    if(orEl)orEl.classList.add('show');
+    
+    if(typeof spawnBurst==='function')spawnBurst(qc.c,110);
 
-  if(['legend','apex','hc','ha','twin','triple'].includes(qk)){
-    const m={legend:'🌟 传说武魂！',apex:'🔥 顶级武魂！震撼！',hc:'🟢 隐藏武魂！',ha:'💗 顶级隐藏！',twin:'✨ 双生武魂！旷世奇才！',triple:'🌈 三生武魂！天命之子！'};
-    setTimeout(()=>notify(m[qk],'divine'),250);
+    if(['legend','apex','hc','ha','twin','triple'].includes(qk)){
+      const m={legend:'🌟 传说武魂！',apex:'🔥 顶级武魂！震撼！',hc:'🟢 隐藏武魂！',ha:'💗 顶级隐藏！',twin:'✨ 双生武魂！旷世奇才！',triple:'🌈 三生武魂！天命之子！'};
+      setTimeout(()=>notify(m[qk],'divine'),250);
+    }
+    saveG();
+    console.log('[觉醒] 觉醒完成:',sd.n,qc.n);
+  } catch(err) {
+    console.error('[觉醒] triggerAwaken 错误:',err);
+    alert('觉醒失败: '+(err.message||err));
   }
-  saveG();
 }
 
 function closeResult(){
