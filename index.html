@@ -693,11 +693,89 @@
     <div class="gm-row">
       <div class="gm-btn gm-btn-g" onclick="gmAddSP()">+魂力</div>
       <div class="gm-btn gm-btn-g" onclick="gmSetSP()">设置魂力</div>
+      <div class="gm-btn gm-btn-g" onclick="gmSP(999999)">999999</div>
     </div>
-    <div class="gm-t">⬆️ 等级操作</div>
+    <div class="gm-t">⬆️ 等级/经验</div>
     <input class="gm-inp" id="gm-lv-val" type="number" placeholder="目标等级" value="50">
     <div class="gm-row">
       <div class="gm-btn gm-btn-b" onclick="gmSetLevel()">设置等级</div>
+      <div class="gm-btn gm-btn-b" onclick="gmAddExp(50000)">+5万经验</div>
+      <div class="gm-btn gm-btn-b" onclick="gmAddExp(1000000)">+百万经验</div>
+    </div>
+    <div class="gm-t">⚔️ 战力操作</div>
+    <input class="gm-inp" id="gm-pw-val" type="number" placeholder="额外战力" value="100000">
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-g" onclick="gmAddPower()">+战力</div>
+      <div class="gm-btn gm-btn-r" onclick="G.extraPower=0;updateHUD();notify('战力重置','normal')">清零战力</div>
+    </div>
+    <div class="gm-t">🎟️ 抽奖券</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-p" onclick="gmTickets('common',10)">普通×10</div>
+      <div class="gm-btn gm-btn-p" onclick="gmTickets('advanced',10)">高级×10</div>
+      <div class="gm-btn gm-btn-p" onclick="gmTickets('apex',5,true)">顶级十连×5</div>
+    </div>
+    <div class="gm-t">⚡ 武魂操作</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-r" onclick="gmDivineSoul()">神级武魂</div>
+      <div class="gm-btn gm-btn-r" onclick="gmChuSoul()">武魂「初」</div>
+      <div class="gm-btn gm-btn-b" onclick="gmMaxRings()">满环(10环)</div>
+    </div>
+    <div class="gm-t">🔮 魂环/魂骨</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-p" onclick="gmAddRings('百万年',3)">百万年×3</div>
+      <div class="gm-btn gm-btn-p" onclick="gmAddRings('不可估量',3)">不估量×3</div>
+      <div class="gm-btn gm-btn-p" onclick="gmAddRings('神赐',1)">神赐×1</div>
+    </div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-g" onclick="gmAddGodBone()">神赐魂骨</div>
+      <div class="gm-btn gm-btn-g" onclick="gmEquipAllBones()">装备全魂骨</div>
+    </div>
+    <div class="gm-t">⚔️ 神器</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-g" onclick="gmAllArts()">全部神器</div>
+      <div class="gm-btn gm-btn-g" onclick="gmExtremeArt()">极致神器</div>
+    </div>
+    <div class="gm-t">🙏 成神道路</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-r" onclick="gmClearGodPath()">通关成神之路</div>
+      <div class="gm-btn gm-btn-r" onclick="showGodExamSelect();closeGM()">开启神位传承</div>
+    </div>
+    <div class="gm-t">📋 任务/活动</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-b" onclick="gmCompleteAllTasks()">完成所有任务</div>
+      <div class="gm-btn gm-btn-b" onclick="gmSeasonalBonus()">踏春奖励×5</div>
+    </div>
+    <div class="gm-t">👑 称号</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-g" onclick="gmAllTitles()">全部称号</div>
+      <div class="gm-btn gm-btn-g" onclick="gmEquipBestTitle()">最强称号</div>
+    </div>
+    <div class="gm-t">⚔️ 异界</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-b" onclick="G.abyss.tokens=10;G.abyss.shards+=500;$set('ab-tokens','textContent',G.abyss.tokens);$set('ab-shards','textContent',G.abyss.shards);notify('令牌满·+500碎片','normal')">令牌满+碎片</div>
+      <div class="gm-btn gm-btn-b" onclick="gmClearAllAbyss()">通关全副本</div>
+    </div>
+    <div class="gm-t">🥚 隐藏内容</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-r" onclick="G.easterEggSeen=false;G.lotTopCount=1001;checkEasterEgg()">触发彩蛋</div>
+      <div class="gm-btn gm-btn-r" onclick="G.cosmicOwned=false;notify('宇宙之核状态重置','normal')">重置宇宙核</div>
+    </div>
+    <div class="gm-t">🌙 V8 境界/天赋/觉醒</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-g" onclick="G.level=91;G.exp=0;updateHUD();updateExpBar();renderSoulPage();notify('跳至Lv.91 封号斗罗','legend')">→封号斗罗</div>
+      <div class="gm-btn gm-btn-p" onclick="G.talent=null;saveG();openTalentSelect()">选天赋</div>
+      <div class="gm-btn gm-btn-p" onclick="G.awakenLevel=10;updateHUD();saveG();renderSoulPage();notify('满觉醒Lv.10','divine')">满觉醒</div>
+    </div>
+    <div class="gm-t">🏆 成就/竞技场</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-g" onclick="ACH_DEF.forEach(a=>{if(!G.achievements[a.id]){G.achievements[a.id]={ts:Date.now()};G.honorPoints+=a.pts;}});$set('hud-honor','textContent',G.honorPoints);saveG();notify('全成就解锁','cosmic')">解锁全成就</div>
+      <div class="gm-btn gm-btn-b" onclick="G.arenaHonor+=2000;G.arenaWins+=20;saveG();notify('竞技荣耀+2000','legend')">竞技荣耀+2k</div>
+      <div class="gm-btn gm-btn-b" onclick="G.tidalPulls=[90,75,60];updateTidalUI(curLotMode);saveG();notify('巅峰触发','cosmic')">触发巅峰</div>
+    </div>
+    <div class="gm-t" style="margin-top:12px">⚠️ 危险操作</div>
+    <div class="gm-row">
+      <div class="gm-btn gm-btn-r" onclick="if(confirm('确认重置？此操作保留武魂图鉴。')){const k=localStorage.getItem('dlv3-grimoire');localStorage.removeItem('dlv3');if(k)localStorage.setItem('dlv3-grimoire',k);location.reload();}">重置存档</div>
+      <div class="gm-btn gm-btn-r" onclick="saveG();notify('已保存','normal')">强制保存</div>
     </div>
   </div>
 </div>
