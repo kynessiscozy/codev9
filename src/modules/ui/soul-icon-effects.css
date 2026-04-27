@@ -439,27 +439,31 @@
    尺寸变体
    ════════════════════════════════════════════════ */
 
+/* 武魂图鉴 - 48px */
 .soul-icon.size-small {
-  max-width: 320px;
-  max-height: 320px;
+  max-width: 48px;
+  max-height: 48px;
   width: auto;
   height: auto;
 }
 
+/* 通用中等尺寸 */
 .soul-icon.size-medium {
-  max-width: 320px;
-  max-height: 320px;
+  max-width: 120px;
+  max-height: 120px;
   width: auto;
   height: auto;
 }
 
+/* 武魂页面 - 280px */
 .soul-icon.size-large {
-  max-width: 320px;
-  max-height: 320px;
+  max-width: 280px;
+  max-height: 280px;
   width: auto;
   height: auto;
 }
 
+/* 觉醒页面 - 320px */
 .soul-icon.size-xlarge {
   max-width: 320px;
   max-height: 320px;

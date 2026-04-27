@@ -64,7 +64,7 @@ export function triggerAwaken() {
     
     const orIco = document.getElementById('or-i');
     if (orIco) {
-      try { orIco.innerHTML = getSoulIcon(sd.n, qk, { sizeClass: 'size-medium' }); }
+      try { orIco.innerHTML = getSoulIcon(sd.n, qk, { sizeClass: 'size-xlarge' }); }
       catch (e) { orIco.innerHTML = sd.i || '⚡'; }
       orIco.style.display = 'flex';
       orIco.style.alignItems = 'center';

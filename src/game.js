@@ -1246,7 +1246,7 @@ function triggerAwakenGame(){
     
     const orIE=document.getElementById('or-i');
     if(orIE){
-      try{orIE.innerHTML=typeof getSoulIcon==='function'?getSoulIcon(sd.n,qk,{sizeClass:'size-large'}):(sd.i||'⚡');}catch(e){orIE.innerHTML=sd.i||'⚡';}
+      try{orIE.innerHTML=typeof getSoulIcon==='function'?getSoulIcon(sd.n,qk,{sizeClass:'size-xlarge'}):(sd.i||'⚡');}catch(e){orIE.innerHTML=sd.i||'⚡';}
       orIE.style.display='flex';orIE.style.alignItems='center';orIE.style.justifyContent='center';
     }
     
