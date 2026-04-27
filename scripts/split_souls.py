@@ -94,75 +94,89 @@ def auto_detect_grid(img_path):
     
     return img, cell_w, cell_h
 
-def detect_gap(img, cell_w, cell_h, direction='horizontal'):
-    """通过扫描行/列的平均亮度差异检测间隔位置"""
+def detect_precise_grid(img_path):
+    """通过像素亮度分析，精确检测每个图标的边界坐标"""
     import numpy as np
-    
-    arr = np.array(img.convert('L'))
-    gap_positions = []
-    
-    if direction == 'horizontal':
-        # 扫描每一列的平均亮度
-        col_means = arr.mean(axis=0)
-        threshold = col_means.mean()
-        for x in range(1, int(cell_w * COLS)):
-            if x % int(cell_w) < 3:  # 靠近网格线的位置
-                if col_means[x] < threshold * 0.85 or col_means[x] > threshold * 1.15:
-                    continue
-    # 简化：不做自动间隔检测，用固定裁剪
-    return None
+
+    img = Image.open(img_path).convert("RGBA")
+    gray = np.array(img.convert("L"))
+    h, w = gray.shape
+    print(f"图片尺寸: {w}x{h}")
+
+    def detect_edges_1d(profile, threshold_ratio=0.55):
+        mean_val = profile.mean()
+        threshold = mean_val * threshold_ratio
+        edges = [0]
+        in_dark = profile[0] < threshold
+        for i in range(1, len(profile)):
+            is_dark = profile[i] < threshold
+            if is_dark != in_dark:
+                edges.append(i)
+                in_dark = is_dark
+        edges.append(len(profile))
+        return edges
+
+    # 水平方向：检测列边界
+    col_avg = gray.mean(axis=0)
+    h_edges = detect_edges_1d(col_avg)
+    h_segments = [(h_edges[i], h_edges[i+1]) for i in range(len(h_edges)-1)]
+    icon_cols = [(s, e) for s, e in h_segments if (e - s) > 20]
+
+    # 垂直方向：检测行边界
+    row_avg = gray.mean(axis=1)
+    v_edges = detect_edges_1d(row_avg)
+    v_segments = [(v_edges[i], v_edges[i+1]) for i in range(len(v_edges)-1)]
+    icon_rows = [(s, e) for s, e in v_segments if (e - s) > 20]
+
+    print(f"检测到: {len(icon_rows)}行 x {len(icon_cols)}列")
+
+    # 输出每格坐标供调试
+    for r, (ry1, ry2) in enumerate(icon_rows):
+        for c, (cx1, cx2) in enumerate(icon_cols):
+            pass  # 静默模式，不逐个打印
+
+    return img, icon_rows, icon_cols
 
 def split_and_save(img_path, output_base):
-    """切割图片并保存为 WebP"""
-    img, cell_w, cell_h = auto_detect_grid(img_path)
-    
-    # 图片: 2912x1440, 7行16列
-    # 每格: 182x206px, 图标间有间隔
-    # 取每格中心 90% 区域，去除间隔
-    padding_ratio = 0.08
-    padding_x = cell_w * padding_ratio
-    padding_y = cell_h * padding_ratio
-    icon_w = cell_w - padding_x * 2
-    icon_h = cell_h - padding_y * 2
-    
+    """使用精确像素级边界切割图片"""
+    img, icon_rows, icon_cols = detect_precise_grid(img_path)
+
     success = 0
     skipped = 0
     errors = []
     idx = 0
-    
-    for row in range(ROWS):
-        for col in range(COLS):
+
+    for row in range(len(icon_rows)):
+        for col in range(len(icon_cols)):
             if idx >= len(SOULS_FLAT):
                 skipped += 1
                 continue
-            
+
             quality, name = SOULS_FLAT[idx]
-            
-            # 计算裁剪区域
-            x = int(col * cell_w + padding_x)
-            y = int(row * cell_h + padding_y)
-            x2 = int(x + icon_w)
-            y2 = int(y + icon_h)
-            
+
+            # 使用精确检测的像素边界
+            x1 = icon_cols[col][0]
+            y1 = icon_rows[row][0]
+            x2 = icon_cols[col][1]
+            y2 = icon_rows[row][1]
+
             try:
-                region = img.crop((x, y, x2, y2))
+                region = img.crop((x1, y1, x2, y2))
                 region = region.resize((CELL_SIZE, CELL_SIZE), Image.LANCZOS)
-                
-                # 创建输出目录
+
                 out_dir = Path(output_base) / quality
                 out_dir.mkdir(parents=True, exist_ok=True)
-                
-                # 保存为 WebP
+
                 out_path = out_dir / f"{name}.webp"
                 region.save(out_path, "WEBP", quality=90)
-                
-                print(f"  [{idx+1:3d}/101] {quality}/{name}.webp")
+
+                print(f"  [{idx+1:3d}/101] {quality}/{name}.webp  ({x1},{y1})-({x2},{y2})")
                 success += 1
             except Exception as e:
                 errors.append(f"  [{idx+1:3d}] {name}: {e}")
-            
+
             idx += 1
-    
+
     print(f"\n完成! 成功: {success}, 跳过空位: {skipped}, 错误: {len(errors)}")
     for err in errors:
         print(err)
@@ -178,7 +192,7 @@ def main():
             "public/souls/souls_sprite.png",
         ]
         img_path = None
-        script_dir = Path(__file__).parent.parent.parent  # codev9/
+        script_dir = Path(__file__).parent.parent  # codev9/
         for p in default_paths:
             full = script_dir / p
             if full.exists():
@@ -201,7 +215,7 @@ def main():
         sys.exit(1)
     
     # 输出目录
-    script_dir = Path(__file__).parent.parent.parent
+    script_dir = Path(__file__).parent.parent  # codev9/
     output_base = script_dir / "public" / "souls"
     
     print(f"合图路径: {img_path}")
