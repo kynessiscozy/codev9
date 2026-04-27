@@ -144,53 +144,6 @@ export function initParticleSystem() {
   console.log('✨ 粒子系统已禁用');
   return false;
 }
-  if (isInitialized) return true;
-
-  canvas = document.createElement('canvas');
-  canvas.id = 'webgl-particles';
-  canvas.style.cssText = 'position:fixed;inset:0;z-index:150;pointer-events:none;width:100%;height:100%;';
-  document.body.appendChild(canvas);
-
-  gl = canvas.getContext('webgl', { premultipliedAlpha: false, alpha: true });
-  if (!gl) {
-    console.warn('WebGL 不支持，粒子系统将回退到 Canvas2D');
-    return false;
-  }
-
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-
-  program = createProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER);
-  if (!program) return false;
-
-  gl.useProgram(program);
-  gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-
-  // 获取属性和 uniform 位置
-  attribLocations = {
-    position: gl.getAttribLocation(program, 'a_position'),
-    velocity: gl.getAttribLocation(program, 'a_velocity'),
-    life: gl.getAttribLocation(program, 'a_life'),
-    maxLife: gl.getAttribLocation(program, 'a_maxLife'),
-    size: gl.getAttribLocation(program, 'a_size'),
-    color: gl.getAttribLocation(program, 'a_color'),
-    type: gl.getAttribLocation(program, 'a_type'),
-  };
-
-  uniformLocations = {
-    resolution: gl.getUniformLocation(program, 'u_resolution'),
-    time: gl.getUniformLocation(program, 'u_time'),
-    gravity: gl.getUniformLocation(program, 'u_gravity'),
-  };
-
-  initBuffers();
-  isInitialized = true;
-
-  startRenderLoop();
-  console.log('✨ WebGL 粒子系统已初始化');
-  return true;
-}
 
 function createShader(gl, type, source) {
   const shader = gl.createShader(type);
