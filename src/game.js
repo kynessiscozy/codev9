@@ -4104,7 +4104,6 @@ function animPtc(){
   ctx.globalAlpha=1;requestAnimationFrame(animPtc);
 }
 animPtc();
-(()=>{const sb=document.getElementById('SB');for(let i=0;i<50;i++){const s=document.createElement('div');s.className='star';const sz=rand(2)+.3;s.style.cssText=`width:${sz}px;height:${sz}px;left:${rand(100)}%;top:${rand(100)}%;--d:${(rand(3)+2).toFixed(1)}s;--dl:${(-rand(5)).toFixed(1)}s;--mn:${(rand(.3)+.08).toFixed(2)};--mx:${(rand(.4)+.5).toFixed(2)}`;sb.appendChild(s);}})();
 
 // ══════════════════════════════════════════════════
 //  ABYSS (异界) SYSTEM — V6.0
