@@ -264,3 +264,45 @@ export function registerSoulIcon(soulName, iconData) {
   }
   SOUL_ICONS[soulName] = iconData;
 }
+
+/**
+ * 预加载所有武魂图标
+ * 在应用初始化时调用，将图标缓存到浏览器
+ * @param {string[]} soulNames - 要预加载的武魂名称数组，默认加载所有
+ */
+export function preloadSoulIcons(soulNames = null) {
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const iconsToPreload = soulNames
+    ? soulNames.filter(name => SOUL_ICONS[name])
+    : Object.keys(SOUL_ICONS);
+
+  console.log(`[SoulIcons] 开始预加载 ${iconsToPreload.length} 个图标...`);
+
+  iconsToPreload.forEach(soulName => {
+    const iconData = SOUL_ICONS[soulName];
+    if (!iconData || !iconData.img) return;
+
+    const img = new Image();
+    img.src = baseUrl.replace(/\/+$/, '') + iconData.img;
+
+    // 可选：加载完成后日志
+    img.onload = () => {
+      console.log(`[SoulIcons] 已加载: ${soulName}`);
+    };
+    img.onerror = () => {
+      console.warn(`[SoulIcons] 加载失败: ${soulName}`);
+    };
+  });
+}
+
+/**
+ * 预加载常用武魂图标（高频使用的）
+ */
+export function preloadCommonSoulIcons() {
+  // 默认觉醒的武魂 + 常见品质
+  const commonSouls = [
+    '蓝银草', '昊天锤', '白虎', '火凤凰', '七宝琉璃塔',
+    '蓝电霸王龙', '六翼天使', '泰坦巨猿', '九宝琉璃塔', '蓝银皇'
+  ];
+  preloadSoulIcons(commonSouls);
+}

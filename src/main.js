@@ -273,6 +273,8 @@ window.hasSoulIcon = Modules.hasSoulIcon;
 window.getSoulTheme = Modules.getSoulTheme;
 window.registerSoulIcon = Modules.registerSoulIcon;
 window.SOUL_ICONS = Modules.SOUL_ICONS;
+window.preloadSoulIcons = Modules.preloadSoulIcons;
+window.preloadCommonSoulIcons = Modules.preloadCommonSoulIcons;
 
 // ──── 特效模块 ────
 window.fxParticles = {
@@ -387,9 +389,25 @@ function injectGameScript() {
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', injectGameScript);
+  document.addEventListener('DOMContentLoaded', () => {
+    injectGameScript();
+    // 预加载常用武魂图标，优化加载速度
+    if (window.preloadCommonSoulIcons) {
+      setTimeout(() => {
+        window.preloadCommonSoulIcons();
+        console.log('✨ 武魂图标预加载完成');
+      }, 100);
+    }
+  });
 } else {
   injectGameScript();
+  // 预加载常用武魂图标，优化加载速度
+  if (window.preloadCommonSoulIcons) {
+    setTimeout(() => {
+      window.preloadCommonSoulIcons();
+      console.log('✨ 武魂图标预加载完成');
+    }, 100);
+  }
 }
 
 // ════════════════════════════════════════════════

@@ -1968,10 +1968,11 @@ function confirmReset(){
       if(_lotGeoRaf){cancelAnimationFrame(_lotGeoRaf);_lotGeoRaf=null;}
       if(_achRaf){cancelAnimationFrame(_achRaf);_achRaf=null;}
 
-      // 3. 保存图鉴
-      const kept=localStorage.getItem('dlv3-grimoire');
+      // 3. 保存图鉴（两个系统）
+      const keptGrimoire = G.grimoire;  // 保存 G.grimoire（武魂图鉴、魂环图鉴、魂骨图鉴）
+      const keptDlv3Grimoire = localStorage.getItem('dlv3-grimoire');  // 保存 GRIMOIRE（独立系统）
+
       localStorage.removeItem('dlv3');
-      if(kept)localStorage.setItem('dlv3-grimoire',kept);
 
       // 4. 重置状态变量
       _lotCurPool=0;_lotTouchX=0;_lotMouseX=0;_lotMouseDown=false;
@@ -1979,14 +1980,19 @@ function confirmReset(){
       fusState={a:null,b:null,herbs:[]};
       fusSelTgt=null;fusHerbTgt=null;
 
-      // 5. 重置游戏状态并立即保存
+      // 5. 重置游戏状态
       G=defState();
+
+      // 6. 恢复图鉴数据
+      G.grimoire = keptGrimoire;  // 恢复 G.grimoire
+      if(keptDlv3Grimoire)localStorage.setItem('dlv3-grimoire',keptDlv3Grimoire);
+
       saveG(); // 立即保存
 
-      // 6. 重新启动定时器
+      // 7. 重新启动定时器
       startGameTimers();
 
-      // 7. 更新UI
+      // 8. 更新UI
       $style('SA','display','flex');
       updateHUD();updateExpBar();renderSoulPage();renderLotPage();
       notify('✨ 再次觉醒！一切归零，图鉴永存。','divine');
