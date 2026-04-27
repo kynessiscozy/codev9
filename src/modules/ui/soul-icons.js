@@ -192,9 +192,11 @@ export function getSoulIcon(soulName, quality = "common", options = {}) {
   const animClass = animated ? "soul-icon-animated" : "";
   const szClass = sizeClass || "";
   const cssTheme = THEME_MAP[iconData.theme] || iconData.theme || "";
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const imgSrc = baseUrl.replace(/\/+$/, '') + iconData.img;
 
   return `<img class="soul-icon ${qualityClass} ${animClass} ${szClass}".trim()}`
-    + ` src="${iconData.img}"`
+    + ` src="${imgSrc}"`
     + ` alt="${soulName}"`
     + (cssTheme ? ` data-theme="${cssTheme}"` : "")
     + ` draggable="false"`
