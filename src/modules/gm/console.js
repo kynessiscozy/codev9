@@ -60,7 +60,8 @@ const GM_COMMANDS = {
     usage: 'resetSave',
     handler: () => {
       if (confirm('确定要重置存档吗？此操作不可撤销！')) {
-        localStorage.removeItem('soulGameSave');
+        localStorage.removeItem('dlv3');
+        localStorage.removeItem('dlv3-grimoire');
         location.reload();
         return '存档已重置';
       }
