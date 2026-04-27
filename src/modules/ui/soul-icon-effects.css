@@ -440,29 +440,29 @@
    ════════════════════════════════════════════════ */
 
 .soul-icon.size-small {
-  max-width: 128px;
-  max-height: 128px;
+  max-width: 32px;
+  max-height: 32px;
   width: auto;
   height: auto;
 }
 
 .soul-icon.size-medium {
-  max-width: 192px;
-  max-height: 192px;
+  max-width: 48px;
+  max-height: 48px;
   width: auto;
   height: auto;
 }
 
 .soul-icon.size-large {
-  max-width: 320px;
-  max-height: 350px;
+  max-width: 80px;
+  max-height: 80px;
   width: auto;
   height: auto;
 }
 
 .soul-icon.size-xlarge {
-  max-width: 480px;
-  max-height: 400px;
+  max-width: 120px;
+  max-height: 120px;
   width: auto;
   height: auto;
 }
