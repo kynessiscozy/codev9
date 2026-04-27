@@ -19,6 +19,7 @@ export function defState() {
     level: 1,
     awakenDone: false,
     soul: null,
+    grimoire: null,  // 武魂图鉴（重置后由confirmReset恢复）
     equippedBones: {},
     equippedArt: null,
     bag: [],
