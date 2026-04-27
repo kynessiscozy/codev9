@@ -28,51 +28,6 @@ export function initSeasonalGeo() {
   // 季节几何动画已禁用
   return;
 }
-  const banner = $('sb-banner');
-  if (!banner) return;
-  const rect = banner.getBoundingClientRect();
-  cvs.width = rect.width || 390;
-  cvs.height = Math.max(rect.height, 80);
-  
-  const rings = [
-    { rx: 80, ry: 58, spd: .0014, dir: 1, op: .13 },
-    { rx: 120, ry: 87, spd: .0009, dir: -1, op: .08, dash: true },
-  ];
-  
-  _sbGeoAng.length = 0;
-  rings.forEach(() => _sbGeoAng.push(0));
-  
-  const ctx = cvs.getContext('2d');
-  function draw() {
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-    const cx = cvs.width * .5, cy = cvs.height * .4;
-    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(cvs.width, cvs.height) * .6);
-    grad.addColorStop(0, 'rgba(192,132,252,.13)');
-    grad.addColorStop(1, 'transparent');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, cvs.width, cvs.height);
-    
-    rings.forEach((ring, ri) => {
-      _sbGeoAng[ri] += ring.spd * ring.dir;
-      const angle = _sbGeoAng[ri];
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.rotate(angle);
-      ctx.setLineDash(ring.dash ? [5, 9] : []);
-      ctx.beginPath();
-      ctx.ellipse(0, 0, ring.rx, ring.ry, 0, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(192,132,252,${ring.op})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.restore();
-    });
-    
-    _sbGeoRaf = requestAnimationFrame(draw);
-  }
-  
-  draw();
-}
 
 /**
  * 渲染季节活动
