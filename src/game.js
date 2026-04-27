@@ -1930,12 +1930,11 @@ function confirmReset(){
       if(_lotGeoRaf){cancelAnimationFrame(_lotGeoRaf);_lotGeoRaf=null;}
       if(_achRaf){cancelAnimationFrame(_achRaf);_achRaf=null;}
 
-      // 3. 仅保存武魂图鉴中觉醒过的历史
-      const keptSouls = G.grimoire && G.grimoire.souls ? [...G.grimoire.souls] : [];
+      // 3. 保存武魂图鉴历史（用于重置后恢复）
+      const keptGrimoire = G.grimoire ? { ...G.grimoire } : null;
 
-      // 4. 清除所有本地存储
+      // 4. 清除游戏存档（保留武魂图鉴 dlv3-grimoire）
       localStorage.removeItem('dlv3');
-      localStorage.removeItem('dlv3-grimoire');
 
       // 5. 重置状态变量
       _lotCurPool=0;_lotTouchX=0;_lotMouseX=0;_lotMouseDown=false;
@@ -1946,9 +1945,20 @@ function confirmReset(){
       // 6. 重置游戏状态
       G=defState();
 
-      // 7. 仅恢复武魂图鉴历史
-      if(keptSouls.length > 0){
-        G.grimoire = { souls: keptSouls, rings: [], bones: [] };
+      // 7. 恢复武魂图鉴历史
+      if(keptGrimoire && keptGrimoire.souls && keptGrimoire.souls.length > 0){
+        G.grimoire = {
+          souls: [...keptGrimoire.souls],
+          rings: [...(keptGrimoire.rings || [])],
+          bones: [...(keptGrimoire.bones || [])]
+        };
+        // 同时恢复 GRIMOIRE 全局变量
+        if(keptGrimoire.discovered) GRIMOIRE.discovered = {...keptGrimoire.discovered};
+        if(keptGrimoire.souls) GRIMOIRE.souls = [...keptGrimoire.souls];
+        if(keptGrimoire.rings) GRIMOIRE.rings = [...keptGrimoire.rings];
+        if(keptGrimoire.bones) GRIMOIRE.bones = [...keptGrimoire.bones];
+        GRIMOIRE.completionClaimed = keptGrimoire.completionClaimed || false;
+        saveGrimoire(); // 立即保存到 localStorage
       }
 
       saveG(); // 立即保存
