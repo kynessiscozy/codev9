@@ -4064,50 +4064,14 @@ function stopGameTimers() {
 startGameTimers();
 
 // ══════════════════════════════════════════════════
-//  PARTICLES & STARS
-// ══════════════════════════════════════════════════
-const cvs=document.getElementById('C'),ctx=cvs.getContext('2d');let pts=[];
-function resC(){cvs.width=window.innerWidth;cvs.height=window.innerHeight;}
-resC();window.addEventListener('resize',resC);
-function spawnBurst(col,n){
-  const cx=cvs.width/2,cy=cvs.height*.42;
-  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,s=rand(5)+1;pts.push({x:cx,y:cy,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:1,decay:.018+rand(.024),sz:rand(4)+.8,col:col||`hsl(${rand(360)},100%,70%)`});}
-}
-function flashScreen(col,ms){
-  const el=document.createElement('div');
-  el.style.cssText='position:fixed;inset:0;z-index:999;background:'+(col||'#fff')+';opacity:.55;pointer-events:none;transition:opacity '+(ms||400)+'ms ease-out;';
-  document.body.appendChild(el);
-  requestAnimationFrame(()=>{el.style.opacity='0';});
-  setTimeout(()=>el.remove(),(ms||400)+60);
-}
-function screenShake(ms){
-  const app=$('app');if(!app)return;
-  app.style.transition='transform .05s';
-  const start=Date.now();
-  const int=setInterval(()=>{
-    const dx=(Math.random()-.5)*8,dy=(Math.random()-.5)*8;
-    app.style.transform='translate('+dx+'px,'+dy+'px)';
-    if(Date.now()-start>=(ms||400)){clearInterval(int);app.style.transform='';app.style.transition='';}
-  },40);
-}
-function spawnRingBurst(col,n,rings){
-  const cx=cvs.width/2,cy=cvs.height*.42;
-  for(let r=0;r<(rings||1);r++){
-    const radius=20+r*25,speed=rand(2)+1.5;
-    for(let i=0;i<(n||30);i++){
-      const a=(Math.PI*2/(n||30))*i+r*0.7;
-      pts.push({x:cx+Math.cos(a)*radius,y:cy+Math.sin(a)*radius,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,life:1,decay:.015+rand(.015),sz:rand(3)+1,col:col||'#ffd700'});
-    }
-  }
-}
-function animPtc(){
-  ctx.clearRect(0,0,cvs.width,cvs.height);pts=pts.filter(p=>p.life>0);
-  pts.forEach(p=>{ctx.globalAlpha=p.life;ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,Math.PI*2);ctx.fill();p.x+=p.vx;p.y+=p.vy;p.vy+=.055;p.life-=p.decay;});
-  ctx.globalAlpha=1;requestAnimationFrame(animPtc);
-}
-animPtc();
-
-// ══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+//  PARTICLES & STARS (已禁用)
+// ═══════════════════════════════════════════════
+// 粒子效果已移除 - 保留函数定义以避免调用报错
+function spawnBurst(col,n){/* 粒子效果已移除 */}
+function flashScreen(col,ms){/* 屏幕闪烁效果已移除 */}
+function screenShake(ms){/* 屏幕震动效果已移除 */}
+function spawnRingBurst(col,n,rings){/* 环形粒子效果已移除 */}
 //  ABYSS (异界) SYSTEM — V6.0
 // ══════════════════════════════════════════════════
 

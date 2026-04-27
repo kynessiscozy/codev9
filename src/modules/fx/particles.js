@@ -140,6 +140,10 @@ let uniformLocations = {};
  * 初始化 WebGL 粒子系统
  */
 export function initParticleSystem() {
+  // 粒子效果已禁用
+  console.log('✨ 粒子系统已禁用');
+  return false;
+}
   if (isInitialized) return true;
 
   canvas = document.createElement('canvas');
