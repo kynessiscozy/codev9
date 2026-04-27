@@ -55,13 +55,11 @@ export function renderSoulPage() {
 }
 
 /**
- * 显示武魂几何背景
+ * 显示武魂几何背景（已禁用）
  */
 export function showSoulGeo(qt, rgb, rings) {
-  const cvs = document.getElementById('soul-geo-canvas');
-  if (!cvs) return;
-  // 简化版 - 完整版需要从game.js提取
-  cvs.classList.add('visible');
+  // 背景特效已移除
+  return;
 }
 
 /**

@@ -197,7 +197,6 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 .ls-0{background:linear-gradient(160deg,#06080f,#0c1020,#060810)}
 .ls-1{background:linear-gradient(160deg,#0d0618,#160c30,#060210)}
 .ls-2{background:linear-gradient(160deg,#140400,#250a00,#0a0200)}
-.lot-geo-cvs{position:absolute;inset:0;pointer-events:none;z-index:1}
 .lot-inner{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;padding:15px 15px 13px}
 .lot-top{display:flex;align-items:flex-start;justify-content:space-between}
 .lot-ey{font-size:8px;color:rgba(255,255,255,.28);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px}
@@ -256,7 +255,6 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 /* ── Tasks page v7 ── */
 /* Cultivate widget */
 .cult-widget{position:relative;margin:0 11px 9px;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,rgba(16,185,129,.07),rgba(16,185,129,.025));border:1px solid rgba(16,185,129,.18)}
-.cw-geo{position:absolute;inset:0;pointer-events:none;z-index:0}
 .cw-body{position:relative;z-index:1;padding:13px}
 .cw-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
 .cw-title{font-family:'Ma Shan Zheng',serif;font-size:14px;color:#6ee7b7;letter-spacing:2px;display:flex;align-items:center;gap:7px}
@@ -470,8 +468,6 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 ═══════════════════════════════════════ */
 #page-soul{padding:0}
 #page-lottery{padding:0}
-#soul-geo-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity .8s}
-#soul-geo-canvas.visible{opacity:1}
 
 .soul-v2-hero{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:30px 16px 20px;width:66.67%;margin:0 auto;overflow:visible}
 
@@ -629,7 +625,6 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 .sb-banner{position:relative;margin:10px 0 8px;border-radius:16px;overflow:hidden;cursor:pointer;background:linear-gradient(135deg,rgba(255,192,203,.08),rgba(201,162,39,.05),rgba(255,192,203,.04));border:1px solid rgba(255,192,203,.25);transition:border-color .3s}
 .sb-banner:hover{border-color:rgba(255,192,203,.45)}
 .sb-banner:active{transform:scale(.99)}
-.sb-geo{position:absolute;inset:0;pointer-events:none;z-index:0}
 .sb-body{position:relative;z-index:1;display:flex;align-items:center;gap:12px;padding:13px 14px}
 .sb-left{flex:1;min-width:0}
 .sb-tag-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
@@ -1428,9 +1423,6 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 [data-theme="light"] #app{background:linear-gradient(180deg,#e8eaed,#dfe2e7)}
 
 /* ── Canvas/星空/几何淡到几乎不可见 ── */
-[data-theme="light"] #C{opacity:.06}
-[data-theme="light"] #SB{opacity:.04}
-[data-theme="light"] #soul-geo-canvas{opacity:.04!important}
 
 /* ── 顶栏 ── */
 [data-theme="light"] .pill{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.08);color:var(--dim)}

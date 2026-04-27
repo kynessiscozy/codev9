@@ -1614,11 +1614,12 @@ function isLightQColor(hex){
   return(parseInt(r[1],16)*.299+parseInt(r[2],16)*.587+parseInt(r[3],16)*.114)>150;
 }
 
-// ── Soul geo background system ──
+// ── Soul geo background system (已禁用) ──
 let _geoAnimFrame=null;
 function showSoulGeo(qt,rgb,rings){
-  const cvs=document.getElementById('soul-geo-canvas');
-  if(!cvs)return;
+  // 背景特效已移除
+  return;
+}
   cvs.width=window.innerWidth;cvs.height=window.innerHeight;
   cvs.classList.add('visible');
   const ctx=cvs.getContext('2d');
@@ -2258,14 +2259,8 @@ const LOT_POOL_WASH=['rgba(156,163,175,.06)','rgba(139,92,246,.08)','rgba(245,15
 const _lotPoolPulls=[0,0,0];
 
 function initLotGeoCvs(){
-  LOT_GEO_CFG.forEach((_,pi)=>{
-    const cvs=document.getElementById('lgeo-'+pi);
-    if(!cvs)return;
-    const slide=cvs.closest('.lot-slide');
-    const rect=slide.getBoundingClientRect();
-    cvs.width=rect.width||400;cvs.height=rect.height||250;
-    LOT_GEO_CTX[pi]=cvs.getContext('2d');
-  });
+  // 抽奖几何动画已禁用
+  return;
 }
 function drawLotGeo(){
   LOT_GEO_CFG.forEach((cfg,pi)=>{
@@ -3027,7 +3022,9 @@ function renderSeasonalTasks(){
 let _sbGeoRaf=null;const _sbGeoAng=[];
 function stopSbGeo(){if(_sbGeoRaf){cancelAnimationFrame(_sbGeoRaf);_sbGeoRaf=null;}}
 function initSeasonalGeo(){
-  const cvs=$('sb-geo');if(!cvs||_sbGeoRaf)return;
+  // 季节几何动画已禁用
+  return;
+}
   const banner=$('sb-banner');if(!banner)return;
   const rect=banner.getBoundingClientRect();
   cvs.width=rect.width||390;cvs.height=Math.max(rect.height,80);
@@ -5356,37 +5353,9 @@ function achInitGeo(){
 let _cwGeoRaf=null;
 function stopCwGeo(){if(_cwGeoRaf){cancelAnimationFrame(_cwGeoRaf);_cwGeoRaf=null;}}
 function initCwGeo(){
-  const cvs=$('cw-geo');if(!cvs||_cwGeoRaf)return;
-  const widget=cvs.closest('.cult-widget');if(!widget)return;
-  const rect=widget.getBoundingClientRect();
-  cvs.width=rect.width||390;cvs.height=rect.height||190;
-  const rings=[
-    {rx:85,ry:61,spd:.0015,dir:1, op:.1},
-    {rx:128,ry:92,spd:.0009,dir:-1,op:.065,dash:true},
-    {rx:172,ry:124,spd:.0005,dir:1, op:.04,dash:true},
-  ];
-  const ang=rings.map((_,i)=>i*Math.PI*0.55);
-  const ctx=cvs.getContext('2d');
-  function draw(){
-    ctx.clearRect(0,0,cvs.width,cvs.height);
-    const cx=cvs.width*.8,cy=cvs.height*.45;
-    const gr=ctx.createRadialGradient(cx,cy,0,cx,cy,cvs.width*.55);
-    gr.addColorStop(0,'rgba(16,185,129,.09)');gr.addColorStop(1,'transparent');
-    ctx.fillStyle=gr;ctx.fillRect(0,0,cvs.width,cvs.height);
-    rings.forEach((ring,ri)=>{
-      ang[ri]+=ring.spd*ring.dir;
-      ctx.save();ctx.translate(cx,cy);ctx.rotate(ang[ri]);
-      ctx.setLineDash(ring.dash?[4,7]:[]);
-      ctx.beginPath();ctx.ellipse(0,0,ring.rx,ring.ry,0,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(16,185,129,${ring.op})`;ctx.lineWidth=1;ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.beginPath();ctx.arc(ring.rx,0,1.8,0,Math.PI*2);
-      ctx.fillStyle=`rgba(16,185,129,${Math.min(1,ring.op*6)})`;
-      ctx.shadowBlur=6;ctx.shadowColor='rgba(16,185,129,.8)';ctx.fill();
-      ctx.shadowBlur=0;ctx.restore();
-    });
-    _cwGeoRaf=requestAnimationFrame(draw);
-  }
+  // 修炼几何动画已禁用
+  return;
+}
   draw();
 }
 

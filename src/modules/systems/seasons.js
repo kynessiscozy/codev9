@@ -22,11 +22,12 @@ export function stopSbGeo() {
 }
 
 /**
- * 初始化季节几何画布
+ * 初始化季节几何画布（已禁用）
  */
 export function initSeasonalGeo() {
-  const cvs = $('sb-geo');
-  if (!cvs || _sbGeoRaf) return;
+  // 季节几何动画已禁用
+  return;
+}
   const banner = $('sb-banner');
   if (!banner) return;
   const rect = banner.getBoundingClientRect();
