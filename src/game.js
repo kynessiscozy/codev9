@@ -2985,39 +2985,6 @@ function initSeasonalGeo(){
   // 季节几何动画已禁用
   return;
 }
-  const banner=$('sb-banner');if(!banner)return;
-  const rect=banner.getBoundingClientRect();
-  cvs.width=rect.width||390;cvs.height=Math.max(rect.height,80);
-  const rings=[
-    {rx:80,ry:58,spd:.0014,dir:1, op:.13},
-    {rx:120,ry:87,spd:.0009,dir:-1,op:.08,dash:true},
-    {rx:160,ry:115,spd:.0005,dir:1, op:.05,dash:true},
-  ];
-  rings.forEach((_,i)=>_sbGeoAng.push(i*Math.PI*0.6));
-  const ctx=cvs.getContext('2d');
-  function draw(){
-    ctx.clearRect(0,0,cvs.width,cvs.height);
-    const cx=cvs.width*.83,cy=cvs.height*.5;
-    const gr=ctx.createRadialGradient(cx,cy,0,cx,cy,cvs.width*.55);
-    gr.addColorStop(0,'rgba(249,168,212,.1)');gr.addColorStop(1,'transparent');
-    ctx.fillStyle=gr;ctx.fillRect(0,0,cvs.width,cvs.height);
-    rings.forEach((ring,ri)=>{
-      _sbGeoAng[ri]+=ring.spd*ring.dir;
-      ctx.save();ctx.translate(cx,cy);ctx.rotate(_sbGeoAng[ri]);
-      ctx.setLineDash(ring.dash?[4,7]:[]);
-      ctx.beginPath();ctx.ellipse(0,0,ring.rx,ring.ry,0,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(249,168,212,${ring.op})`;ctx.lineWidth=1;ctx.stroke();
-      ctx.setLineDash([]);
-      // particle dot
-      ctx.beginPath();ctx.arc(ring.rx,0,1.8,0,Math.PI*2);
-      ctx.fillStyle=`rgba(249,168,212,${ring.op*5})`;
-      ctx.shadowBlur=6;ctx.shadowColor='rgba(249,168,212,.8)';ctx.fill();
-      ctx.shadowBlur=0;ctx.restore();
-    });
-    _sbGeoRaf=requestAnimationFrame(draw);
-  }
-  draw();
-}
 
 function toggleSeasonalBanner(){
   const banner=$('sb-banner');if(!banner)return;
