@@ -2040,6 +2040,660 @@ def 三生武魂_时空():
     <circle cx="32" cy="32" r="6" fill="url(#triple3Grad)" stroke="#b388ff" stroke-width="1.5"/>
     <circle cx="32" cy="32" r="2" fill="#b388ff" filter="url(#glow)"/>''', "theme": "star"}
 
+# ──── 新增普通品质图标 ────
+
+def 铁剑():
+    return {"svg": f'''{defs()}
+      <linearGradient id="ironSwordGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#8c8c8c"/>
+        <stop offset="50%" style="stop-color:#b0b0b0"/>
+        <stop offset="100%" style="stop-color:#d4d4d4"/>
+      </linearGradient>
+    </defs>
+    <path d="M32 8 L32 48" stroke="url(#ironSwordGrad)" stroke-width="4" stroke-linecap="round" filter="url(#metalIron)"/>
+    <path d="M28 48 L36 48 L34 52 L30 52 Z" fill="url(#ironSwordGrad)" stroke="#666" stroke-width="1" filter="url(#metalIron)"/>
+    <circle cx="32" cy="20" r="2" fill="#fff" filter="url(#glow)"/>''', "theme": "metal"}
+
+def 木盾():
+    return {"svg": f'''{defs()}
+      <linearGradient id="woodShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#8b6914"/>
+        <stop offset="50%" style="stop-color:#a07828"/>
+        <stop offset="100%" style="stop-color:#b8903c"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="16" ry="20" fill="url(#woodShieldGrad)" stroke="#6b4f10" stroke-width="2" filter="url(#woodTexture)"/>
+    <ellipse cx="32" cy="32" rx="10" ry="14" fill="none" stroke="#6b4f10" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="3" fill="#6b4f10"/>''', "theme": "wood"}
+
+def 石斧():
+    return {"svg": f'''{defs()}
+      <linearGradient id="stoneAxeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#808080"/>
+        <stop offset="50%" style="stop-color:#a0a0a0"/>
+        <stop offset="100%" style="stop-color:#c0c0c0"/>
+      </linearGradient>
+    </defs>
+    <rect x="28" y="8" width="8" height="32" rx="2" fill="url(#stoneAxeGrad)" stroke="#606060" stroke-width="1.5" filter="url(#metalIron)"/>
+    <path d="M20 40 L44 40 L40 52 L24 52 Z" fill="url(#stoneAxeGrad)" stroke="#606060" stroke-width="1.5" filter="url(#stoneTexture)"/>''', "theme": "stone"}
+
+def 草绳():
+    return {"svg": f'''{defs()}
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="none" stroke="#8b7355" stroke-width="3" stroke-dasharray="4 2" opacity="0.8"/>
+    <circle cx="32" cy="32" r="10" fill="none" stroke="#8b7355" stroke-width="2" stroke-dasharray="3 3" opacity="0.6"/>
+    <path d="M24 24 Q28 20 32 24 Q36 28 40 24" stroke="#a0855a" stroke-width="1.5" fill="none"/>''', "theme": "plant"}
+
+def 骨矛():
+    return {"svg": f'''{defs()}
+      <linearGradient id="boneSpearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#f5f5dc"/>
+        <stop offset="50%" style="stop-color:#fffff0"/>
+        <stop offset="100%" style="stop-color:#faf0e6"/>
+      </linearGradient>
+    </defs>
+    <path d="M32 12 L32 48" stroke="url(#boneSpearGrad)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M28 12 L36 12 L32 8 Z" fill="url(#boneSpearGrad)" stroke="#d4d4b0" stroke-width="1"/>
+    <circle cx="32" cy="32" r="2" fill="#d4d4b0" opacity="0.5"/>''', "theme": "bone"}
+
+def 藤甲():
+    return {"svg": f'''{defs()}
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="#556b2f" stroke="#3a4a1f" stroke-width="2" filter="url(#leatherTex)"/>
+    <path d="M20 28 Q32 24 44 28 Q32 32 20 28 Z" fill="#6b8a3f" opacity="0.6"/>
+    <path d="M20 32 Q32 28 44 32 Q32 36 20 32 Z" fill="#6b8a3f" opacity="0.6"/>
+    <circle cx="32" cy="30" r="2" fill="#8baf4f" filter="url(#glow)"/>''', "theme": "plant"}
+
+def 竹弓():
+    return {"svg": f'''{defs()}
+      <linearGradient id="bambooBowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#8b7355"/>
+        <stop offset="50%" style="stop-color:#a0855a"/>
+        <stop offset="100%" style="stop-color:#b8975f"/>
+      </linearGradient>
+    </defs>
+    <path d="M20 20 Q32 8 44 20 Q32 32 20 20 Z" fill="none" stroke="url(#bambooBowGrad)" stroke-width="3" filter="url(#woodTexture)"/>
+    <line x1="32" y1="14" x2="32" y2="26" stroke="#8b7355" stroke-width="1.5"/>
+    <circle cx="32" cy="14" r="2" fill="#ffd700"/>''', "theme": "wood"}
+
+def 铜镜():
+    return {"svg": f'''{defs()}
+      <linearGradient id="bronzeMirrorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#cd7f32"/>
+        <stop offset="50%" style="stop-color:#e6a44a"/>
+        <stop offset="100%" style="stop-color:#ffc670"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="url(#bronzeMirrorGrad)" stroke="#8b5a2b" stroke-width="2" filter="url(#metalBrass)"/>
+    <circle cx="32" cy="32" r="12" fill="none" stroke="#8b5a2b" stroke-width="1" opacity="0.5"/>
+    <circle cx="26" cy="28" r="2" fill="#fff" opacity="0.8"/>''', "theme": "metal"}
+
+# ──── 新增稀有品质图标 ────
+
+def 火焰刀():
+    return {"svg": f'''{defs()}
+      <linearGradient id="flameBladeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6f00"/>
+        <stop offset="50%" style="stop-color:#ff1744"/>
+        <stop offset="100%" style="stop-color:#d50000"/>
+      </linearGradient>
+    </defs>
+    <path d="M32 8 L32 48" stroke="url(#flameBladeGrad)" stroke-width="5" stroke-linecap="round" filter="url(#fireGlow)"/>
+    <path d="M24 48 L40 48 L36 52 L28 52 Z" fill="url(#flameBladeGrad)" stroke="#d50000" stroke-width="1.5"/>
+    <circle cx="32" cy="20" r="3" fill="#ffff00" filter="url(#glow)"/>''', "theme": "fire"}
+
+def 冰晶杖():
+    return {"svg": f'''{defs()}
+      <linearGradient id="iceCrystalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#e0f7fa"/>
+        <stop offset="50%" style="stop-color:#80deea"/>
+        <stop offset="100%" style="stop-color:#26c6da"/>
+      </linearGradient>
+    </defs>
+    <rect x="29" y="8" width="6" height="36" rx="2" fill="url(#iceCrystalGrad)" stroke="#00838f" stroke-width="1.5" filter="url(#iceEffect)"/>
+    <circle cx="32" cy="12" r="4" fill="#e0f7fa" filter="url(#glow)"/>
+    <circle cx="32" cy="48" r="3" fill="#80deea" filter="url(#glow)"/>''', "theme": "ice"}
+
+def 雷电锤():
+    return {"svg": f'''{defs()}
+      <linearGradient id="thunderHammerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1a237e"/>
+        <stop offset="50%" style="stop-color:#3949ab"/>
+        <stop offset="100%" style="stop-color:#5c6bc0"/>
+      </linearGradient>
+    </defs>
+    <rect x="26" y="8" width="12" height="24" rx="3" fill="url(#thunderHammerGrad)" stroke="#1a237e" stroke-width="2" filter="url(#metalChrome)"/>
+    <path d="M20 32 L44 32" stroke="url(#thunderHammerGrad)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M28 32 L32 28 L36 32 L40 28" stroke="#ffd600" stroke-width="2" fill="none" filter="url(#lightningEffect)"/>''', "theme": "lightning"}
+
+def 暗影弓():
+    return {"svg": f'''{defs()}
+      <linearGradient id="shadowBowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1a1a2e"/>
+        <stop offset="50%" style="stop-color:#2d2d5e"/>
+        <stop offset="100%" style="stop-color:#4a4a8e"/>
+      </linearGradient>
+    </defs>
+    <path d="M20 20 Q32 10 44 20 Q32 30 20 20 Z" fill="none" stroke="url(#shadowBowGrad)" stroke-width="3" filter="url(#shadowEffect)"/>
+    <line x1="32" y1="15" x2="32" y2="25" stroke="#6a1b9a" stroke-width="2"/>
+    <circle cx="32" cy="15" r="2" fill="#9c27b0" filter="url(#glow)"/>''', "theme": "shadow"}
+
+def 圣光盾():
+    return {"svg": f'''{defs()}
+      <linearGradient id="holyShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#fff9c4"/>
+        <stop offset="50%" style="stop-color:#fff176"/>
+        <stop offset="100%" style="stop-color:#ffd600"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="16" ry="20" fill="url(#holyShieldGrad)" stroke="#ffd600" stroke-width="2" filter="url(#holyGlow)"/>
+    <ellipse cx="32" cy="32" rx="10" ry="14" fill="none" stroke="#ffd600" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="32" cy="32" r="4" fill="#fff9c4" filter="url(#glow)"/>''', "theme": "holy"}
+
+def 毒雾扇():
+    return {"svg": f'''{defs()}
+      <linearGradient id="poisonFanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4a148c"/>
+        <stop offset="50%" style="stop-color:#7b1fa2"/>
+        <stop offset="100%" style="stop-color:#9c27b0"/>
+      </linearGradient>
+    </defs>
+    <path d="M20 20 Q32 8 44 20 Q32 32 20 20 Z" fill="url(#poisonFanGrad)" stroke="#4a148c" stroke-width="2" filter="url(#shadowEffect)"/>
+    <circle cx="28" cy="24" r="2" fill="#e1bee7" opacity="0.8"/>
+    <circle cx="36" cy="24" r="2" fill="#e1bee7" opacity="0.8"/>
+    <circle cx="32" cy="28" r="2" fill="#e1bee7" opacity="0.8"/>''', "theme": "shadow"}
+
+# ──── 新增史诗品质图标 ────
+
+def 龙鳞剑():
+    return {"svg": f'''{defs()}
+      <linearGradient id="dragonScaleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#01579b"/>
+        <stop offset="50%" style="stop-color:#0288d1"/>
+        <stop offset="100%" style="stop-color:#4fc3f7"/>
+      </linearGradient>
+    </defs>
+    <path d="M32 8 L32 48" stroke="url(#dragonScaleGrad)" stroke-width="5" stroke-linecap="round" filter="url(#metalChrome)"/>
+    <path d="M24 48 L40 48 L37 52 L27 52 Z" fill="url(#dragonScaleGrad)" stroke="#01579b" stroke-width="1.5"/>
+    <path d="M28 20 L36 20 L32 16 Z" fill="#4fc3f7" opacity="0.8" filter="url(#scaleTexture)"/>''', "theme": "water"}
+
+def 凤凰羽():
+    return {"svg": f'''{defs()}
+      <linearGradient id="phoenixFeatherGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6f00"/>
+        <stop offset="50%" style="stop-color:#ff1744"/>
+        <stop offset="100%" style="stop-color:#d50000"/>
+      </linearGradient>
+    </defs>
+    <path d="M20 44 Q32 20 44 44 Q32 36 20 44 Z" fill="url(#phoenixFeatherGrad)" stroke="#d50000" stroke-width="2" filter="url(#fireGlow)"/>
+    <circle cx="32" cy="36" r="3" fill="#ffff00" filter="url(#glow)"/>
+    <path d="M26 40 L30 36 L34 40 L38 36" stroke="#ffff00" stroke-width="1.5" fill="none"/>''', "theme": "fire"}
+
+def 玄武甲():
+    return {"svg": f'''{defs()}
+      <linearGradient id="xuanwuArmorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#263238"/>
+        <stop offset="50%" style="stop-color:#37474f"/>
+        <stop offset="100%" style="stop-color:#455a64"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#xuanwuArmorGrad)" stroke="#263238" stroke-width="2" filter="url(#stoneTexture)"/>
+    <ellipse cx="32" cy="32" rx="12" ry="10" fill="none" stroke="#607d8b" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="4" fill="#607d8b" opacity="0.6"/>''', "theme": "stone"}
+
+def 白虎牙():
+    return {"svg": f'''{defs()}
+      <linearGradient id="whiteTigerFangGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#f5f5f5"/>
+        <stop offset="50%" style="stop-color:#e0e0e0"/>
+        <stop offset="100%" style="stop-color:#ffffff"/>
+      </linearGradient>
+    </defs>
+    <path d="M24 16 L32 48 L40 16" fill="url(#whiteTigerFangGrad)" stroke="#bdbdbd" stroke-width="2" filter="url(#metalChrome)"/>
+    <circle cx="28" cy="24" r="2" fill="#fff" filter="url(#glow)"/>
+    <circle cx="36" cy="24" r="2" fill="#fff" filter="url(#glow)"/>''', "theme": "metal"}
+
+def 朱雀翼():
+    return {"svg": f'''{defs()}
+      <linearGradient id="vermilionWingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#d50000"/>
+        <stop offset="50%" style="stop-color:#ff1744"/>
+        <stop offset="100%" style="stop-color:#ff6f00"/>
+      </linearGradient>
+    </defs>
+    <path d="M20 20 Q32 8 44 20 Q32 32 20 20 Z" fill="url(#vermilionWingGrad)" stroke="#d50000" stroke-width="2" filter="url(#fireGlow)"/>
+    <path d="M24 24 Q32 16 40 24 Q32 28 24 24 Z" fill="#ff6f00" opacity="0.6"/>
+    <circle cx="32" cy="22" r="2" fill="#ffff00" filter="url(#glow)"/>''', "theme": "fire"}
+
+def 青龙爪():
+    return {"svg": f'''{defs()}
+      <linearGradient id="azureDragonClawGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#01579b"/>
+        <stop offset="50%" style="stop-color:#0288d1"/>
+        <stop offset="100%" style="stop-color:#4fc3f7"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="12" fill="url(#azureDragonClawGrad)" stroke="#01579b" stroke-width="2" filter="url(#metalChrome)"/>
+    <path d="M24 24 L20 18 M32 20 L32 14 M40 24 L44 18" stroke="url(#azureDragonClawGrad)" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="32" cy="32" r="4" fill="#4fc3f7" filter="url(#glow)"/>''', "theme": "water"}
+
+def 麒麟角():
+    return {"svg": f'''{defs()}
+      <linearGradient id="qilinHornGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ffd600"/>
+        <stop offset="50%" style="stop-color:#ffab00"/>
+        <stop offset="100%" style="stop-color:#ff6f00"/>
+      </linearGradient>
+    </defs>
+    <path d="M32 12 L28 48 L36 48 Z" fill="url(#qilinHornGrad)" stroke="#ff6f00" stroke-width="2" filter="url(#metalGold)"/>
+    <circle cx="32" cy="20" r="3" fill="#ffff00" filter="url(#glow)"/>
+    <path d="M30 28 L34 28 M30 34 L34 34 M30 40 L34 40" stroke="#ff6f00" stroke-width="1.5"/>''', "theme": "metal"}
+
+def 鲲鹏翼():
+    return {"svg": f'''{defs()}
+      <linearGradient id="kunpengWingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#311b92"/>
+        <stop offset="50%" style="stop-color:#4527a0"/>
+        <stop offset="100%" style="stop-color:#5e35b1"/>
+      </linearGradient>
+    </defs>
+    <path d="M16 32 Q32 16 48 32 Q32 48 16 32 Z" fill="url(#kunpengWingGrad)" stroke="#311b92" stroke-width="2" filter="url(#shadowEffect)"/>
+    <circle cx="32" cy="32" r="6" fill="#7c4dff" filter="url(#glow)"/>
+    <path d="M24 28 Q28 24 32 28 Q36 24 40 28" stroke="#b388ff" stroke-width="1.5" fill="none"/>''', "theme": "shadow"}
+
+# ──── 新增传说品质图标 ────
+
+def 修罗剑():
+    return {"svg": f'''{defs()}
+      <linearGradient id="shuraSwordGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#b71c1c"/>
+        <stop offset="50%" style="stop-color:#d32f2f"/>
+        <stop offset="100%" style="stop-color:#f44336"/>
+      </linearGradient>
+    </defs>
+    <path d="M32 8 L32 48" stroke="url(#shuraSwordGrad)" stroke-width="6" stroke-linecap="round" filter="url(#metalChrome)"/>
+    <path d="M24 20 L40 20" stroke="url(#shuraSwordGrad)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M26 36 L38 36" stroke="url(#shuraSwordGrad)" stroke-width="4" stroke-linecap="round"/>
+    <path d="M20 48 L44 48 L40 54 L28 54 Z" fill="url(#shuraSwordGrad)" stroke="#b71c1c" stroke-width="2" filter="url(#metalChrome)"/>
+    <circle cx="32" cy="8" r="4" fill="#ff5252" filter="url(#glow)"/>''', "theme": "metal"}
+
+def 罗刹刀():
+    return {"svg": f'''{defs()}
+      <linearGradient id="rakshasaBladeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4a148c"/>
+        <stop offset="50%" style="stop-color:#7b1fa2"/>
+        <stop offset="100%" style="stop-color:#9c27b0"/>
+      </linearGradient>
+    </defs>
+    <path d="M32 8 L32 48" stroke="url(#rakshasaBladeGrad)" stroke-width="5" stroke-linecap="round" filter="url(#shadowEffect)"/>
+    <path d="M24 48 L40 48 L36 52 L28 52 Z" fill="url(#rakshasaBladeGrad)" stroke="#4a148c" stroke-width="1.5"/>
+    <circle cx="32" cy="20" r="3" fill="#ff00ff" filter="url(#glow)"/>''', "theme": "shadow"}
+
+def 食神锅():
+    return {"svg": f'''{defs()}
+      <linearGradient id="foodGodPotGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6f00"/>
+        <stop offset="50%" style="stop-color:#ffab00"/>
+        <stop offset="100%" style="stop-color:#ffd600"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="36" rx="16" ry="12" fill="url(#foodGodPotGrad)" stroke="#ff6f00" stroke-width="2" filter="url(#metalGold)"/>
+    <ellipse cx="32" cy="24" rx="14" ry="8" fill="url(#foodGodPotGrad)" stroke="#ff6f00" stroke-width="2"/>
+    <circle cx="32" cy="24" r="4" fill="#ffff00" filter="url(#glow)"/>''', "theme": "fire"}
+
+def 九彩神鹿():
+    return {"svg": f'''{defs()}
+      <linearGradient id="nineColorDeerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#e91e63"/>
+        <stop offset="25%" style="stop-color:#9c27b0"/>
+        <stop offset="50%" style="stop-color:#2196f3"/>
+        <stop offset="75%" style="stop-color:#4caf50"/>
+        <stop offset="100%" style="stop-color:#ff9800"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="16" ry="20" fill="url(#nineColorDeerGrad)" stroke="#e91e63" stroke-width="2" filter="url(#holyGlow)"/>
+    <circle cx="26" cy="28" r="3" fill="#fff" filter="url(#glow)"/>
+    <circle cx="38" cy="28" r="3" fill="#fff" filter="url(#glow)"/>
+    <path d="M24 44 L22 50 L26 48 L30 52 L34 48 L38 50 L36 44" fill="url(#nineColorDeerGrad)" stroke="#e91e63" stroke-width="1"/>''', "theme": "holy"}
+
+def 天狐尾():
+    return {"svg": f'''{defs()}
+      <linearGradient id="skyFoxTailGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff9800"/>
+        <stop offset="50%" style="stop-color:#ff5722"/>
+        <stop offset="100%" style="stop-color:#d84315"/>
+      </linearGradient>
+    </defs>
+    <path d="M32 12 Q20 24 24 36 Q28 44 32 48 Q36 44 40 36 Q44 24 32 12 Z" fill="url(#skyFoxTailGrad)" stroke="#ff9800" stroke-width="2" filter="url(#fireGlow)"/>
+    <circle cx="28" cy="24" r="2" fill="#ffff00" filter="url(#glow)"/>
+    <circle cx="36" cy="24" r="2" fill="#ffff00" filter="url(#glow)"/>
+    <circle cx="32" cy="32" r="2" fill="#ffff00" filter="url(#glow)"/>''', "theme": "fire"}
+
+def 魔熊王():
+    return {"svg": f'''{defs()}
+      <linearGradient id="demonBearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#3e2723"/>
+        <stop offset="50%" style="stop-color:#4e342e"/>
+        <stop offset="100%" style="stop-color:#5d4037"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#demonBearGrad)" stroke="#3e2723" stroke-width="2" filter="url(#furTexture)"/>
+    <circle cx="26" cy="28" r="3" fill="#ff5722" filter="url(#glow)"/>
+    <circle cx="38" cy="28" r="3" fill="#ff5722" filter="url(#glow)"/>
+    <path d="M28 40 L26 44 L30 42 L34 46 L38 42 L42 44 L40 40" fill="#5d4037" stroke="#3e2723" stroke-width="1"/>''', "theme": "shadow"}
+
+def 妖猴王():
+    return {"svg": f'''{defs()}
+      <linearGradient id="demonMonkeyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6f00"/>
+        <stop offset="50%" style="stop-color:#ff8f00"/>
+        <stop offset="100%" style="stop-color:#ffa726"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="16" ry="18" fill="url(#demonMonkeyGrad)" stroke="#ff6f00" stroke-width="2" filter="url(#furTexture)"/>
+    <circle cx="26" cy="28" r="3" fill="#fff" filter="url(#glow)"/>
+    <circle cx="38" cy="28" r="3" fill="#fff" filter="url(#glow)"/>
+    <path d="M28 42 L26 48 L30 44 L34 50 L38 44 L42 48 L40 42" fill="url(#demonMonkeyGrad)" stroke="#ff6f00" stroke-width="1"/>''', "theme": "fire"}
+
+def 冰晶龙():
+    return {"svg": f'''{defs()}
+      <linearGradient id="iceCrystalDragonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#e0f7fa"/>
+        <stop offset="50%" style="stop-color:#80deea"/>
+        <stop offset="100%" style="stop-color:#26c6da"/>
+      </linearGradient>
+    </defs>
+    <path d="M20 20 Q16 28 18 36 Q22 44 32 46 Q42 44 46 36 Q48 28 44 20 Q40 12 32 10 Q24 12 20 20 Z" fill="url(#iceCrystalDragonGrad)" stroke="#00838f" stroke-width="2" filter="url(#iceEffect)"/>
+    <circle cx="26" cy="24" r="3" fill="#80deea" filter="url(#glow)"/>
+    <circle cx="38" cy="24" r="3" fill="#80deea" filter="url(#glow)"/>
+    <path d="M20 16 L14 8 L22 14" fill="url(#iceCrystalDragonGrad)" stroke="#00838f" stroke-width="1.5"/>''', "theme": "ice"}
+
+def 炎魔():
+    return {"svg": f'''{defs()}
+      <linearGradient id="flameDemonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6f00"/>
+        <stop offset="50%" style="stop-color:#d50000"/>
+        <stop offset="100%" style="stop-color:#b71c1c"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#flameDemonGrad)" stroke="#d50000" stroke-width="2" filter="url(#fireGlow)"/>
+    <circle cx="26" cy="28" r="3" fill="#ffff00" filter="url(#glow)"/>
+    <circle cx="38" cy="28" r="3" fill="#ffff00" filter="url(#glow)"/>
+    <path d="M28 40 L26 44 L30 42 L34 46 L38 42 L42 44 L40 40" fill="#d50000" stroke="#b71c1c" stroke-width="0.8"/>''', "theme": "fire"}
+
+def 雷鸟():
+    return {"svg": f'''{defs()}
+      <linearGradient id="thunderBirdGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1a237e"/>
+        <stop offset="50%" style="stop-color:#3949ab"/>
+        <stop offset="100%" style="stop-color:#5c6bc0"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#thunderBirdGrad)" stroke="#1a237e" stroke-width="2" filter="url(#lightningEffect)"/>
+    <circle cx="26" cy="28" r="3" fill="#ffd600" filter="url(#glow)"/>
+    <circle cx="38" cy="28" r="3" fill="#ffd600" filter="url(#glow)"/>
+    <path d="M24 20 L28 28 L24 36" stroke="#ffd600" stroke-width="2" fill="none" filter="url(#lightningEffect)"/>
+    <path d="M40 20 L36 28 L40 36" stroke="#ffd600" stroke-width="2" fill="none" filter="url(#lightningEffect)"/>''', "theme": "lightning"}
+
+# ──── 新增神话品质图标 ────
+
+def 太阳神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="sunGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#fff9c4"/>
+        <stop offset="50%" style="stop-color:#ffd600"/>
+        <stop offset="100%" style="stop-color:#ff6f00"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="url(#sunGodGrad)" stroke="#ffd600" stroke-width="2" filter="url(#holyGlow)"/>
+    <circle cx="32" cy="32" r="10" fill="none" stroke="#ffd600" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="32" cy="32" r="4" fill="#ffff00" filter="url(#glow)"/>
+    <path d="M32 12 L32 8 M44 32 L48 32 M32 52 L32 56 M20 32 L16 32" stroke="#ffd600" stroke-width="2" opacity="0.8"/>''', "theme": "holy"}
+
+def 月亮神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="moonGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#e0e0e0"/>
+        <stop offset="50%" style="stop-color:#b0b0b0"/>
+        <stop offset="100%" style="stop-color:#808080"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="url(#moonGodGrad)" stroke="#808080" stroke-width="2" filter="url(#metalChrome)"/>
+    <circle cx="32" cy="28" r="8" fill="#f5f5f5" opacity="0.3"/>
+    <circle cx="28" cy="26" r="2" fill="#fff" opacity="0.8"/>
+    <path d="M36 40 Q40 36 44 40" stroke="#808080" stroke-width="1.5" fill="none"/>''', "theme": "metal"}
+
+def 星辰神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="starGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#311b92"/>
+        <stop offset="50%" style="stop-color:#4527a0"/>
+        <stop offset="100%" style="stop-color:#5e35b1"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="18" fill="url(#starGodGrad)" stroke="#311b92" stroke-width="2" filter="url(#outerGlow)"/>
+    <circle cx="32" cy="32" r="12" fill="none" stroke="#7c4dff" stroke-width="1" opacity="0.7"/>
+    <circle cx="32" cy="32" r="6" fill="#7c4dff" filter="url(#glow)"/>
+    <circle cx="32" cy="32" r="2" fill="#b388ff" filter="url(#glow)"/>''', "theme": "star"}
+
+def 风暴神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="stormGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1a237e"/>
+        <stop offset="50%" style="stop-color:#283593"/>
+        <stop offset="100%" style="stop-color:#3949ab"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#stormGodGrad)" stroke="#1a237e" stroke-width="2" filter="url(#lightningEffect)"/>
+    <path d="M28 20 L32 28 L28 36" stroke="#ffd600" stroke-width="2.5" fill="none" filter="url(#lightningEffect)"/>
+    <path d="M36 20 L32 28 L36 36" stroke="#ffd600" stroke-width="2.5" fill="none" filter="url(#lightningEffect)"/>
+    <circle cx="32" cy="28" r="4" fill="#ffd600" filter="url(#glow)"/>''', "theme": "lightning"}
+
+def 大地神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="earthGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4e342e"/>
+        <stop offset="50%" style="stop-color:#6d4c41"/>
+        <stop offset="100%" style="stop-color:#8d6e63"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#earthGodGrad)" stroke="#4e342e" stroke-width="2" filter="url(#stoneTexture)"/>
+    <path d="M24 24 L40 24 L40 40 L24 40 Z" fill="#8d6e63" opacity="0.5"/>
+    <path d="M28 28 L36 28 M28 32 L36 32 M28 36 L36 36" stroke="#4e342e" stroke-width="1.5"/>
+    <circle cx="32" cy="32" r="3" fill="#8d6e63" filter="url(#glow)"/>''', "theme": "stone"}
+
+def 海洋神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="oceanGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#01579b"/>
+        <stop offset="50%" style="stop-color:#0288d1"/>
+        <stop offset="100%" style="stop-color:#4fc3f7"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="18" fill="url(#oceanGodGrad)" stroke="#01579b" stroke-width="2" filter="url(#metalChrome)"/>
+    <path d="M24 24 Q32 16 40 24 Q32 32 24 24 Z" fill="#80d8ff" opacity="0.6"/>
+    <path d="M24 32 Q32 24 40 32 Q32 40 24 32 Z" fill="#80d8ff" opacity="0.6"/>
+    <circle cx="32" cy="32" r="4" fill="#80d8ff" filter="url(#glow)"/>''', "theme": "water"}
+
+def 烈焰神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="flameGod2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff6f00"/>
+        <stop offset="50%" style="stop-color:#ff1744"/>
+        <stop offset="100%" style="stop-color:#d50000"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="url(#flameGod2Grad)" stroke="#d50000" stroke-width="2" filter="url(#fireGlow)"/>
+    <circle cx="26" cy="28" r="3" fill="#ffff00" filter="url(#glow)"/>
+    <circle cx="38" cy="28" r="3" fill="#ffff00" filter="url(#glow)"/>
+    <path d="M32 44 L32 52 L30 48 L32 56 L34 48 L36 52 L34 44" fill="url(#flameGod2Grad)" stroke="#d50000" stroke-width="1"/>''', "theme": "fire"}
+
+def 寒冰神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="iceGod2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#e0f7fa"/>
+        <stop offset="50%" style="stop-color:#80deea"/>
+        <stop offset="100%" style="stop-color:#26c6da"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="url(#iceGod2Grad)" stroke="#00838f" stroke-width="2" filter="url(#iceEffect)"/>
+    <circle cx="26" cy="28" r="3" fill="#80deea" filter="url(#glow)"/>
+    <circle cx="38" cy="28" r="3" fill="#80deea" filter="url(#glow)"/>
+    <path d="M24 24 L40 40 M40 24 L24 40" stroke="#e0f7fa" stroke-width="2" opacity="0.8"/>''', "theme": "ice"}
+
+def 雷霆神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="thunderGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1a237e"/>
+        <stop offset="50%" style="stop-color:#283593"/>
+        <stop offset="100%" style="stop-color:#3949ab"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#thunderGodGrad)" stroke="#1a237e" stroke-width="2" filter="url(#lightningEffect)"/>
+    <path d="M24 20 L28 28 L24 36" stroke="#ffd600" stroke-width="3" fill="none" filter="url(#lightningEffect)"/>
+    <path d="M40 20 L36 28 L40 36" stroke="#ffd600" stroke-width="3" fill="none" filter="url(#lightningEffect)"/>
+    <circle cx="32" cy="28" r="4" fill="#ffd600" filter="url(#glow)"/>''', "theme": "lightning"}
+
+def 光明神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="lightGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#fff9c4"/>
+        <stop offset="50%" style="stop-color:#fff176"/>
+        <stop offset="100%" style="stop-color:#ffd600"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#lightGodGrad)" stroke="#ffd600" stroke-width="2" filter="url(#holyGlow)"/>
+    <circle cx="26" cy="28" r="3" fill="#fff9c4" filter="url(#glow)"/>
+    <circle cx="38" cy="28" r="3" fill="#fff9c4" filter="url(#glow)"/>
+    <path d="M28 40 L26 48 L30 44 L34 52 L38 44 L42 48 L40 40" fill="url(#metalGoldGrad)" stroke="#ffd600" stroke-width="1" filter="url(#metalGold)"/>''', "theme": "holy"}
+
+# ──── 新增巅峰品质图标 ────
+
+def 巅峰太阳神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="peakSunGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#fff9c4"/>
+        <stop offset="50%" style="stop-color:#ffd600"/>
+        <stop offset="100%" style="stop-color:#ff6f00"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="url(#peakSunGodGrad)" stroke="#ffd600" stroke-width="3" filter="url(#holyGlow)"/>
+    <circle cx="32" cy="32" r="10" fill="none" stroke="#ffd600" stroke-width="2" opacity="0.8"/>
+    <circle cx="32" cy="32" r="4" fill="#ffff00" filter="url(#glow)"/>
+    <path d="M32 8 L32 16 M44 20 L40 28 M52 32 L44 32 M44 44 L40 36 M32 56 L32 48 M20 44 L24 36 M8 32 L16 32 M20 20 L24 28" stroke="#ffd600" stroke-width="2" filter="url(#glow)"/>''', "theme": "holy"}
+
+def 巅峰月亮神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="peakMoonGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#e0e0e0"/>
+        <stop offset="50%" style="stop-color:#b0b0b0"/>
+        <stop offset="100%" style="stop-color:#808080"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="url(#peakMoonGodGrad)" stroke="#808080" stroke-width="3" filter="url(#metalChrome)"/>
+    <circle cx="32" cy="28" r="10" fill="#f5f5f5" opacity="0.4"/>
+    <circle cx="28" cy="26" r="3" fill="#fff" opacity="0.9"/>
+    <path d="M36 40 Q40 36 44 40 Q40 44 36 40" stroke="#808080" stroke-width="2" fill="none"/>''', "theme": "metal"}
+
+def 巅峰星辰神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="peakStarGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#311b92"/>
+        <stop offset="50%" style="stop-color:#4527a0"/>
+        <stop offset="100%" style="stop-color:#5e35b1"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="18" fill="url(#peakStarGodGrad)" stroke="#311b92" stroke-width="3" filter="url(#outerGlow)"/>
+    <circle cx="32" cy="32" r="12" fill="none" stroke="#7c4dff" stroke-width="2" opacity="0.8"/>
+    <circle cx="32" cy="32" r="6" fill="#7c4dff" filter="url(#glow)"/>
+    <circle cx="32" cy="32" r="2" fill="#b388ff" filter="url(#glow)"/>
+    <path d="M32 10 L32 54 M10 32 L54 32 M18 18 L46 46 M46 18 L18 46" stroke="#7c4dff" stroke-width="1" opacity="0.5"/>''', "theme": "star"}
+
+def 巅峰风暴神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="peakStormGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#1a237e"/>
+        <stop offset="50%" style="stop-color:#283593"/>
+        <stop offset="100%" style="stop-color:#3949ab"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#peakStormGodGrad)" stroke="#1a237e" stroke-width="3" filter="url(#lightningEffect)"/>
+    <path d="M28 20 L32 28 L28 36" stroke="#ffd600" stroke-width="3" fill="none" filter="url(#lightningEffect)"/>
+    <path d="M36 20 L32 28 L36 36" stroke="#ffd600" stroke-width="3" fill="none" filter="url(#lightningEffect)"/>
+    <circle cx="32" cy="28" r="5" fill="#ffd600" filter="url(#glow)"/>
+    <path d="M20 32 L44 32" stroke="#ffd600" stroke-width="2" opacity="0.6"/>''', "theme": "lightning"}
+
+def 巅峰大地神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="peakEarthGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4e342e"/>
+        <stop offset="50%" style="stop-color:#6d4c41"/>
+        <stop offset="100%" style="stop-color:#8d6e63"/>
+      </linearGradient>
+    </defs>
+    <ellipse cx="32" cy="32" rx="18" ry="16" fill="url(#peakEarthGodGrad)" stroke="#4e342e" stroke-width="3" filter="url(#stoneTexture)"/>
+    <path d="M24 24 L40 24 L40 40 L24 40 Z" fill="#8d6e63" opacity="0.6"/>
+    <path d="M28 28 L36 28 M28 32 L36 32 M28 36 L36 36" stroke="#4e342e" stroke-width="2"/>
+    <circle cx="32" cy="32" r="4" fill="#8d6e63" filter="url(#glow)"/>''', "theme": "stone"}
+
+# ──── 新增混沌品质图标 ────
+
+def 混沌太阳():
+    return {"svg": f'''{defs()}
+      <linearGradient id="chaosSunGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#fff9c4"/>
+        <stop offset="50%" style="stop-color:#ffd600"/>
+        <stop offset="100%" style="stop-color:#ff6f00"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="url(#chaosSunGrad)" stroke="#ffd600" stroke-width="2" filter="url(#chaosEffect)"/>
+    <circle cx="32" cy="32" r="10" fill="none" stroke="#ffd600" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="32" cy="32" r="4" fill="#ffff00" filter="url(#glow)"/>
+    <path d="M32 8 L32 16 M44 20 L40 28 M52 32 L44 32 M44 44 L40 36 M32 56 L32 48 M20 44 L24 36 M8 32 L16 32 M20 20 L24 28" stroke="#ffd600" stroke-width="1.5" filter="url(#chaosEffect)"/>''', "theme": "holy"}
+
+def 混沌月亮():
+    return {"svg": f'''{defs()}
+      <linearGradient id="chaosMoonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4a148c"/>
+        <stop offset="50%" style="stop-color:#7b1fa2"/>
+        <stop offset="100%" style="stop-color:#9c27b0"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="16" fill="url(#chaosMoonGrad)" stroke="#4a148c" stroke-width="2" filter="url(#chaosEffect)"/>
+    <circle cx="32" cy="28" r="8" fill="#e1bee7" opacity="0.3"/>
+    <circle cx="28" cy="26" r="2" fill="#e1bee7" filter="url(#glow)"/>
+    <path d="M36 40 Q40 36 44 40" stroke="#e1bee7" stroke-width="1.5" fill="none" filter="url(#chaosEffect)"/>''', "theme": "shadow"}
+
+def 混沌星辰():
+    return {"svg": f'''{defs()}
+      <linearGradient id="chaosStarGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#311b92"/>
+        <stop offset="50%" style="stop-color:#4527a0"/>
+        <stop offset="100%" style="stop-color:#5e35b5"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="18" fill="url(#chaosStarGrad)" stroke="#311b92" stroke-width="2" filter="url(#chaosEffect)"/>
+    <circle cx="32" cy="32" r="12" fill="none" stroke="#b388ff" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="32" cy="32" r="6" fill="#b388ff" filter="url(#glow)"/>
+    <circle cx="32" cy="32" r="2" fill="#e1bee7" filter="url(#glow)"/>
+    <path d="M32 10 L32 54 M10 32 L54 32 M18 18 L46 46 M46 18 L18 46" stroke="#b388ff" stroke-width="1" opacity="0.5" filter="url(#chaosEffect)"/>''', "theme": "shadow"}
+
+# ──── 新增神品质图标 ────
+
+def 命运神():
+    return {"svg": f'''{defs()}
+      <linearGradient id="fateGodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#4a148c"/>
+        <stop offset="50%" style="stop-color:#7b1fa2"/>
+        <stop offset="100%" style="stop-color:#9c27b0"/>
+      </linearGradient>
+    </defs>
+    <circle cx="32" cy="32" r="18" fill="url(#fateGodGrad)" stroke="#4a148c" stroke-width="2" filter="url(#shadowEffect)"/>
+    <path d="M24 24 Q32 20 40 24 Q32 28 24 24 Z" fill="#e1bee7" opacity="0.5"/>
+    <path d="M24 32 Q32 28 40 32 Q32 36 24 32 Z" fill="#e1bee7" opacity="0.5"/>
+    <path d="M24 40 Q32 36 40 40 Q32 44 24 40 Z" fill="#e1bee7" opacity="0.5"/>
+    <circle cx="32" cy="32" r="3" fill="#e1bee7" filter="url(#glow)"/>''', "theme": "shadow"}
+
 # ──── 生成主函数 ────
 
 def gen_common():

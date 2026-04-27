@@ -241,19 +241,23 @@ export function getSoulTheme(soulName) {
 }
 
 /**
- * 检查是否有指定武魂的图标
+ * 检查武魂是否有图标
  * @param {string} soulName - 武魂名称
- * @returns {boolean} 是否存在图标
+ * @returns {boolean} 是否有图标
  */
 export function hasSoulIcon(soulName) {
   return !!SOUL_ICONS[soulName];
 }
 
 /**
- * 注册自定义武魂图标
+ * 注册新的武魂图标
  * @param {string} soulName - 武魂名称
- * @param {Object} iconData - 图标数据 { img, theme }
+ * @param {Object} iconData - 图标数据 { svg: string, theme?: string }
  */
 export function registerSoulIcon(soulName, iconData) {
+  if (!soulName || !iconData || !iconData.svg) {
+    console.warn('[SoulIcons] 注册图标失败：参数无效', soulName, iconData);
+    return;
+  }
   SOUL_ICONS[soulName] = iconData;
 }
