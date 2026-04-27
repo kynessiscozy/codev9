@@ -110,7 +110,8 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 #OR.show{display:flex}
 .or-b{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 38%,var(--bc,rgba(201,162,39,.28)),transparent 62%);animation:bP .9s ease infinite;pointer-events:none}
 @keyframes bP{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
-.or-ico{font-size:86px;margin-bottom:14px;z-index:1;animation:flt 2s ease infinite}
+.or-ico{margin-bottom:14px;z-index:1;animation:flt 2s ease infinite;display:flex;align-items:center;justify-content:center}
+.or-ico img{max-width:200px;max-height:200px;width:auto;height:auto;object-fit:contain}
 @keyframes flt{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .or-q{font-family:'Ma Shan Zheng',serif;font-size:17px;letter-spacing:4px;margin-bottom:4px;z-index:1}
 .or-nm{font-family:'Ma Shan Zheng',serif;font-size:34px;font-weight:900;margin-bottom:7px;z-index:1;letter-spacing:3px}

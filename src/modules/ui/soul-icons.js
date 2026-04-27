@@ -195,12 +195,15 @@ export function getSoulIcon(soulName, quality = "common", options = {}) {
   const baseUrl = import.meta.env.BASE_URL || '/';
   const imgSrc = baseUrl.replace(/\/+$/, '') + iconData.img;
 
-  return `<img class="soul-icon ${qualityClass} ${animClass} ${szClass}".trim()}`
+  const className = `soul-icon ${qualityClass} ${animClass} ${szClass}`.trim();
+  const themeAttr = cssTheme ? ` data-theme="${cssTheme}"` : "";
+  const fallbackSVG = createFallbackSVG(soulName, quality);
+  return `<img class="${className}"`
     + ` src="${imgSrc}"`
     + ` alt="${soulName}"`
-    + (cssTheme ? ` data-theme="${cssTheme}"` : "")
+    + themeAttr
     + ` draggable="false"`
-    + ` onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${createFallbackSVG(soulName, quality)}')">`;
+    + ` onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${fallbackSVG}')">`;
 }
 
 /**
