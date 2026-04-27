@@ -1955,8 +1955,8 @@ function assignRingFromSel(rid){
 }
 
 function confirmReset(){
-  if(confirm('⚠️ 再次觉醒将重置所有游戏数据！\n武魂图鉴记录将永久保留。\n\n确认继续？')){
-    if(confirm('最终确认：清除所有进度，保留图鉴？\n此操作不可撤销！')){
+  if(confirm('⚠️ 再次觉醒将重置所有游戏数据！\n仅保留武魂图鉴中觉醒过的历史。\n\n确认继续？')){
+    if(confirm('最终确认：清除所有进度，仅保留武魂图鉴历史？\n此操作不可撤销！')){
       // 1. 停止所有定时器
       stopGameTimers();
 
@@ -1968,34 +1968,36 @@ function confirmReset(){
       if(_lotGeoRaf){cancelAnimationFrame(_lotGeoRaf);_lotGeoRaf=null;}
       if(_achRaf){cancelAnimationFrame(_achRaf);_achRaf=null;}
 
-      // 3. 保存图鉴（两个系统）
-      const keptGrimoire = G.grimoire;  // 保存 G.grimoire（武魂图鉴、魂环图鉴、魂骨图鉴）
-      const keptDlv3Grimoire = localStorage.getItem('dlv3-grimoire');  // 保存 GRIMOIRE（独立系统）
+      // 3. 仅保存武魂图鉴中觉醒过的历史
+      const keptSouls = G.grimoire && G.grimoire.souls ? [...G.grimoire.souls] : [];
 
+      // 4. 清除所有本地存储
       localStorage.removeItem('dlv3');
+      localStorage.removeItem('dlv3-grimoire');
 
-      // 4. 重置状态变量
+      // 5. 重置状态变量
       _lotCurPool=0;_lotTouchX=0;_lotMouseX=0;_lotMouseDown=false;
       curLotMode=0;curBagFilter='all';
       fusState={a:null,b:null,herbs:[]};
       fusSelTgt=null;fusHerbTgt=null;
 
-      // 5. 重置游戏状态
+      // 6. 重置游戏状态
       G=defState();
 
-      // 6. 恢复图鉴数据
-      G.grimoire = keptGrimoire;  // 恢复 G.grimoire
-      if(keptDlv3Grimoire)localStorage.setItem('dlv3-grimoire',keptDlv3Grimoire);
+      // 7. 仅恢复武魂图鉴历史
+      if(keptSouls.length > 0){
+        G.grimoire = { souls: keptSouls, rings: [], bones: [] };
+      }
 
       saveG(); // 立即保存
 
-      // 7. 重新启动定时器
+      // 8. 重新启动定时器
       startGameTimers();
 
-      // 8. 更新UI
+      // 9. 更新UI
       $style('SA','display','flex');
       updateHUD();updateExpBar();renderSoulPage();renderLotPage();
-      notify('✨ 再次觉醒！一切归零，图鉴永存。','divine');
+      notify('✨ 再次觉醒！一切归零，武魂图鉴历史永存。','divine');
       spawnBurst('#8b5cf6',80);
     }
   }
