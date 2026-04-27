@@ -15340,3 +15340,21 @@ export function getSoulTheme(soulName) {
   return iconData ? (iconData.theme || "") : "";
 }
 
+/**
+ * 检查是否有指定武魂的图标
+ * @param {string} soulName - 武魂名称
+ * @returns {boolean} 是否存在图标
+ */
+export function hasSoulIcon(soulName) {
+  return !!SOUL_ICONS[soulName];
+}
+
+/**
+ * 注册自定义武魂图标
+ * @param {string} soulName - 武魂名称
+ * @param {Object} iconData - 图标数据 {svg, theme}
+ */
+export function registerSoulIcon(soulName, iconData) {
+  SOUL_ICONS[soulName] = iconData;
+}
+
