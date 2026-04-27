@@ -1620,46 +1620,6 @@ function showSoulGeo(qt,rgb,rings){
   // 背景特效已移除
   return;
 }
-  cvs.width=window.innerWidth;cvs.height=window.innerHeight;
-  cvs.classList.add('visible');
-  const ctx=cvs.getContext('2d');
-  const [r,g,b]=rgb;
-  let t=0;
-  if(_geoAnimFrame)cancelAnimationFrame(_geoAnimFrame);
-  function draw(){
-    ctx.clearRect(0,0,cvs.width,cvs.height);
-    // Radial bloom top-center
-    const cx=cvs.width/2,cy=0;
-    const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,cvs.height*.6);
-    grad.addColorStop(0,`rgba(${r},${g},${b},.09)`);
-    grad.addColorStop(1,'transparent');
-    ctx.fillStyle=grad;ctx.fillRect(0,0,cvs.width,cvs.height);
-    // Lower left secondary
-    const g2=ctx.createRadialGradient(cvs.width*.15,cvs.height*.6,0,cvs.width*.15,cvs.height*.6,cvs.height*.45);
-    g2.addColorStop(0,`rgba(${r},${g},${b},.05)`);g2.addColorStop(1,'transparent');
-    ctx.fillStyle=g2;ctx.fillRect(0,0,cvs.width,cvs.height);
-    // Rotating geo rings
-    const NUM=rings||4;
-    const ringDefs=[
-      {rx:150,ry:150,spd:.0002,phase:0,op:.06},
-      {rx:220,ry:180,spd:-.00015,phase:1.2,op:.04},
-      {rx:280,ry:280,spd:.0001,phase:2.4,op:.025},
-      {rx:360,ry:200,spd:-.00008,phase:.8,op:.02},
-      {rx:180,ry:320,spd:.00012,phase:3.6,op:.018},
-      {rx:400,ry:400,spd:-.00006,phase:1.9,op:.013},
-    ].slice(0,NUM);
-    const mx=cvs.width/2,my=cvs.height*.35;
-    ringDefs.forEach(rd=>{
-      const angle=t*rd.spd+rd.phase;
-      ctx.save();ctx.translate(mx,my);ctx.rotate(angle);
-      ctx.beginPath();ctx.ellipse(0,0,rd.rx,rd.ry,0,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(${r},${g},${b},${rd.op})`;ctx.lineWidth=1;ctx.stroke();
-      ctx.restore();
-    });
-    t++;_geoAnimFrame=requestAnimationFrame(draw);
-  }
-  draw();
-}
 function hideSoulGeo(){
   const cvs=document.getElementById('soul-geo-canvas');
   if(cvs)cvs.classList.remove('visible');
@@ -5355,8 +5315,6 @@ function stopCwGeo(){if(_cwGeoRaf){cancelAnimationFrame(_cwGeoRaf);_cwGeoRaf=nul
 function initCwGeo(){
   // 修炼几何动画已禁用
   return;
-}
-  draw();
 }
 
 // 安全地隐藏觉醒屏幕（如果已觉醒）
