@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>武魂图标预览 - 透明背景效果</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .quality-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .quality-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            color: #333;
+        }
+        
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .icon-item {
+            background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0),
+                        linear-gradient(45deg, #f0f0f0 25%, transparent 25%, transparent 75%, #f0f0f0 75%, #f0f0f0);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .icon-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .icon-item img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .icon-name {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+            word-break: break-all;
+            max-width: 200px;
+        }
+        
+        .stats {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .filter-buttons {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .filter-btn {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 武魂图标预览 - 透明背景效果</h1>
+        
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterQuality('all')">全部显示</button>
+            <button class="filter-btn" onclick="filterQuality('apex')">Apex</button>
+            <button class="filter-btn" onclick="filterQuality('legend')">Legend</button>
+            <button class="filter-btn" onclick="filterQuality('epic')">Epic</button>
+            <button class="filter-btn" onclick="filterQuality('ha')">Ha</button>
+            <button class="filter-btn" onclick="filterQuality('hc')">Hc</button>
+            <button class="filter-btn" onclick="filterQuality('triple')">Triple</button>
+            <button class="filter-btn" onclick="filterQuality('twin')">Twin</button>
+            <button class="filter-btn" onclick="filterQuality('rare')">Rare</button>
+            <button class="filter-btn" onclick="filterQuality('common')">Common</button>
+        </div>
+        
+        <div id="icons-container"></div>
+    </div>
+    
+    <script>
+        const qualityConfig = {
+            'apex': { name: 'Apex 品质', color: '#ff6b6b' },
+            'legend': { name: 'Legend 品质', color: '#ffd93d' },
+            'epic': { name: 'Epic 品质', color: '#6bcb77' },
+            'ha': { name: 'Ha 品质', color: '#4d96ff' },
+            'hc': { name: 'Hc 品质', color: '#9b59b6' },
+            'triple': { name: 'Triple 品质', color: '#e74c3c' },
+            'twin': { name: 'Twin 品质', color: '#3498db' },
+            'rare': { name: 'Rare 品质', color: '#2ecc71' },
+            'common': { name: 'Common 品质', color: '#95a5a6' }
+        };
+        
+        let allIconsData = [];
+        
+        // 根据实际文件系统手动配置的图标列表
+        const iconsByQuality = {
+            'apex': [
+                '混沌属性', '柔骨兔王', '神格化身', '神圣天使',
+                '时空裂缝', '虚无之主', '因果律者', '宇宙之源'
+            ],
+            'legend': [
+                '堕落天使', '海神武魂', '混沌剑魂', '混沌之翼',
+                '极品火凤凰', '金龙王', '九宝琉璃塔', '蓝银皇',
+                '雷灵王', '七杀剑', '天罚神雷', '天命神弓',
+                '星宿命盘', '炎狱魔神', '永恒冰魂', '幽冥神眼'
+            ],
+            'triple': [
+                '冰火雷三生龙', '昊天极光混沌三生',
+                '神圣幽冥混沌三生', '时空因果三生'
+            ],
+            'epic': [
+                '暗域鬼王', '冰碧帝皇蝎', '昊天锤', '黄金圣龙',
+                '极寒冰皇', '极焱炎神', '狂风战鹰', '蓝电霸王龙',
+                '雷霆战神', '烈火剑圣', '六翼天使', '噬魂蛛皇',
+                '死亡蛛皇', '泰坦巨猿', '星辰神兽', '焰灵骑士'
+            ],
+            'ha': [
+                '昊天九绝锤', '混沌神炉', '死神镰刀', '饕餮神牛',
+                '天魔琴', '虚空裂爪'
+            ],
+            'hc': [
+                '九心海棠', '奇茸通天菊', '千机算盘', '如意环',
+                '无形剑意', '幽莲血心', '幽冥之眼', '月影神狐'
+            ],
+            'twin': [
+                '冰火双凤', '金龙_银龙', '金龙+银龙', '蓝银草+昊天锤',
+                '雷剑双生', '神火_神冰', '神火+神冰', '圣天使_堕天使',
+                '圣天使+堕天使', '时间_空间', '时间+空间', '星辰_混沌',
+                '星辰+混沌', '幽冥_圣光', '幽冥+圣光'
+            ],
+            'rare': [
+                '白鹤翎羽', '白虎', '碧海银鲸', '碧磷蛇皇',
+                '冰凤凰', '冰火蛟龙', '赤炎狮王', '火凤凰',
+                '金龙爪', '雷电狼王', '盘龙棍', '七宝琉璃塔',
+                '青龙护卫', '碎星陨铁', '玄武神盾', '幽灵蝶',
+                '幽冥灵猫', '幽影黑豹', '朱雀圣火', '紫电金鹰'
+            ],
+            'common': [
+                '含羞草', '荆棘藤', '蓝银草', '镰刀',
+                '芦苇杆', '木棍', '蒲公英', '石头',
+                '陶笛', '铁锤', '铁锅', '香草', '渔网'
+            ]
+        };
+        
+        function loadIcons() {
+            displayIcons();
+        }
+        
+        function displayIcons(iconsByQuality) {
+            const container = document.getElementById('icons-container');
+            container.innerHTML = '';
+            
+            let totalIcons = 0;
+            
+            for (const [quality, icons] of Object.entries(iconsByQuality)) {
+                if (!icons || icons.length === 0) continue;
+                
+                const section = document.createElement('div');
+                section.className = 'quality-section';
+                section.dataset.quality = quality;
+                
+                const title = document.createElement('div');
+                title.className = 'quality-title';
+                title.innerHTML = `${qualityConfig[quality]?.name || quality.toUpperCase()} (${icons.length} 个)`;
+                section.appendChild(title);
+                
+                const grid = document.createElement('div');
+                grid.className = 'icons-grid';
+                
+                icons.forEach(iconName => {
+                    const item = document.createElement('div');
+                    item.className = 'icon-item';
+                    
+                    const img = document.createElement('img');
+                    // 尝试多个可能的文件路径
+                    const possiblePaths = [
+                        `./public/souls/${quality}/${iconName}.webp`,
+                        `./public/souls/${quality}/${iconName}.png`,
+                        `./souls/${quality}/${iconName}.webp`,
+                        `./souls/${quality}/${iconName}.png`
+                    ];
+                    img.src = possiblePaths[0];
+                    img.alt = iconName;
+                    img.onerror = function() {
+                        // 如果加载失败，尝试其他路径
+                        const currentIndex = possiblePaths.indexOf(this.src);
+                        if (currentIndex < possiblePaths.length - 1) {
+                            this.src = possiblePaths[currentIndex + 1];
+                        } else {
+                            this.style.display = 'none';
+                        }
+                    };
+                    
+                    const name = document.createElement('div');
+                    name.className = 'icon-name';
+                    name.textContent = iconName;
+                    
+                    item.appendChild(img);
+                    item.appendChild(name);
+                    grid.appendChild(item);
+                    
+                    totalIcons++;
+                });
+                
+                section.appendChild(grid);
+                
+                const stats = document.createElement('div');
+                stats.className = 'stats';
+                stats.textContent = `共 ${icons.length} 个图标 | 透明背景已应用`;
+                section.appendChild(stats);
+                
+                container.appendChild(section);
+            }
+            
+            console.log(`总共加载了 ${totalIcons} 个图标`);
+        }
+        
+        function filterQuality(quality) {
+            const sections = document.querySelectorAll('.quality-section');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // 更新按钮状态
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // 过滤显示
+            sections.forEach(section => {
+                if (quality === 'all' || section.dataset.quality === quality) {
+                    section.classList.remove('hidden');
+                } else {
+                    section.classList.add('hidden');
+                }
+            });
+        }
+        
+        // 页面加载时执行
+        window.addEventListener('DOMContentLoaded', loadIcons);
+    </script>
+</body>
+</html>
