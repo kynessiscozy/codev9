@@ -70,9 +70,6 @@ export function closeSidebar() {
   const sidebar = $('sidebar');
   if (sidebar) {
     sidebar.classList.remove('open');
-    setTimeout(() => {
-      sidebar.style.display = 'none';
-    }, 300);
   }
 }
 

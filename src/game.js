@@ -1958,9 +1958,8 @@ function confirmReset(){
       // 6. 清理DOM状态
       // 关闭模态框
       $remCls('modal','show');
-      // 关闭侧边栏
-      const sb=document.getElementById('sidebar');if(sb){sb.classList.remove('open');sb.style.display='none';}
-      const ls=document.getElementById('ls-panel');if(ls){ls.classList.remove('open');ls.style.display='none';}
+      // 关闭侧边栏（统一调用 closeSidebar，避免直接操作 ls-panel 导致 display 永久为 none）
+      closeSidebar();
       // 清除通知
       document.querySelectorAll('.ntf').forEach(n=>n.remove());
       // 清除成就覆盖层
@@ -5028,8 +5027,10 @@ function closeSidebar(){
 }
 function openSidebar(){
   const sb=document.getElementById('left-sidebar');
+  const panel=document.getElementById('ls-panel');
   const btn=document.getElementById('menu-btn');
   if(sb)sb.classList.add('open');
+  if(panel)panel.style.display='';
   if(btn)btn.classList.add('open');
 }
 // Swipe left on panel to close left sidebar
