@@ -17,7 +17,7 @@ except ImportError:
 # Config
 SOULS_DIR = Path("/Users/shunzhiyuanweizhu/Desktop/1/public/souls")
 BACKUP_DIR = Path("/Users/shunzhiyuanweizhu/Desktop/1/public/souls_backup")
-QUALITY = 90  # WebP quality (0-100)
+QUALITY = 75  # WebP quality (0-100), lowered for smaller file size
 
 
 def convert_png_to_webp(png_path, webp_path):

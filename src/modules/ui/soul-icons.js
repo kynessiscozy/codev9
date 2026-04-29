@@ -203,6 +203,8 @@ export function getSoulIcon(soulName, quality = "common", options = {}) {
     + ` alt="${soulName}"`
     + themeAttr
     + ` draggable="false"`
+    + ` loading="lazy"`
+    + ` decoding="async"`
     + ` onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${fallbackSVG}')">`;
 }
 

@@ -21,3 +21,6 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+# Large backup files (not needed for deployment)
+public/souls_backup/
