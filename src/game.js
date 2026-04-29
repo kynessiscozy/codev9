@@ -5923,7 +5923,7 @@ function openShareCard(){
   // Update DOM elements
   const card=$('share-card');
   if(card)card.style.setProperty('--sc-col',col);
-  const scIco=$('sc-ico');if(scIco){scIco.innerHTML=hasSoul?getSoulIcon(s.name,s.quality,{sizeClass:'size-large'}):'<span style=\"font-size:88px\">🌀</span>';scIco.style.display='flex';scIco.style.alignItems='center';scIco.style.justifyContent='center';}
+  const scIco=$('sc-ico');if(scIco){scIco.innerHTML=hasSoul?getSoulIcon(s.name,s.quality,{sizeClass:'size-medium'}):'<span style=\"font-size:88px\">🌀</span>';scIco.style.display='flex';scIco.style.alignItems='center';scIco.style.justifyContent='center';}
   $set('sc-name','textContent',hasSoul?s.name:'尚未觉醒');
   $set('sc-name','style.color',col);
 

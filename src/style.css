@@ -1369,7 +1369,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
   position:absolute;top:16px;left:16px;
   font-size:9px;color:rgba(201,162,39,.5);letter-spacing:3px;font-weight:700;
 }
-.sc-ico{font-size:88px;margin-bottom:10px;position:relative;z-index:1;filter:drop-shadow(0 0 30px var(--sc-col,rgba(245,158,11,.6)));}
+.sc-ico{font-size:88px;margin-bottom:10px;position:relative;z-index:1;filter:drop-shadow(0 0 30px var(--sc-col,rgba(245,158,11,.6)));display:flex;align-items:center;justify-content:center;width:120px;height:120px;margin-left:auto;margin-right:auto;}.sc-ico .soul-icon{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;}
 .sc-name{
   font-family:'Ma Shan Zheng',serif;font-size:32px;letter-spacing:5px;
   color:var(--sc-col,#f59e0b);text-shadow:0 0 30px var(--sc-col,rgba(245,158,11,.5));
