@@ -490,7 +490,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 }
 .sol-glow{position:absolute;width:128px;height:128px;border-radius:50%;filter:blur(12px);animation:solGlowPulse 3.2s ease infinite}
 @keyframes solGlowPulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
-.sol-icon{position:relative;z-index:2;line-height:1;animation:solIconFloat 3.5s ease infinite;margin-bottom:40px}
+.sol-icon{position:relative;z-index:2;line-height:1;animation:solIconFloat 3.5s ease infinite;margin-bottom:80px}
 @keyframes solIconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
 /* Awaken level FX */
