@@ -2256,8 +2256,14 @@ const LOT_POOL_WASH=['rgba(156,163,175,.06)','rgba(139,92,246,.08)','rgba(245,15
 const _lotPoolPulls=[0,0,0];
 
 function initLotGeoCvs(){
-  // 抽奖几何动画已禁用
-  return;
+  LOT_GEO_CFG.forEach((_,pi)=>{
+    const cvs=document.getElementById('lgeo-'+pi);
+    if(!cvs)return;
+    const slide=cvs.closest('.lot-slide');
+    const rect=slide.getBoundingClientRect();
+    cvs.width=rect.width||400;cvs.height=rect.height||250;
+    LOT_GEO_CTX[pi]=cvs.getContext('2d');
+  });
 }
 function drawLotGeo(){
   LOT_GEO_CFG.forEach((cfg,pi)=>{
