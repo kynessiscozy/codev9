@@ -40,7 +40,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
   display:flex;align-items:center;gap:7px;
   padding:7px 11px 7px 9px;border-radius:22px;
   font-size:10px;line-height:1.35;font-weight:500;
-  max-width:100%;word-break:break-all;
+  max-width:100%;
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
   background:rgba(8,14,30,.85);
   border:1px solid rgba(201,162,39,.28);
@@ -49,7 +49,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .ntf::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;background:var(--ntf-col,var(--gl));box-shadow:0 0 5px var(--ntf-col,var(--gl))}
-.ntf.long{white-space:normal;border-radius:12px;padding:8px 12px 8px 10px;align-items:flex-start}
+.ntf.long{white-space:normal;word-break:break-word;border-radius:12px;padding:8px 12px 8px 10px;align-items:flex-start}
 .ntf.long::before{margin-top:3px}
 .ntf.normal{--ntf-col:rgba(201,162,39,.75);color:rgba(255,255,255,.62)}
 .ntf.epic{--ntf-col:#a78bfa;border-color:rgba(139,92,246,.38);background:rgba(10,6,24,.88);box-shadow:0 2px 12px rgba(0,0,0,.5),0 0 10px rgba(139,92,246,.16);color:rgba(255,255,255,.82)}
@@ -321,8 +321,6 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 .tc-tix{display:inline-flex;align-items:center;gap:3px;font-size:8px;padding:2px 7px;border-radius:8px;margin-top:4px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.18);color:rgba(255,255,255,.3)}
 .tc.claimable .tc-tix{border-color:rgba(201,162,39,.3);color:var(--gl)}
 .tc.hidden .tc-tix{border-color:rgba(139,92,246,.28);color:#a78bfa}
-/* hidden legacy stubs */.cult-btn{display:none}.cb-ico{display:none}.cb-lbl{display:none}.cb-cnt{display:none}
-
 /* BAG PAGE */
 .bag-tabs{display:flex;gap:4px;margin-bottom:10px;overflow-x:auto}
 .bag-tabs::-webkit-scrollbar{display:none}
@@ -814,9 +812,9 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 .talent-card:active{transform:scale(.95)}
 .talent-card.selected{border-color:var(--tc,rgba(245,158,11,.6));background:rgba(var(--tr,245),var(--tg,158),var(--tb,11),.1);box-shadow:0 0 18px rgba(var(--tr,245),var(--tg,158),var(--tb,11),.2)}
 .talent-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 30%,rgba(var(--tr,245),var(--tg,158),var(--tb,11),.07),transparent 65%);pointer-events:none}
-.tc-ico{font-size:28px;margin-bottom:7px}
-.tc-name{font-family:'Ma Shan Zheng',serif;font-size:15px;color:var(--tc,var(--gl));letter-spacing:2px;margin-bottom:4px}
-.tc-desc{font-size:9px;color:var(--dim);line-height:1.6;margin-bottom:6px}
+.talent-card .tc-ico{font-size:28px;margin-bottom:7px}
+.talent-card .tc-name{font-family:'Ma Shan Zheng',serif;font-size:15px;color:var(--tc,var(--gl));letter-spacing:2px;margin-bottom:4px}
+.talent-card .tc-desc{font-size:9px;color:var(--dim);line-height:1.6;margin-bottom:6px}
 .tc-stat{font-size:10px;color:var(--tc,var(--gl));font-weight:600;margin-bottom:2px}
 .tc-sel-badge{position:absolute;top:6px;right:6px;font-size:8px;padding:2px 6px;border-radius:8px;background:var(--tc,rgba(245,158,11,.5));color:#000;font-weight:700}
 /* Awaken stars */
@@ -1370,7 +1368,13 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
   position:absolute;top:16px;left:16px;
   font-size:9px;color:rgba(201,162,39,.5);letter-spacing:3px;font-weight:700;
 }
-.sc-ico{font-size:88px;margin-bottom:10px;position:relative;z-index:1;filter:drop-shadow(0 0 30px var(--sc-col,rgba(245,158,11,.6)));display:flex;align-items:center;justify-content:center;width:120px;height:120px;margin-left:auto;margin-right:auto;}.sc-ico .soul-icon{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;}
+.sc-ico{
+  font-size:88px;margin-bottom:10px;position:relative;z-index:1;
+  filter:drop-shadow(0 0 30px var(--sc-col,rgba(245,158,11,.6)));
+  display:flex;align-items:center;justify-content:center;
+  width:120px;height:120px;margin-left:auto;margin-right:auto;
+}
+.sc-ico .soul-icon{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
 .sc-name{
   font-family:'Ma Shan Zheng',serif;font-size:32px;letter-spacing:5px;
   color:var(--sc-col,#f59e0b);text-shadow:0 0 30px var(--sc-col,rgba(245,158,11,.5));
@@ -1552,7 +1556,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 [data-theme="light"] .sv2-gc-title{color:rgba(0,0,0,.25)}
 [data-theme="light"] .sv2-b-slot{background:rgba(0,0,0,.025);border-color:rgba(0,0,0,.08);color:var(--dim)}
 [data-theme="light"] .sv2-b-slot.on{border-color:rgba(201,162,39,.25);background:rgba(201,162,39,.05)}
-[data-theme="light"] .sv2-b-pw{color:rgba(0,0,0,.4)}
+[data-theme="light"] .sv2-b-pw{color:rgba(0,0,0,.18)}
 [data-theme="light"] .sv2-b-slot.on .sv2-b-pw{color:var(--legend)}
 [data-theme="light"] .sv2-art-wrap{background:rgba(0,0,0,.02);border-color:rgba(0,0,0,.05)}
 [data-theme="light"] .sv2-art-name{color:var(--legend)}
@@ -1601,7 +1605,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 [data-theme="light"] .lot-ey{color:rgba(0,0,0,.25)}
 [data-theme="light"] .lot-nm{color:var(--txt)}
 [data-theme="light"] .lot-sb{color:var(--dim)}
-[data-theme="light"] .lot-cnt-l{color:var(--dim)}
+[data-theme="light"] .lot-cnt-l{color:rgba(0,0,0,.18)}
 [data-theme="light"] .lot-ltd{background:rgba(220,38,38,.75);color:#fff}
 [data-theme="light"] .lot-banner-outer{background:rgba(0,0,0,.015);border-radius:12px}
 [data-theme="light"] .lot-panel{background:rgba(255,255,255,.6);border-color:rgba(0,0,0,.06)}
@@ -1801,7 +1805,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 [data-theme="light"] .tc.hidden .tc-ico-w{border-color:rgba(124,58,237,.15);background:rgba(124,58,237,.04)}
 [data-theme="light"] .tc-btn.do{border-color:rgba(201,162,39,.3);background:rgba(201,162,39,.06);color:var(--legend)}
 [data-theme="light"] .tc-rew{color:var(--legend)}
-[data-theme="light"] .tc-name{color:var(--txt)}
+[data-theme="light"] .tc:not(.talent-card) .tc-name{color:var(--txt)}
 [data-theme="light"] .tc-pf{background:linear-gradient(90deg,var(--gd),var(--gold))}
 [data-theme="light"] .tc.claimable .tc-pf{background:linear-gradient(90deg,rgba(201,162,39,.55),var(--gold))}
 [data-theme="light"] .tc.hidden .tc-pf{background:linear-gradient(90deg,rgba(124,58,237,.55),#7c3aed)}
@@ -1826,7 +1830,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 /* ── 天赋/融合/道路 ── */
 [data-theme="light"] .talent-card{background:rgba(255,255,255,.6);border-color:rgba(0,0,0,.06)}
 [data-theme="light"] .talent-card.selected{box-shadow:0 0 10px rgba(201,162,39,.1)}
-[data-theme="light"] .tc-name{color:var(--legend)}
+[data-theme="light"] .talent-card .tc-name{color:var(--legend)}
 [data-theme="light"] .tc-stat{color:var(--legend)}
 [data-theme="light"] .tc-sel-badge{background:rgba(201,162,39,.75);color:#fff}
 [data-theme="light"] .f-c{background:radial-gradient(ellipse,rgba(240,242,245,.95),#e8eaed);border-color:rgba(0,0,0,.12)}
@@ -1860,7 +1864,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 [data-theme="light"] .sc-line{background:linear-gradient(90deg,transparent,rgba(201,162,39,.35),transparent)}
 [data-theme="light"] .sc-stat-v{color:var(--legend)}
 [data-theme="light"] .sc-stat-l{color:var(--dim)}
-[data-theme="light"] .sc-attr{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.06);color:var(--dim)}
+[data-theme="light"] .sc-attr{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.06);color:rgba(0,0,0,.4)}
 [data-theme="light"] .sc-realm{color:var(--dim)}
 [data-theme="light"] .sc-name{text-shadow:none}
 [data-theme="light"] .sc-ico{filter:drop-shadow(0 2px 6px rgba(0,0,0,.1))}
@@ -1871,11 +1875,10 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 /* ── 世界卡片/杂项 ── */
 [data-theme="light"] .wc-tag{background:rgba(255,255,255,.45);color:var(--txt);border:1px solid rgba(0,0,0,.06)}
 [data-theme="light"] .wc-sub{color:var(--dim)}
-[data-theme="light"] .world-card-big{box-shadow:0 2px 10px rgba(0,0,0,.06)}
+[data-theme="light"] .world-card-big{box-shadow:0 2px 10px rgba(0,0,0,.06);border-color:rgba(0,0,0,.1)!important}
 [data-theme="light"] .world-dot{background:rgba(0,0,0,.08)}
 [data-theme="light"] .world-dot.active{background:var(--gold)}
 /* ── 异界副本卡片 Light 主题色覆盖 ── */
-[data-theme="light"] .world-card-big{border-color:rgba(0,0,0,.1)!important}
 /* 每层卡片保留对应主题色渐变 */
 [data-theme="light"] .world-card-big:nth-child(1){background:linear-gradient(160deg,#f3e8ff,#ede9fe,#faf5ff)!important;border-color:rgba(192,132,252,.35)!important}
 [data-theme="light"] .world-card-big:nth-child(2){background:linear-gradient(160deg,#fef2f2,#fee2e2,#fff5f5)!important;border-color:rgba(248,113,113,.35)!important}
@@ -1928,27 +1931,10 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 [data-theme="light"] .sol-exp-fill{background:linear-gradient(90deg,var(--gd),var(--gold))}
 
 /* ── 白色/浅色文字在浅色背景下不可读 → 改为深灰/深金 ── */
-[data-theme="light"] .ntf.normal{color:var(--dim)}
-[data-theme="light"] .lot-nm{color:var(--txt)}
-[data-theme="light"] .lot-ey{color:rgba(0,0,0,.25)}
-[data-theme="light"] .lot-cnt-l{color:rgba(0,0,0,.18)}
-[data-theme="light"] .lr-ttl{color:var(--dim)}
-[data-theme="light"] .lhw-ttl{color:rgba(0,0,0,.3)}
-[data-theme="light"] .tasks-sh-title{color:rgba(0,0,0,.25)}
-[data-theme="light"] .tc-tix{color:var(--dim)}
-[data-theme="light"] .sol-attr{color:rgba(0,0,0,.4)}
-[data-theme="light"] .sv2-title{color:rgba(0,0,0,.25)}
-[data-theme="light"] .sv2-gc-title{color:rgba(0,0,0,.25)}
-[data-theme="light"] .sv2-b-pw{color:rgba(0,0,0,.18)}
-[data-theme="light"] .sv2-art-pw{color:rgba(0,0,0,.18)}
+/* 注意：lot-nm/lot-ey/lr-ttl/lhw-ttl/tasks-sh-title/tc-tix/sv2-title/sv2-gc-title/realm-sub-title/realm-lv-text/sc-stat-l/sc-realm/wc-sub 等已在各自区块声明 */
+/* 此处仅补充遗漏的选择器 */
 [data-theme="light"] .gs-d-attr{color:rgba(0,0,0,.4)}
-[data-theme="light"] .realm-sub-title{color:var(--dim)}
-[data-theme="light"] .realm-lv-text{color:rgba(0,0,0,.25)}
-[data-theme="light"] .sc-stat-l{color:var(--dim)}
 [data-theme="light"] .sc-attr{color:rgba(0,0,0,.4)}
-[data-theme="light"] .sc-realm{color:var(--dim)}
-[data-theme="light"] .wc-title{color:var(--txt)!important}
-[data-theme="light"] .wc-sub{color:var(--dim)}
 [data-theme="light"] .ls-item-lbl{color:var(--txt)}
 [data-theme="light"] .ls-item-desc{color:var(--dim)}
 [data-theme="light"] .ls-pill-lbl{color:var(--dim)}

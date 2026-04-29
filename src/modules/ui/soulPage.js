@@ -1,16 +1,14 @@
 // ──── 武魂页面UI模块 ────
 
 import { G, saveG } from '../core/state.js';
-import { getQualityConfig, getQualityColor } from '../config/quality.js';
+import { QC, getQualityConfig, getQualityColor } from '../config/quality.js';
 import { rankStr } from '../config/realms.js';
 import { spawnBurst } from '../core/utils.js';
-import { updateHUD } from '../core/exp.js';
-import { openModal, closeModal } from './modals.js';
-import { notify, notifyDivine } from '../core/notify.js';
-import { getSoulIcon, getSoulTheme } from './soul-icons.js';
-import { SOUL_EVOLUTIONS, execSoulEvolution as execSoulEvo } from '../core/resonance.js';
-import { genSkills } from '../systems/awakening.js';
-import { SD } from '../data/souls.js';
+import { addExp, updateHUD } from '../core/exp.js';
+import { openModal } from './modals.js';
+import { notify } from '../core/notify.js';
+import { getSoulIcon } from './soul-icons.js';
+import { SOUL_EVOLUTIONS, RESONANCE_CFG, FRAGMENT_SOURCES, calcResonancePower } from '../core/resonance.js';
 
 /**
  * 渲染武魂页面（简化版，完整版需从game.js提取更多代码）
@@ -57,7 +55,7 @@ export function renderSoulPage() {
 /**
  * 显示武魂几何背景（已禁用）
  */
-export function showSoulGeo(qt, rgb, rings) {
+export function showSoulGeo() {
   // 背景特效已移除
   return;
 }
