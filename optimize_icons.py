@@ -20,24 +20,34 @@ BACKUP_DIR = Path("/Users/shunzhiyuanweizhu/Desktop/1/public/souls_backup")
 QUALITY = 75  # WebP quality (0-100), lowered for smaller file size
 
 
+def remove_white_background(img, threshold=230):
+    """
+    将白色/近白色背景转为透明
+    threshold: 判定为白色的阈值 (0-255)
+    """
+    if img.mode != 'RGBA':
+        img = img.convert('RGBA')
+
+    datas = img.getdata()
+    newData = []
+    for item in datas:
+        # 如果 RGB 都接近白色，则设为透明
+        if item[0] >= threshold and item[1] >= threshold and item[2] >= threshold:
+            newData.append((255, 255, 255, 0))
+        else:
+            newData.append(item)
+    img.putdata(newData)
+    return img
+
+
 def convert_png_to_webp(png_path, webp_path):
-    """Convert PNG to WebP, preserve transparency"""
+    """Convert PNG to WebP, remove white background and preserve transparency"""
     img = Image.open(png_path)
 
-    # Check if image has transparency
-    has_transparency = (img.mode in ('RGBA', 'LA') or
-                       (img.mode == 'P' and 'transparency' in img.info))
+    # 去除白色背景（原始 PNG 通常有白色背景）
+    img = remove_white_background(img, threshold=230)
 
-    if has_transparency:
-        # Keep alpha channel
-        if img.mode != 'RGBA':
-            img = img.convert('RGBA')
-    else:
-        # No transparency, convert to RGB for smaller size
-        if img.mode != 'RGB':
-            img = img.convert('RGB')
-
-    # Save as WebP
+    # Save as WebP with alpha channel
     img.save(webp_path, 'WEBP', quality=QUALITY, method=6, lossless=False)
     img.close()
 
