@@ -631,7 +631,7 @@ function openSoulResonance(){
 
   const sourcesH=FRAGMENT_SOURCES.map(s=>`
     <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03)">
-      <span style="display:flex;align-items:center;flex-shrink:0">${getSoulIcon(s.name,s.quality,{sizeClass:'size-small'})}</span>
+      <span style="display:flex;align-items:center;flex-shrink:0">${getSoulIcon(s.name,s.quality,{sizeClass:'size-small',animated:false})}</span>
       <div>
         <div style="font-size:10px;font-weight:600;color:var(--txt)">${s.label}</div>
         <div style="font-size:9px;color:var(--dim)">${s.desc}</div>
@@ -5182,7 +5182,7 @@ function gsRenderGrid(){
       style="${isFound?`--qr:${qc.r};--qg:${qc.g};--qb:${qc.b};--qbdr:${qc.c}55;--sd:${5+i%6}s;--dl:${delay}s`:''}"
       onclick="${isFound?`gsShowDetail('${encodeURIComponent(s.n)}')`:''}"
     >
-      <div class="gc-ico" style="display:flex;align-items:center;justify-content:center;height:40px;">${isFound?getSoulIcon(s.n,s.q,{sizeClass:'size-small'}):'<span style="font-size:28px;">❓</span>'}</div>
+      <div class="gc-ico" style="display:flex;align-items:center;justify-content:center;height:40px;">${isFound?getSoulIcon(s.n,s.q,{sizeClass:'size-small',animated:false}):'<span style="font-size:28px;">❓</span>'}</div>
       <div class="gc-name">${isFound?s.n:'???'}</div>
       <div class="gc-q" style="${isFound?`color:${qc.c}`:''}">
         ${isFound?qc.n:'未知'}

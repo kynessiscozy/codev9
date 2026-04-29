@@ -25,7 +25,7 @@
    普通品质 - 微弱光晕
    ════════════════════════════════════════════════ */
 
-.quality-common {
+.soul-icon-animated.quality-common {
   animation: commonPulse 3s ease-in-out infinite;
 }
 
@@ -44,7 +44,7 @@
    稀有品质 - 蓝色光晕
    ════════════════════════════════════════════════ */
 
-.quality-rare {
+.soul-icon-animated.quality-rare {
   animation: rareGlow 2s ease-in-out infinite;
 }
 
@@ -61,11 +61,11 @@
    史诗品质 - 紫色旋转光环
    ════════════════════════════════════════════════ */
 
-.quality-epic {
+.soul-icon-animated.quality-epic {
   animation: epicSpin 4s linear infinite;
 }
 
-.quality-epic:hover {
+.soul-icon-animated.quality-epic:hover {
   animation: epicSpin 2s linear infinite, epicPulse 1.5s ease-in-out infinite;
 }
 
@@ -105,7 +105,7 @@
    传说品质 - 金色闪烁
    ════════════════════════════════════════════════ */
 
-.quality-legend {
+.soul-icon-animated.quality-legend {
   animation: legendShine 3s ease-in-out infinite;
 }
 
@@ -135,7 +135,7 @@
    顶级品质 - 红色烈焰
    ════════════════════════════════════════════════ */
 
-.quality-apex {
+.soul-icon-animated.quality-apex {
   animation: apexFlame 2s ease-in-out infinite;
 }
 
@@ -163,7 +163,7 @@
    隐藏品质HC - 翠绿色生命脉动
    ════════════════════════════════════════════════ */
 
-.quality-hc {
+.soul-icon-animated.quality-hc {
   animation: hcLife 2.5s ease-in-out infinite;
 }
 
@@ -183,7 +183,7 @@
    隐藏品质HA - 粉色幻影
    ════════════════════════════════════════════════ */
 
-.quality-ha {
+.soul-icon-animated.quality-ha {
   animation: haPhantom 3s ease-in-out infinite;
 }
 
@@ -205,7 +205,7 @@
    双生武魂 - 双色交替
    ════════════════════════════════════════════════ */
 
-.quality-twin {
+.soul-icon-animated.quality-twin {
   animation: twinAlternate 2s ease-in-out infinite;
 }
 
@@ -228,7 +228,7 @@
    三生武魂 - 三色流转
    ════════════════════════════════════════════════ */
 
-.quality-triple {
+.soul-icon-animated.quality-triple {
   animation: tripleFlow 3s linear infinite;
 }
 
@@ -264,7 +264,7 @@
    ════════════════════════════════════════════════ */
 
 /* 火系 - 火焰跳动 */
-.soul-icon[data-theme="fire"] {
+.soul-icon-animated[data-theme="fire"] {
   animation: fireFlicker 1.5s ease-in-out infinite;
 }
 
@@ -288,7 +288,7 @@
 }
 
 /* 冰系 - 冰霜凝结 */
-.soul-icon[data-theme="ice"] {
+.soul-icon-animated[data-theme="ice"] {
   animation: iceFreeze 3s ease-in-out infinite;
 }
 
@@ -305,7 +305,7 @@
 }
 
 /* 雷电 - 闪电闪烁 */
-.soul-icon[data-theme="thunder"] {
+.soul-icon-animated[data-theme="thunder"] {
   animation: thunderFlash 2s ease-in-out infinite;
 }
 
@@ -328,7 +328,7 @@
 }
 
 /* 龙系 - 龙息呼吸 */
-.soul-icon[data-theme="dragon"] {
+.soul-icon-animated[data-theme="dragon"] {
   animation: dragonBreath 4s ease-in-out infinite;
 }
 
@@ -346,7 +346,7 @@
 }
 
 /* 神圣 - 圣光普照 */
-.soul-icon[data-theme="holy"] {
+.soul-icon-animated[data-theme="holy"] {
   animation: holyRadiance 3s ease-in-out infinite;
 }
 
@@ -363,7 +363,7 @@
 }
 
 /* 黑暗 - 暗影涌动 */
-.soul-icon[data-theme="dark"] {
+.soul-icon-animated[data-theme="dark"] {
   animation: darkSurge 3s ease-in-out infinite;
 }
 

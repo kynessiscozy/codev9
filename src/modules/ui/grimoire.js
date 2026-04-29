@@ -75,7 +75,7 @@ function renderSoulsGrimoire(container) {
     card.style.cssText = 'background:#1e293b;border:1px solid #334155;border-radius:8px;padding:12px;cursor:pointer;transition:all .2s;';
 
     const isDiscovered = G.grimoire?.souls?.includes(soul.id) || false;
-    const svgIcon = isDiscovered ? getSoulIcon(soul.n, soul.q, { sizeClass: 'size-medium' }) : '<span style="font-size:28px;">❓</span>';
+    const svgIcon = isDiscovered ? getSoulIcon(soul.n, soul.q, { sizeClass: 'size-medium', animated: false }) : '<span style="font-size:28px;">❓</span>';
 
     card.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:center;height:48px;margin-bottom:8px;">
