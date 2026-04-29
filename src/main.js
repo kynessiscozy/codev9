@@ -29,7 +29,7 @@ const moduleInfo = Modules.initializeGameModules();
 // ══════════════════════════════════════════════
 Object.defineProperty(window, 'G', {
   get() { return Modules.G; },
-  set(val) { console.warn('[main.js] 请通过模块系统修改 G，不要直接赋值 window.G'); }
+  set(val) { Modules.G = val; }
 });
 console.log('🌐 window.G 已绑定到模块状态');
 console.log('📊 模块初始化信息:', moduleInfo);

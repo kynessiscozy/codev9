@@ -1936,13 +1936,41 @@ function confirmReset(){
       // 4. 清除游戏存档（保留武魂图鉴 dlv3-grimoire）
       localStorage.removeItem('dlv3');
 
-      // 5. 重置状态变量
+      // 5. 重置所有全局状态变量
       _lotCurPool=0;_lotTouchX=0;_lotMouseX=0;_lotMouseDown=false;
       curLotMode=0;curBagFilter='all';
       fusState={a:null,b:null,herbs:[]};
       fusSelTgt=null;fusHerbTgt=null;
+      // 战斗状态
+      if(combatAnimTimer){clearTimeout(combatAnimTimer);combatAnimTimer=null;}
+      combatState=null;combatLog=[];
+      // 分页状态
+      worldPage=0;
+      // 页面可见性
+      pageHidden=false;
+      // GM控制台
+      if(gmPressTimer){clearTimeout(gmPressTimer);gmPressTimer=null;}
+      // 图鉴筛选
+      _gsFilter='all';_gsSearch='';
+      // 成就筛选
+      _achFilter='all';
 
-      // 6. 重置游戏状态
+      // 6. 清理DOM状态
+      // 关闭模态框
+      $remCls('modal','show');
+      // 关闭侧边栏
+      const sb=document.getElementById('sidebar');if(sb){sb.classList.remove('open');sb.style.display='none';}
+      const ls=document.getElementById('ls-panel');if(ls){ls.classList.remove('open');ls.style.display='none';}
+      // 清除通知
+      document.querySelectorAll('.ntf').forEach(n=>n.remove());
+      // 清除成就覆盖层
+      const achOv=document.getElementById('ach-ov');if(achOv)achOv.remove();
+      // 清除图鉴完成覆盖层
+      const gsOv=document.getElementById('gs-complete-ov');if(gsOv)gsOv.remove();
+      // 清除领域突破覆盖层
+      const ro=document.getElementById('realm-overlay');if(ro)ro.classList.remove('show');
+
+      // 7. 重置游戏状态
       G=defState();
 
       // 7. 恢复武魂图鉴历史
