@@ -1525,8 +1525,8 @@ function renderSoulPage(){
         ${(()=>{const t=TALENTS.find(x=>x.id===G.talent);if(!t)return '';return '<div class="sol-dot-sep"></div><div class="sol-rank" style="color:'+t.col+'">'+t.icon+' '+t.name+'</div>';})()}
       </div>
 
-      <!-- v9: Unified 4-action row — width matches ring card (padding 0 11px) -->
-      <div class="sol-actions" style="margin:0 -5px 10px">
+      <!-- v9: Unified 4-action row — width matches bone column -->
+      <div class="sol-actions">
         <div class="sol-act" onclick="doSecondAwaken()">
           <div class="sol-act-ico">⚡</div><div class="sol-act-lbl">二次觉醒</div>
         </div>
@@ -1606,7 +1606,18 @@ function renderSoulPage(){
   document.documentElement.style.setProperty('--qc-bg',`rgba(${qR},${qG},${qB},.06)`);
   document.documentElement.style.setProperty('--qc-bg2',`rgba(${qR},${qG},${qB},.04)`);
   updateHUD();
+  // 对齐四个按钮宽度与魂骨栏宽度
+  requestAnimationFrame(alignSolActionsWidth);
 }
+
+function alignSolActionsWidth(){
+  const boneCol=document.querySelector('.sv2-gcol');
+  const solActs=document.querySelector('.sol-actions');
+  if(boneCol&&solActs){
+    solActs.style.width=boneCol.offsetWidth+'px';
+  }
+}
+window.addEventListener('resize',()=>requestAnimationFrame(alignSolActionsWidth));
 
 function isLightQColor(hex){
   const r=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);

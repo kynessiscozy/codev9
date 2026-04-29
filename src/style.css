@@ -523,8 +523,8 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 .sol-attrs{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;padding:0 16px;margin-bottom:12px}
 .sol-attr{font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.4)}
 
-/* Quick actions — 4 buttons */
-.sol-actions{display:flex;gap:7px;width:calc(50% - 4px);margin:0 0 6px;align-self:flex-start}
+/* Quick actions — 4 buttons（宽度由 JS 动态对齐到魂骨栏） */
+.sol-actions{display:flex;gap:7px;margin:0 0 10px;align-self:flex-start}
 .sol-act{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border-radius:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);transition:all .18s}
 .sol-act:active{transform:scale(.93)}
 .sol-act.hi{border-color:var(--qc-border,rgba(245,158,11,.28));background:var(--qc-bg,rgba(245,158,11,.06))}
