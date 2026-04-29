@@ -469,7 +469,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 #page-soul{padding:0}
 #page-lottery{padding:0}
 
-.soul-v2-hero{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:94px 16px 20px;width:66.67%;margin:0 auto;overflow:visible}
+.soul-v2-hero{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:94px 0 20px;width:calc(100% - 22px);margin:0 11px;overflow:visible}
 
 /* Orbit ring system */
 .soul-orbit{position:relative;width:190px;height:190px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
@@ -490,7 +490,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 }
 .sol-glow{position:absolute;width:128px;height:128px;border-radius:50%;filter:blur(12px);animation:solGlowPulse 3.2s ease infinite}
 @keyframes solGlowPulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
-.sol-icon{position:relative;z-index:2;line-height:1;animation:solIconFloat 3.5s ease infinite;margin-bottom:20px}
+.sol-icon{position:relative;z-index:2;line-height:1;animation:solIconFloat 3.5s ease infinite;margin-bottom:40px}
 @keyframes solIconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
 /* Awaken level FX */
@@ -524,7 +524,7 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
 .sol-attr{font-size:9px;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:rgba(255,255,255,.4)}
 
 /* Quick actions — 4 buttons */
-.sol-actions{display:flex;gap:7px;width:100%;margin:0 -5px 6px;align-self:stretch}
+.sol-actions{display:flex;gap:7px;width:calc(50% - 4px);margin:0 0 6px;align-self:flex-start}
 .sol-act{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px 8px;border-radius:11px;cursor:pointer;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);transition:all .18s}
 .sol-act:active{transform:scale(.93)}
 .sol-act.hi{border-color:var(--qc-border,rgba(245,158,11,.28));background:var(--qc-bg,rgba(245,158,11,.06))}
