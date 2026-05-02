@@ -36,7 +36,7 @@ export { HERBS, RESOURCES, ARTS, TITLES, getHerb, getResource, getArtifact, getT
 // ──── 系统模块 ────
 export { triggerAwaken, closeResult, genSkills, getQK } from "./systems/awakening.js";
 export { hunt, rollRing, renderRecentRings, updateGodPath } from "./systems/hunt.js";
-export { doLotSmart, doLot, renderLotPage, goLotPool, updateLotPoolUI } from "./systems/lottery.js";
+export { doLotSmart, doLot, renderLotPage, goLotPool, updateLotPoolUI, getLotPullCount, getPityProgress, rollLottery, applyLotResult, getLotTier, getItemTier } from "./systems/lottery.js";
 export { openFusion, closeFusion, selFR, pickFR, addFH, pickFH, execFusion } from "./systems/fusion.js";
 export { showGodPath, startTrial, awardTitle, allGodTrialsCleared, showGodExamSelect, selectGodExam, openGodExam, doGodExam, renderSpecialPaths } from "./systems/god.js";
 export { explore, renderWorldPage, renderArenaPage, startArenaMatch, renderWorldDots, setWorldPage, unlockHiddenTask, claimHidden } from "./systems/world.js";
@@ -52,6 +52,7 @@ export { openModal, closeModal, openSelectModal, openConfirmModal, openInputModa
 export { renderSidebar, toggleSidebar, updateSidebar } from "./ui/sidebar.js";
 export { renderGrimoire, discoverSoul, discoverRing, discoverBone } from "./ui/grimoire.js";
 export { getSoulIcon, hasSoulIcon, getSoulTheme, registerSoulIcon, SOUL_ICONS } from "./ui/soul-icons.js";
+export { initPage25D, destroyPage25D } from "./ui/page-25d.js";
 
 // ──── 特效模块 ────
 export {

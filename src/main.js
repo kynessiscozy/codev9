@@ -8,6 +8,7 @@
 import './style.css';
 import './modules/ui/soul-icon-effects.css';
 import './modules/fx/effects.css';
+import './modules/ui/page-25d.css';
 
 // 导入统一的模块索引
 import * as Modules from './modules/index.js';
@@ -207,18 +208,14 @@ window.renderSpecialPaths = Modules.renderSpecialPaths;
 
 // 世界探索系统
 window.explore = Modules.explore;
-window.renderWorldPage = Modules.renderWorldPage;
 window.renderArenaPage = Modules.renderArenaPage;
 window.startArenaMatch = Modules.startArenaMatch;
-window.renderWorldDots = Modules.renderWorldDots;
-window.setWorldPage = Modules.setWorldPage;
 window.unlockHiddenTask = Modules.unlockHiddenTask;
 window.claimHidden = Modules.claimHidden;
 
 // 深渊系统
 window.showAbyssLayer = Modules.showAbyssLayer;
 window.fightAbyssStage = Modules.fightAbyssStage;
-window.renderAbyssPage = Modules.renderAbyssPage;
 window.allAbyssCleared = Modules.allAbyssCleared;
 window.claimAbyssReward = Modules.claimAbyssReward;
 
@@ -237,6 +234,10 @@ window.initSeasonalGeo = Modules.initSeasonalGeo;
 window.renderSeasonalActivities = Modules.renderSeasonalActivities;
 window.getCurrentSeason = Modules.getCurrentSeason;
 window.getSeasonBonus = Modules.getSeasonBonus;
+
+// 2.5D页面效果
+window.initPage25D = Modules.initPage25D;
+window.destroyPage25D = Modules.destroyPage25D;
 
 // ──── UI模块 ────
 window.renderNavigation = Modules.navTo;
@@ -398,6 +399,12 @@ if (document.readyState === 'loading') {
         console.log('✨ 武魂图标预加载完成');
       }, 100);
     }
+    // 初始化2.5D页面效果
+    setTimeout(() => {
+      if (window.initPage25D) {
+        window.initPage25D();
+      }
+    }, 200);
   });
 } else {
   injectGameScript();
@@ -408,6 +415,12 @@ if (document.readyState === 'loading') {
       console.log('✨ 武魂图标预加载完成');
     }, 100);
   }
+  // 初始化2.5D页面效果
+  setTimeout(() => {
+    if (window.initPage25D) {
+      window.initPage25D();
+    }
+  }, 200);
 }
 
 // ════════════════════════════════════════════════

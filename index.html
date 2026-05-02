@@ -46,61 +46,91 @@
     <!-- ===== SOUL PAGE ===== -->
     <div class="page active" id="page-soul"></div>
 
-    <!-- ===== HUNT/TRIAL PAGE ===== -->
+    <!-- ===== HUNT/TRIAL PAGE 2.5D ===== -->
     <div class="page" id="page-hunt">
       <div class="sh"><div class="st">试炼</div><span style="font-size:10px;color:var(--dim)">次数: <span id="hunt-cnt" style="color:var(--gl);font-weight:700">0</span></span></div>
 
-      <!-- Compact hunt zones grid -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-        <div class="zone-card forest" style="padding:10px;margin-bottom:0" onclick="hunt('forest')">
-          <div class="z-ico" style="font-size:22px;margin-bottom:4px">🌲</div>
-          <div class="z-nm" style="color:#6ee7b7;font-size:14px;margin-bottom:3px">星斗大森林</div>
-          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:7px">
-            <span class="ztag">🔮 百~万年</span><span class="ztag">🌿 药草</span><span class="ztag">👑 1%称号</span>
+      <!-- 2.5D 区域卡片网格 -->
+      <div class="hunt-zones-25d">
+        <div class="zone-card-25d forest" onclick="hunt('forest')">
+          <div class="zone-card-header-25d">
+            <div class="zone-icon-25d" style="--zone-color:#22c55e">
+              <span class="icon-text">🌲</span>
+            </div>
+            <div class="zone-name-25d">星斗大森林</div>
           </div>
-          <div class="z-cost" style="font-size:10px;padding:3px 8px">100 魂力</div>
+          <div class="zone-tags-25d">
+            <span class="zone-tag-25d">🔮 百~万年</span>
+            <span class="zone-tag-25d">🌿 药草</span>
+            <span class="zone-tag-25d">👑 1%称号</span>
+          </div>
+          <div class="zone-cost-25d">💜 100 魂力</div>
         </div>
-        <div class="zone-card chaos" style="padding:10px;margin-bottom:0" onclick="hunt('chaos')">
-          <div class="z-ico" style="font-size:22px;margin-bottom:4px">🌀</div>
-          <div class="z-nm" style="color:#c084fc;font-size:14px;margin-bottom:3px">混沌之地</div>
-          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:7px">
-            <span class="ztag">💜 万~不估量</span><span class="ztag">🦴 魂骨</span><span class="ztag">👑 1%称号</span>
+
+        <div class="zone-card-25d chaos" onclick="hunt('chaos')">
+          <div class="zone-card-header-25d">
+            <div class="zone-icon-25d" style="--zone-color:#a855f7">
+              <span class="icon-text">🌀</span>
+            </div>
+            <div class="zone-name-25d">混沌之地</div>
           </div>
-          <div class="z-cost" style="font-size:10px;padding:3px 8px">500 魂力</div>
+          <div class="zone-tags-25d">
+            <span class="zone-tag-25d">💜 万~不估量</span>
+            <span class="zone-tag-25d">🦴 魂骨</span>
+            <span class="zone-tag-25d">👑 1%称号</span>
+          </div>
+          <div class="zone-cost-25d">💜 500 魂力</div>
         </div>
-        <div class="zone-card primordial" style="padding:10px;margin-bottom:0" onclick="hunt('primordial')">
-          <div class="z-ico" style="font-size:22px;margin-bottom:4px">🌌</div>
-          <div class="z-nm" style="color:#67e8f9;font-size:14px;margin-bottom:3px">原初之地</div>
-          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:7px">
-            <span class="ztag">🔵 不估量~神赐</span><span class="ztag">⚡ 极致神器</span><span class="ztag">👑 1%称号</span>
+
+        <div class="zone-card-25d primordial" onclick="hunt('primordial')">
+          <div class="zone-card-header-25d">
+            <div class="zone-icon-25d" style="--zone-color:#06b6d4">
+              <span class="icon-text">🌌</span>
+            </div>
+            <div class="zone-name-25d">原初之地</div>
           </div>
-          <div class="z-cost" style="font-size:10px;padding:3px 8px">1000 魂力</div>
+          <div class="zone-tags-25d">
+            <span class="zone-tag-25d">🔵 不估量~神赐</span>
+            <span class="zone-tag-25d">⚡ 极致神器</span>
+            <span class="zone-tag-25d">👑 1%称号</span>
+          </div>
+          <div class="zone-cost-25d">💜 1000 魂力</div>
         </div>
-        <div class="zone-card random" style="padding:10px;margin-bottom:0" onclick="hunt('random')">
-          <div class="z-ico" style="font-size:22px;margin-bottom:4px">🎲</div>
-          <div class="z-nm" style="color:var(--gl);font-size:14px;margin-bottom:3px">随机传送</div>
-          <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:7px">
-            <span class="ztag">❓ 随机一切</span><span class="ztag">🎯 随机券</span><span class="ztag">👑 1%称号</span>
+
+        <div class="zone-card-25d random" onclick="hunt('random')">
+          <div class="zone-card-header-25d">
+            <div class="zone-icon-25d" style="--zone-color:#eab308">
+              <span class="icon-text">🎲</span>
+            </div>
+            <div class="zone-name-25d">随机传送</div>
           </div>
-          <div class="z-cost" style="font-size:10px;padding:3px 8px">300 魂力</div>
+          <div class="zone-tags-25d">
+            <span class="zone-tag-25d">❓ 随机一切</span>
+            <span class="zone-tag-25d">🎯 随机券</span>
+            <span class="zone-tag-25d">👑 1%称号</span>
+          </div>
+          <div class="zone-cost-25d">💜 300 魂力</div>
         </div>
       </div>
 
-      <!-- 成神之路 -->
-      <div class="zone-card godpath" id="godpath-card" onclick="showGodPath()">
-        <div class="z-deco">✨</div>
-        <div class="z-ico">🌟</div>
-        <div class="z-nm" style="color:#fca5a5">成神之路</div>
-        <div class="z-desc" id="gp-desc">集结九环之力，踏上超越凡人的成神试炼。每一关皆是对灵魂的淬炼。</div>
-        <div class="z-tags"><span class="ztag">🔴 需要9个魂环</span><span class="ztag">🏆 通关奖励丰厚</span><span class="ztag">⚡ 解锁神级属性</span></div>
+      <!-- 成神之路 2.5D -->
+      <div class="godpath-card-25d" id="godpath-card" onclick="showGodPath()">
+        <div class="godpath-icon-25d">🌟</div>
+        <div class="godpath-title-25d">成神之路</div>
+        <div class="godpath-desc-25d" id="gp-desc">集结九环之力，踏上超越凡人的成神试炼。每一关皆是对灵魂的淬炼。</div>
+        <div class="godpath-tags-25d">
+          <span class="zone-tag-25d">🔴 需要9个魂环</span>
+          <span class="zone-tag-25d">🏆 通关奖励丰厚</span>
+          <span class="zone-tag-25d">⚡ 解锁神级属性</span>
+        </div>
         <div class="z-lock-hint" id="gp-hint">🔒 当前武魂魂环不足9个，无法开启</div>
       </div>
 
       <!-- 特殊道路 Section -->
-      <div class="sh" style="margin-top:6px"><div class="st">🌌 特殊道路</div></div>
-      <div id="special-paths-section">
-        <div style="font-size:11px;color:var(--dim);margin-bottom:10px;line-height:1.7;padding:0 2px">特殊道路由武魂、魂环或成就条件解锁，每条道路均有独特的试炼内容与奖励。</div>
-        <div id="special-paths-grid" class="path-grid"></div>
+      <div class="special-section-25d">
+        <div class="special-title-25d">🌌 特殊道路</div>
+        <div style="font-size:11px;color:var(--dim);margin-bottom:10px;line-height:1.6">特殊道路由武魂、魂环或成就条件解锁，每条道路均有独特的试炼内容与奖励。</div>
+        <div id="special-paths-grid" class="special-paths-25d"></div>
       </div>
 
       <div class="sh" style="margin-top:6px">
@@ -110,7 +140,7 @@
       <div id="recent-rings" style="display:none"></div>
     </div>
 
-    <!-- ===== LOTTERY PAGE ===== -->
+    <!-- ===== LOTTERY PAGE 2.5D ===== -->
     <div class="page" id="page-lottery">
       <div class="sh" style="padding:11px 11px 0">
         <div class="st">星运抽取</div>
@@ -120,87 +150,94 @@
         </div>
       </div>
 
-      <!-- Swipe banner -->
-      <div class="lot-banner-outer" id="lot-banner-outer">
-        <div class="lot-banner-track" id="lot-banner-track">
+      <!-- 奖池切换标签 -->
+      <div class="lot-pool-tabs" id="lot-pool-tabs">
+        <div class="lot-pool-tab active" data-pool="0" onclick="goLotPool(0)">普通池</div>
+        <div class="lot-pool-tab" data-pool="1" onclick="goLotPool(1)">高级池</div>
+        <div class="lot-pool-tab" data-pool="2" onclick="goLotPool(2)">顶级池</div>
+      </div>
+
+      <!-- 2.5D Swipe banner -->
+      <div class="lot-banner-outer-25d" id="lot-banner-outer" style="--pool-r:156;--pool-g:163;--pool-b:175;">
+        <!-- 流光扫光 -->
+        <div class="shimmer-sweep"></div>
+        <!-- 角落装饰 -->
+        <div class="corner-accent tl"></div>
+        <div class="corner-accent tr"></div>
+        <div class="corner-accent bl"></div>
+        <div class="corner-accent br"></div>
+        <!-- 水晶球抽奖动画 -->
+        <div class="crystal-ball-wrap" id="crystal-ball">
+          <div class="cb-sphere">
+            <div class="cb-glass"></div>
+            <div class="cb-swirl"></div>
+            <div class="cb-highlight"></div>
+            <div class="cb-ring"></div>
+            <div class="cb-inner-sparkle"></div>
+          </div>
+          <div class="cb-aura"></div>
+          <div class="cb-particle p1"></div>
+          <div class="cb-particle p2"></div>
+          <div class="cb-particle p3"></div>
+          <div class="cb-particle p4"></div>
+          <div class="cb-particle p5"></div>
+          <div class="cb-particle p6"></div>
+        </div>
+        <div class="lot-banner-track-25d" id="lot-banner-track">
           <!-- Pool 0: 普通 -->
-          <div class="lot-slide ls-0">
-            <canvas class="lot-geo-cvs" id="lgeo-0"></canvas>
-            <div class="lot-ltd">🔥 限时 稀有×2</div>
-            <div class="lot-inner">
-              <div class="lot-top">
-                <div>
-                  <div class="lot-ey">STANDARD POOL</div>
-                  <div class="lot-nm">普通奖池</div>
-                  <div class="lot-sb">基础奖励 · 魂力可期</div>
-                </div>
-                <div>
-                  <div class="lot-cnt-n" id="lcnt-0" style="color:rgba(156,163,175,.45);text-align:right">0</div>
-                  <div class="lot-cnt-l">本池次数</div>
-                </div>
-              </div>
+          <div class="lot-slide-25d pool-standard">
+            <div class="pool-bg-layer"></div>
+            <div class="pool-core-glow"></div>
+            <div class="lot-slide-content">
+              <div class="lot-pool-icon">🛡️</div>
+              <div class="lot-pool-name">普通奖池</div>
+              <div class="lot-pool-sub">STANDARD POOL · 基础奖励</div>
             </div>
           </div>
 
           <!-- Pool 1: 高级 -->
-          <div class="lot-slide ls-1">
-            <canvas class="lot-geo-cvs" id="lgeo-1"></canvas>
-            <div class="lot-inner">
-              <div class="lot-top">
-                <div>
-                  <div class="lot-ey">ELITE POOL</div>
-                  <div class="lot-nm">高级奖池</div>
-                  <div class="lot-sb">精英奖励 · 史诗必现</div>
-                </div>
-                <div>
-                  <div class="lot-cnt-n" id="lcnt-1" style="color:rgba(167,139,250,.5);text-align:right">0</div>
-                  <div class="lot-cnt-l">本池次数</div>
-                </div>
-              </div>
+          <div class="lot-slide-25d pool-elite">
+            <div class="pool-bg-layer"></div>
+            <div class="pool-core-glow"></div>
+            <div class="lot-ltd">🎯 10连保底</div>
+            <div class="lot-slide-content">
+              <div class="lot-pool-icon">⚡</div>
+              <div class="lot-pool-name">高级奖池</div>
+              <div class="lot-pool-sub">ELITE POOL · 精英奖励</div>
             </div>
           </div>
 
           <!-- Pool 2: 顶级 -->
-          <div class="lot-slide ls-2">
-            <canvas class="lot-geo-cvs" id="lgeo-2"></canvas>
-            <div class="lot-inner">
-              <div class="lot-top">
-                <div>
-                  <div class="lot-ey">APEX POOL</div>
-                  <div class="lot-nm">顶级奖池</div>
-                  <div class="lot-sb">绝世奖励 · 传说降临</div>
-                </div>
-                <div>
-                  <div class="lot-cnt-n" id="lcnt-2" style="color:rgba(245,158,11,.55);text-align:right">0</div>
-                  <div class="lot-cnt-l">本池次数</div>
-                </div>
-              </div>
+          <div class="lot-slide-25d pool-apex">
+            <div class="pool-bg-layer"></div>
+            <div class="pool-core-glow"></div>
+            <div class="lot-ltd">🔥 宇宙之核</div>
+            <div class="lot-slide-content">
+              <div class="lot-pool-icon">🌟</div>
+              <div class="lot-pool-name">顶级奖池</div>
+              <div class="lot-pool-sub">APEX POOL · 绝世奖励</div>
             </div>
           </div>
         </div>
-        <div class="lot-dots" id="lot-dots">
-          <div class="ldot active" onclick="goLotPool(0)" style="--lpc:#9ca3af"></div>
-          <div class="ldot" onclick="goLotPool(1)" style="--lpc:#a78bfa"></div>
-          <div class="ldot" onclick="goLotPool(2)" style="--lpc:#f59e0b"></div>
-        </div>
       </div>
 
-      <!-- Draw panel -->
+      <!-- 抽奖按钮面板 -->
       <div class="lot-panel" id="lot-panel">
         <div class="lot-draw-grid" id="lot-draw-grid"></div>
-        <!-- V8 Luck Bar -->
-        <div class="tidal-wrap" id="tidal-wrap">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
-            <div style="font-size:9px;color:rgba(255,255,255,.28);letter-spacing:.8px">🍀 幸运值</div>
-            <div id="tidal-state-lbl" style="font-size:9px;font-weight:700;color:#9ca3af">低迷</div>
-          </div>
-          <div class="tidal-bar-track">
-            <div class="tidal-bar-fill" id="tidal-bar-fill" style="width:0%;background:linear-gradient(90deg,#4b5563,#9ca3af)"></div>
-            <div class="tidal-wave"></div>
-          </div>
-          <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--dim)">
-            <span>低迷</span><span id="tidal-next-lbl">平稳 30点</span><span id="tidal-pull-cnt">0点</span>
-          </div>
+      </div>
+
+      <!-- 幸运值 -->
+      <div class="tidal-wrap" id="tidal-wrap">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+          <div style="font-size:9px;color:rgba(255,255,255,.28);letter-spacing:.8px">🍀 幸运值</div>
+          <div id="tidal-state-lbl" style="font-size:9px;font-weight:700;color:#9ca3af">低迷</div>
+        </div>
+        <div class="tidal-bar-track">
+          <div class="tidal-bar-fill" id="tidal-bar-fill" style="width:0%;background:linear-gradient(90deg,#4b5563,#9ca3af)"></div>
+          <div class="tidal-wave"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:8px;color:var(--dim)">
+          <span>低迷</span><span id="tidal-next-lbl">平稳 30点</span><span id="tidal-pull-cnt">0点</span>
         </div>
       </div>
 
@@ -549,32 +586,7 @@
         <div class="ls-ci-days" id="ls-ci-days"></div>
         <div id="ls-ci-btn-wrap"></div>
       </div>
-      <div class="ls-tasks" id="ls-tasks">
-        <div class="ls-tasks-head" onclick="toggleSection('ls-daily-tasks','ls-daily-fold')">
-          <span style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--gl);letter-spacing:1px">📜 日常任务<span class="ls-task-dot" id="ls-daily-dot"></span><span class="ls-tasks-refresh" id="ls-tasks-refresh" onclick="event.stopPropagation();refreshTasks();renderSidebarTasks()">🔄</span></span>
-          <span style="display:flex;align-items:center;gap:6px">
-            <span class="ls-fold-btn" id="ls-daily-fold">▼</span>
-          </span>
-        </div>
-        <div class="ls-task-list" id="ls-daily-tasks"></div>
-        <div class="ls-tasks-head" style="margin-top:10px" onclick="toggleSection('ls-hidden-tasks','ls-hidden-fold')">
-          <span style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:rgba(168,85,247,.9);letter-spacing:1px">🔮 隐藏任务<span class="ls-task-dot" id="ls-hidden-dot"></span></span>
-          <span style="display:flex;align-items:center;gap:6px">
-            <span style="font-size:9px;color:var(--dim)" id="ls-hidden-hint"></span>
-            <span class="ls-fold-btn" id="ls-hidden-fold">▼</span>
-          </span>
-        </div>
-        <div class="ls-task-list" id="ls-hidden-tasks"></div>
-      </div>
       <div class="ls-bottom-action">
-        <div class="theme-toggle-row">
-          <div class="theme-toggle-btn dark-btn active" id="th-dark" onclick="setTheme('dark')">
-            🌙 暗黑
-          </div>
-          <div class="theme-toggle-btn light-btn" id="th-light" onclick="setTheme('light')">
-            ☀️ 浅灰
-          </div>
-        </div>
         <div class="ls-reawaken-btn" onclick="confirmReset();closeSidebar()">
           <span class="ico">🔄</span> 重新开始
         </div>
@@ -590,7 +602,7 @@
       <canvas class="sc-bg" id="sc-bg-cvs"></canvas>
       <div class="sc-top">武魂模拟器 · SOUL AWAKENED</div>
       <div class="sc-ico" id="sc-ico">⚡</div>
-      <div class="scname" id="sc-name">蓝银草</div>
+      <div class="sc-name" id="sc-name">蓝银草</div>
       <div class="sc-quality" id="sc-quality">传说品质 · 幸运值</div>
       <div class="sc-line"></div>
       <div class="sc-stats">

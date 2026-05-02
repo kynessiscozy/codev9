@@ -908,7 +908,7 @@ const $remCls=(id,cls)=>{const e=$(id);if(e)e.classList.remove(cls);};
 // Shared bag item push helper
 const bagPush=(type,data,count=1)=>G.bag.push({type,data,count,id:Date.now()+ri(0,9999)});
 // Shared after-action cleanup (updateHUD + save + render)
-const afterAction=(pages=[])=>{updateHUD();saveG();pages.forEach(p=>{if(p==='bag')renderBag();else if(p==='soul')renderSoulPage();else if(p==='lot')renderLotHist();});};
+const afterAction=(pages=[])=>{updateHUD();saveG();pages.forEach(p=>{if(p==='bag')renderBag();else if(p==='soul')renderSoulPage();});};
 const ri=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const pick=a=>a[ri(0,a.length-1)];
 function wPick(arr,k){
@@ -1505,6 +1505,7 @@ function renderSoulPage(){
         <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qt.glow}) drop-shadow(0 4px 8px rgba(0,0,0,.6));display:flex;align-items:center;justify-content:center;">${getSoulIcon(s.name,s.quality,{sizeClass:'size-large'})}</div>
         ${awakenFXH}
       </div>
+      ${(G.awakenLevel||0)>=10?`<div class="awk-∞-hero" style="--∞c:${qt.col};--∞r:${qR};--∞g:${qG};--∞b:${qB}"><div class="awk-∞-glow"></div><div class="awk-∞-symbol">∞</div><div class="awk-∞-label">极限觉醒</div></div>`:''}
       <!-- Identity -->
       <div class="sol-name" style="color:${qt.col};text-shadow:0 0 22px ${qt.glow}">${s.name}</div>
       <div class="sol-meta">
@@ -1530,14 +1531,17 @@ function renderSoulPage(){
         <div class="sol-act" onclick="doSecondAwaken()">
           <div class="sol-act-ico">⚡</div><div class="sol-act-lbl">二次觉醒</div>
         </div>
-        <div class="sol-act" onclick="openSoulResonance()" style="border-color:rgba(201,162,39,.22);background:rgba(201,162,39,.05)">
-          <div class="sol-act-ico">✨</div><div class="sol-act-lbl" style="color:var(--gl);opacity:.85">武魂共鸣</div>
+        <div class="sol-act" onclick="openSoulResonance()">
+          <div class="sol-act-ico">✨</div><div class="sol-act-lbl">武魂共鸣</div>
         </div>
-        <div class="sol-act" onclick="openSoulEvolution()" style="border-color:${SOUL_EVOLUTIONS[s.name]?'rgba(139,92,246,.28)':'rgba(255,255,255,.07)'};background:${SOUL_EVOLUTIONS[s.name]?'rgba(139,92,246,.07)':'rgba(255,255,255,.03)'}">
-          <div class="sol-act-ico">🌟</div><div class="sol-act-lbl" style="color:${SOUL_EVOLUTIONS[s.name]?'#c4b5fd':'var(--dim)'}">武魂传承</div>
+        <div class="sol-act" onclick="openSoulEvolution()">
+          <div class="sol-act-ico">🌟</div><div class="sol-act-lbl">武魂传承</div>
         </div>
         <div class="sol-act" onclick="openSoulDetail()">
           <div class="sol-act-ico">📖</div><div class="sol-act-lbl">魂技详情</div>
+        </div>
+        <div class="sol-act" onclick="openTaskPage()">
+          <div class="sol-act-ico">📜</div><div class="sol-act-lbl">修炼任务</div>
         </div>
       </div>
     </div>
@@ -1594,6 +1598,9 @@ function renderSoulPage(){
     <div style="height:6px;position:relative;z-index:1"></div>
   `;
 
+  // 重新应用2.5D效果
+  if(window.reinitSoulPage)window.reinitSoulPage();
+
   // Trigger geo background
   showSoulGeo(qt, [parseFloat(qR),parseFloat(qG),parseFloat(qB)], qt.geo);
   // Set CSS vars for rgb-based rules
@@ -1605,6 +1612,9 @@ function renderSoulPage(){
   document.documentElement.style.setProperty('--qc-border',`rgba(${qR},${qG},${qB},.28)`);
   document.documentElement.style.setProperty('--qc-bg',`rgba(${qR},${qG},${qB},.06)`);
   document.documentElement.style.setProperty('--qc-bg2',`rgba(${qR},${qG},${qB},.04)`);
+  document.documentElement.style.setProperty('--qc-accent',`rgba(${qR},${qG},${qB},.12)`);
+  document.documentElement.style.setProperty('--qc-accent2',`rgba(${qR},${qG},${qB},.08)`);
+  document.documentElement.style.setProperty('--qc-accent3',`rgba(${qR},${qG},${qB},.35)`);
   updateHUD();
 }
 
@@ -1794,6 +1804,40 @@ function openSoulDetail(){
     `<span style="display:flex;align-items:center;gap:8px;"><span style="display:flex;align-items:center;">${getSoulIcon(s.name,s.quality,{sizeClass:'size-small'})}</span><span>${s.name} · ${qc.n}品质</span></span>`);
 }
 
+function openTaskPage(){
+  if(!G.soul){notify('请先觉醒武魂','normal');return;}
+  if(!G.tasks.length)genTasks();
+  const taskHtml='<div class="task-modal-page">'+
+    '<div class="cult-widget"><div class="cw-body">'+
+      '<div class="cw-head"><div class="cw-title">魂力修炼</div><div class="cw-income"><span style="color:#6ee7b7">+2/秒</span><span style="opacity:.5"> 挂机</span>&nbsp;·&nbsp;<span style="color:#93c5fd">+100/分</span><span style="opacity:.5"> 在线</span></div></div>'+
+      '<div class="cw-bars">'+
+        '<div class="cw-bar-row"><div class="cw-bar-lbl" style="color:#6ee7b7">修炼</div><div class="cw-bar-trk"><div class="cw-bar-fill cult-f idle-bar-m" id="idle-bar" style="width:0%"></div></div><div class="cw-bar-num idle-txt-m">0/5000</div></div>'+
+        '<div class="cw-bar-row"><div class="cw-bar-lbl" style="color:#93c5fd">探索</div><div class="cw-bar-trk"><div class="cw-bar-fill expl-f expl-bar-m" id="expl-bar" style="width:0%"></div></div><div class="cw-bar-num expl-txt-m">0/5000</div></div>'+
+      '</div>'+
+      '<div class="cw-acts">'+
+        '<div class="cw-btn cult-b" onclick="cultivate()"><div class="cw-btn-ico">🧘</div><div class="cw-btn-lbl">修炼 (+200)</div><div class="cw-btn-cnt cult-cnt-m">0/10</div></div>'+
+        '<div class="cw-btn expl-b" onclick="explore()"><div class="cw-btn-ico">🌲</div><div class="cw-btn-lbl">探索 (+500)</div><div class="cw-btn-cnt expl-cnt-m">0/10</div></div>'+
+      '</div>'+
+    '</div></div>'+
+    '<div class="tasks-sh" style="padding-top:12px">'+
+      '<div class="tasks-sh-title">日常任务</div>'+
+      '<div class="tasks-sh-right"><div class="tasks-refresh-btn" onclick="refreshTasks()">刷新 <span class="refresh-cost-m"></span></div></div>'+
+    '</div>'+
+    '<div class="daily-tasks-m"></div>'+
+    '<div class="tasks-sh" style="padding-top:10px">'+
+      '<div class="tasks-sh-title">隐藏任务</div>'+
+    '</div>'+
+    '<div class="hidden-tasks-m"></div>'+
+  '</div>';
+  openModal(taskHtml,'📜 修炼任务');
+  setTimeout(()=>{
+    renderModalTasks();
+    const de=document.querySelector('.daily-e-m');
+    if(de)de.textContent=G.dailyEarned;
+    updateRefreshBtn();
+    updateCultUI();
+  },10);
+}
 function equipArt(id){
   const it=G.bag.find(i=>i.type==='artifact'&&i.data.id===id);
   if(!it)return;
@@ -1927,7 +1971,7 @@ function confirmReset(){
       if(_gsRaf){cancelAnimationFrame(_gsRaf);_gsRaf=null;}
       if(_cwGeoRaf){cancelAnimationFrame(_cwGeoRaf);_cwGeoRaf=null;}
       if(_sbGeoRaf){cancelAnimationFrame(_sbGeoRaf);_sbGeoRaf=null;}
-      if(_lotGeoRaf){cancelAnimationFrame(_lotGeoRaf);_lotGeoRaf=null;}
+
       if(_achRaf){cancelAnimationFrame(_achRaf);_achRaf=null;}
 
       // 3. 保存武魂图鉴历史（用于重置后恢复）
@@ -1950,6 +1994,8 @@ function confirmReset(){
       pageHidden=false;
       // GM控制台
       if(gmPressTimer){clearTimeout(gmPressTimer);gmPressTimer=null;}
+      // 水晶球动画
+      if(_cbTimer){clearTimeout(_cbTimer);_cbTimer=null;}
       // 图鉴筛选
       _gsFilter='all';_gsSearch='';
       // 成就筛选
@@ -1993,9 +2039,10 @@ function confirmReset(){
       // 8. 重新启动定时器
       startGameTimers();
 
-      // 9. 更新UI
+      // 9. 跳转到武魂页并显示觉醒界面
+      navTo('soul');
       $style('SA','display','flex');
-      updateHUD();updateExpBar();renderSoulPage();renderLotPage();
+      updateHUD();updateExpBar();
       notify('✨ 再次觉醒！一切归零，武魂图鉴历史永存。','divine');
       spawnBurst('#8b5cf6',80);
     }
@@ -2246,63 +2293,34 @@ const LOT_GEO_CFG=[
   {rgb:[167,139,250],rings:[{rx:95,ry:68,spd:.0024,dir:1,op:.18,dash:false},{rx:140,ry:100,spd:.0015,dir:-1,op:.12,dash:false},{rx:190,ry:136,spd:.0009,dir:1,op:.08,dash:true},{rx:245,ry:176,spd:.0005,dir:-1,op:.05,dash:false},{rx:305,ry:220,spd:.0003,dir:1,op:.03,dash:true}]},
   {rgb:[245,158,11], rings:[{rx:88,ry:63,spd:.003,dir:1,op:.22,dash:false},{rx:132,ry:95,spd:.0018,dir:-1,op:.15,dash:false},{rx:180,ry:130,spd:.0011,dir:1,op:.10,dash:false},{rx:232,ry:167,spd:.0007,dir:-1,op:.07,dash:true},{rx:288,ry:208,spd:.0004,dir:1,op:.04,dash:false},{rx:350,ry:252,spd:.0002,dir:-1,op:.025,dash:true}]},
 ];
-const LOT_GEO_ANGLES=LOT_GEO_CFG.map(c=>c.rings.map((_,i)=>i*Math.PI*0.41));
-const LOT_GEO_CTX=[];
-let _lotGeoRaf=null;
 const LOT_POOL_PITY=[{max:100,hint:'十连特别概率提升'},{max:80,hint:'80抽内必出百万年以上'},{max:50,hint:'50抽内必出不可估量以上'}];
 const LOT_POOL_COL=['#9ca3af','#a78bfa','#f59e0b'];
 const LOT_POOL_WASH=['rgba(156,163,175,.06)','rgba(139,92,246,.08)','rgba(245,158,11,.08)'];
 // Per-pool pull counters (in-memory, sync to G.lotTotal for total)
 const _lotPoolPulls=[0,0,0];
 
-function initLotGeoCvs(){
-  LOT_GEO_CFG.forEach((_,pi)=>{
-    const cvs=document.getElementById('lgeo-'+pi);
-    if(!cvs)return;
-    const slide=cvs.closest('.lot-slide');
-    const rect=slide.getBoundingClientRect();
-    cvs.width=rect.width||400;cvs.height=rect.height||250;
-    LOT_GEO_CTX[pi]=cvs.getContext('2d');
-  });
-}
-function drawLotGeo(){
-  LOT_GEO_CFG.forEach((cfg,pi)=>{
-    const ctx=LOT_GEO_CTX[pi];if(!ctx)return;
-    const w=ctx.canvas.width,h=ctx.canvas.height;
-    ctx.clearRect(0,0,w,h);
-    const [r,g,b]=cfg.rgb;
-    const cx=w*.60,cy=h*.44;
-    const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.min(w,h)*.6);
-    grad.addColorStop(0,`rgba(${r},${g},${b},.13)`);grad.addColorStop(1,'transparent');
-    ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
-    cfg.rings.forEach((ring,ri)=>{
-      LOT_GEO_ANGLES[pi][ri]+=ring.spd*ring.dir;
-      const angle=LOT_GEO_ANGLES[pi][ri];
-      ctx.save();ctx.translate(cx,cy);ctx.rotate(angle);
-      ctx.setLineDash(ring.dash?[5,9]:[]);
-      ctx.beginPath();ctx.ellipse(0,0,ring.rx,ring.ry,0,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(${r},${g},${b},${ring.op})`;ctx.lineWidth=1;ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.beginPath();ctx.arc(ring.rx,0,2.5,0,Math.PI*2);
-      ctx.fillStyle=`rgba(${r},${g},${b},${Math.min(1,ring.op*5)})`;
-      ctx.shadowBlur=9;ctx.shadowColor=`rgba(${r},${g},${b},.9)`;
-      ctx.fill();ctx.shadowBlur=0;ctx.restore();
-    });
-  });
-  _lotGeoRaf=requestAnimationFrame(drawLotGeo);
-}
-function startLotGeo(){if(_lotGeoRaf){cancelAnimationFrame(_lotGeoRaf);_lotGeoRaf=null;}initLotGeoCvs();drawLotGeo();}
-function stopLotGeo(){if(_lotGeoRaf){cancelAnimationFrame(_lotGeoRaf);_lotGeoRaf=null;}}
-
+function stopLotGeo(){}
+function startLotGeo(){}
 // Swipe logic
 let _lotCurPool=0,_lotTouchX=0,_lotMouseX=0,_lotMouseDown=false;
 function goLotPool(idx){
   _lotCurPool=idx;curLotMode=idx;G.lotMode=idx;
   const track=document.getElementById('lot-banner-track');
-  if(track){track.style.transition='transform .38s cubic-bezier(.4,0,.2,1)';track.style.transform=`translateX(-${idx*(100/3)}%)`;}
-  const dots=document.querySelectorAll('.ldot');
-  const cols=LOT_POOL_COL;
-  dots.forEach((d,i)=>{d.classList.toggle('active',i===idx);d.style.setProperty('--lpc',cols[idx]);});
+  if(track){track.style.transition='transform .38s cubic-bezier(.4,0,.2,1)';track.style.transform=`translateX(-${idx*100}%)`;}
+
+  // 更新奖池标签样式
+  const tabs=document.querySelectorAll('.lot-pool-tab');
+  tabs.forEach((t,i)=>{t.classList.toggle('active',i===idx);});
+
+  // 更新banner外层颜色变量
+  const bannerOuter=document.getElementById('lot-banner-outer');
+  if(bannerOuter){
+    const [r,g,b]=LOT_GEO_CFG[idx].rgb;
+    bannerOuter.style.setProperty('--pool-r',r);
+    bannerOuter.style.setProperty('--pool-g',g);
+    bannerOuter.style.setProperty('--pool-b',b);
+  }
+
   updateLotPoolUI(idx);
   updateTidalUI(idx);
 }
@@ -2379,24 +2397,48 @@ function renderLotDrawGrid(idx){
   `;
 }
 
-// Smart draw: tries ticket first for the matching pool, falls back to SP
+// ──── 水晶球抽奖动画 ────
+let _cbTimer=null;
+function showCrystalBall(callback){
+  const cb=document.getElementById('crystal-ball');
+  if(!cb){callback();return;}
+  const idx=_lotCurPool;
+  const cols=LOT_POOL_COL;
+  cb.style.setProperty('--pool-r',LOT_GEO_CFG[idx].rgb[0]);
+  cb.style.setProperty('--pool-g',LOT_GEO_CFG[idx].rgb[1]);
+  cb.style.setProperty('--pool-b',LOT_GEO_CFG[idx].rgb[2]);
+  cb.classList.remove('reveal','active');
+  void cb.offsetWidth;
+  cb.classList.add('active');
+  if(_cbTimer)clearTimeout(_cbTimer);
+  _cbTimer=setTimeout(()=>{
+    cb.classList.remove('active');
+    cb.classList.add('reveal');
+    setTimeout(()=>{
+      cb.classList.remove('reveal');
+      callback();
+    },400);
+  },1000);
+}
+
+// Smart draw: shows crystal ball then executes draw
 function doLotSmart(times){
-  const pool=['common','advanced','apex'][_lotCurPool];
-  const cfg=LOT[_lotCurPool];
-  if(times===1){
-    const s=G.bag.find(i=>i.type==='ticket'&&i.data?.pool===pool&&!i.data?.ten);
-    if(s&&s.count>0){doLotWithTicketSingle(pool);renderLotDrawGrid(_lotCurPool);return;}
-  } else if(times===10){
-    // Ten: prefer ten-pull ticket, then 10 singles, then SP
-    const tenT=G.bag.find(i=>i.type==='ticket'&&i.data?.pool===pool&&i.data?.ten);
-    if(tenT&&tenT.count>0){doLotWithTicketTenDirect(pool);renderLotDrawGrid(_lotCurPool);return;}
-    const singles=G.bag.filter(i=>i.type==='ticket'&&i.data?.pool===pool&&!i.data?.ten);
-    const sc=singles.reduce((s,i)=>s+i.count,0);
-    if(sc>=10){doLotWithTicketTen(pool);renderLotDrawGrid(_lotCurPool);return;}
-  }
-  // Fall back to SP
-  doLot(times);
-  renderLotDrawGrid(_lotCurPool);
+  showCrystalBall(()=>{
+    const pool=['common','advanced','apex'][_lotCurPool];
+    const cfg=LOT[_lotCurPool];
+    if(times===1){
+      const s=G.bag.find(i=>i.type==='ticket'&&i.data?.pool===pool&&!i.data?.ten);
+      if(s&&s.count>0){doLotWithTicketSingle(pool);renderLotDrawGrid(_lotCurPool);return;}
+    } else if(times===10){
+      const tenT=G.bag.find(i=>i.type==='ticket'&&i.data?.pool===pool&&i.data?.ten);
+      if(tenT&&tenT.count>0){doLotWithTicketTenDirect(pool);renderLotDrawGrid(_lotCurPool);return;}
+      const singles=G.bag.filter(i=>i.type==='ticket'&&i.data?.pool===pool&&!i.data?.ten);
+      const sc=singles.reduce((s,i)=>s+i.count,0);
+      if(sc>=10){doLotWithTicketTen(pool);renderLotDrawGrid(_lotCurPool);return;}
+    }
+    doLot(times);
+    renderLotDrawGrid(_lotCurPool);
+  });
 }
 
 function initLotSwipe(){
@@ -2409,7 +2451,7 @@ function initLotSwipe(){
     const dx=e.touches[0].clientX-tx;
     const dy=e.touches[0].clientY-(e.touches[0].clientY);
     if(!isSliding&&Math.abs(dx)>8){isSliding=true;}
-    if(isSliding){e.preventDefault();const base=-_lotCurPool*(100/3);track.style.transition='none';track.style.transform=`translateX(calc(${base}% + ${dx*.6}px))`;}
+    if(isSliding){e.preventDefault();const base=-_lotCurPool*100;track.style.transition='none';track.style.transform=`translateX(calc(${base}% + ${dx*.6}px))`;}
   },{passive:false});
   track.addEventListener('touchend',e=>{
     const dx=e.changedTouches[0].clientX-tx;track.style.transition='';
@@ -2418,7 +2460,7 @@ function initLotSwipe(){
   },{passive:true});
   // Mouse for desktop
   track.addEventListener('mousedown',e=>{_lotMouseDown=true;_lotMouseX=e.clientX;track.style.transition='none';});
-  window.addEventListener('mousemove',e=>{if(!_lotMouseDown)return;const dx=e.clientX-_lotMouseX;const base=-_lotCurPool*(100/3);track.style.transform=`translateX(calc(${base}% + ${dx*.6}px))`;});
+  window.addEventListener('mousemove',e=>{if(!_lotMouseDown)return;const dx=e.clientX-_lotMouseX;const base=-_lotCurPool*100;track.style.transform=`translateX(calc(${base}% + ${dx*.6}px))`;});
   window.addEventListener('mouseup',e=>{if(!_lotMouseDown)return;_lotMouseDown=false;const dx=e.clientX-_lotMouseX;track.style.transition='';if(dx<-40&&_lotCurPool<2)goLotPool(_lotCurPool+1);else if(dx>40&&_lotCurPool>0)goLotPool(_lotCurPool-1);else goLotPool(_lotCurPool);});
 }
 
@@ -2448,29 +2490,23 @@ function toggleRecentRings(btn){
 }
 
 function renderLotPage(){
-  // Init geo and swipe on first render
+  // 先同步渲染抽奖按钮
+  goLotPool(_lotCurPool);
+  // 再异步初始化滑动
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
-      startLotGeo();
       initLotSwipe();
-      goLotPool(_lotCurPool);
     });
   });
   // Sync pull counters from G.lotHistory
   _lotPoolPulls[0]=G.lotTotal||0;_lotPoolPulls[1]=0;_lotPoolPulls[2]=0;
-  // Update total displays
+  // Update total display
   const lt=document.getElementById('lot-total');if(lt)lt.textContent=G.lotTotal||0;
-  const lt2=document.getElementById('lot-total-2');if(lt2)lt2.textContent=G.lotTotal||0;
-  // Sync per-pool counters from history
-  (G.lotHistory||[]).forEach(h=>{
-    // We don't track per-pool in history, so just show total on all
-  });
   // Update pull counter badges from G
   [0,1,2].forEach(pi=>{
     const el=document.getElementById('lcnt-'+pi);
     if(el)el.textContent=G.lotTotal||0;
   });
-  renderLotHist();
 }
 function doLotWithTicketSingle(pool){
   const pIdx=poolTicketIdx(pool);
@@ -2575,7 +2611,7 @@ function doLotInternal(cfg,modeIdx,times,fromTicket){
   if(G.lotHistory.length>14)G.lotHistory.pop();
   const lotEl=$('lot-total');if(lotEl)lotEl.textContent=G.lotTotal;
   G.luckBonus=0;
-  updateHUD();saveG();renderLotHist();renderBag();
+  updateHUD();saveG();renderBag();
   progressTask('lottery');
   grantActivityDew('lottery');
   // Refresh draw grid ticket counts
@@ -2743,7 +2779,7 @@ function flashTopItem(label,color,icon){
     ov.innerHTML=`<style>@keyframes tfIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}</style>
       <div style="animation:tfIn .4s ease both">
         <div style="font-size:86px;animation:iconFloat 2s ease infinite;margin-bottom:16px;text-align:center">${icon||'🌟'}</div>
-        <div style="font-family:'Ma Shan Zheng',serif;font-size:28px;color:${color||'#ffd700'};text-shadow:0 0 22px ${color||'#ffd700'};letter-spacing:3px;text-align:center;padding:0 24px">${label}</div>
+        <div style="font-family:"Ma Shan Zheng",serif;font-size:28px;color:${color||'#ffd700'};text-shadow:0 0 22px ${color||'#ffd700'};letter-spacing:3px;text-align:center;padding:0 24px">${label}</div>
         <div style="margin-top:22px;text-align:center;font-size:11px;color:rgba(255,255,255,.38);animation:blk 1.5s infinite">点击任意处继续</div>
       </div>
       <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 44%,${color||'#ffd700'}22,transparent 65%);pointer-events:none;animation:bP .9s ease infinite"></div>`;
@@ -2806,9 +2842,9 @@ function showTenPullAnim(results){
     @keyframes bgP{0%,100%{opacity:.6}50%{opacity:1}}
   </style>
   <div style="animation:bgP 2s ease infinite;position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,${bgCol},transparent 62%);pointer-events:none"></div>
-  <div style="font-family:'Ma Shan Zheng',serif;font-size:20px;color:var(--gl);letter-spacing:3px;margin-bottom:14px;text-shadow:0 0 14px rgba(245,158,11,.5);position:relative;z-index:1">✨ 十连结果 ✨</div>
+  <div style="font-family:"Ma Shan Zheng",serif;font-size:20px;color:var(--gl);letter-spacing:3px;margin-bottom:14px;text-shadow:0 0 14px rgba(245,158,11,.5);position:relative;z-index:1">✨ 十连结果 ✨</div>
   <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;width:100%;max-width:390px;margin-bottom:18px;position:relative;z-index:1">${cards}</div>
-  <button onclick="$('ten-pull-ov').remove()" style="padding:10px 32px;border-radius:10px;border:1px solid var(--bdrB);background:rgba(201,162,39,.15);color:var(--gl);font-size:14px;cursor:pointer;font-family:'Ma Shan Zheng',serif;letter-spacing:3px;position:relative;z-index:1">关闭</button>`;
+  <button onclick="$('ten-pull-ov').remove()" style="padding:10px 32px;border-radius:10px;border:1px solid var(--bdrB);background:rgba(201,162,39,.15);color:var(--gl);font-size:14px;cursor:pointer;font-family:"Ma Shan Zheng",serif;letter-spacing:3px;position:relative;z-index:1">关闭</button>`;
   document.body.appendChild(ov);
   spawnBurst('#f0d060',50);
 
@@ -2994,7 +3030,7 @@ function triggerSeasonal(type, extra){
 function renderSeasonalTasks(){
   initSeasonalTasks();
   const S=G.seasonal;
-  const c=$('seasonal-tasks');if(!c)return;
+  const c=document.getElementById('seasonal-tasks');if(!c)return;
   const tasks=[
     {id:"s1",n:"任务一：升级奖励",d:"每升一级 → 顶级星运券×1",ico:"⬆️",cnt:S.completions.s1||0,prog:null},
     {id:"s2",n:"任务二：猎魂不止",d:"每5次狩猎 → 顶级星运券×1",ico:"🔮",cnt:S.completions.s2||0,prog:`${S.s2count||0}/5次`},
@@ -3020,6 +3056,37 @@ function renderSeasonalTasks(){
   const cnt=$('sb-total-cnt');if(cnt)cnt.textContent=`已领取 ${total} 次`;
   // Init geo canvas if needed
   initSeasonalGeo();
+  renderModalSeasonalTasks();
+}
+function renderModalSeasonalTasks(){
+  if(!G.activity?.active)return;
+  const sc=document.querySelector('.seasonal-tasks-m');
+  if(!sc||document.getElementById('modal')?.classList.contains('show')===false)return;
+  initSeasonalTasks();
+  const S=G.seasonal;
+  const tasks=[
+    {id:"s1",n:"任务一：升级奖励",d:"每升一级 → 顶级星运券×1",ico:"⬆️",cnt:S.completions.s1||0,prog:null},
+    {id:"s2",n:"任务二：猎魂不止",d:"每5次狩猎 → 顶级星运券×1",ico:"🔮",cnt:S.completions.s2||0,prog:`${S.s2count||0}/5次`},
+    {id:"s3",n:"任务三：百万传奇",d:"每百万年+魂环 → 顶级星运券×1",ico:"⭕",cnt:S.completions.s3||0,prog:null},
+    {id:"s4",n:"任务四：顶级常客",d:"每10次顶级星运 → 顶级星运券×1",ico:"🏆",cnt:S.completions.s4||0,prog:`${S.s4count||0}/10次`},
+    {id:"s5",n:"任务五：全能强者",d:"累计10次任意任务 → 顶级星运券×1",ico:"👑",cnt:S.completions.s5||0,prog:`已完成${(S.completions.s1||0)+(S.completions.s2||0)+(S.completions.s3||0)+(S.completions.s4||0)}次`},
+  ];
+  sc.innerHTML=tasks.map(t=>`
+    <div class="sb-task-row">
+      <div class="sb-task-ico">${t.ico}</div>
+      <div class="sb-task-body">
+        <div class="sb-task-name">${t.n}</div>
+        <div class="sb-task-desc">${t.d}</div>
+        ${t.prog?`<div class="sb-task-prog">进度: ${t.prog}</div>`:''}
+      </div>
+      <div class="sb-task-rew">
+        <div class="sb-task-cnt">×${t.cnt||0}</div>
+        <div class="sb-task-lbl">已领取</div>
+      </div>
+    </div>`).join('');
+  const total=(S.completions.s1||0)+(S.completions.s2||0)+(S.completions.s3||0)+(S.completions.s4||0)+(S.completions.s5||0);
+  const tc=document.querySelector('.sb-total-cnt-m');
+  if(tc)tc.textContent=total;
 }
 
 let _sbGeoRaf=null;const _sbGeoAng=[];
@@ -3150,7 +3217,7 @@ function refreshTasks(){
     G.sp-=cost;updateHUD();
   }
   G.refreshCount=(G.refreshCount||0)+1;
-  genTasks();renderTasks();
+  genTasks();renderTasks();renderModalTasks();
   const rc=$('refresh-cost');
   if(rc)rc.textContent=G.refreshCount>=2?'(100魂力)':'';
   notify('任务已刷新','normal');
@@ -3160,10 +3227,75 @@ function updateRefreshBtn(){
   $set('refresh-cost','textContent',paid?'(100)':'');
   const btn=$('refresh-btn');
   if(btn){btn.className='tasks-refresh-btn'+(paid?' paid':'');}
+  const mc=document.querySelector('.refresh-cost-m');
+  if(mc)mc.textContent=paid?'(100)':'';
+}
+function renderModalTasks(){
+  const mc=document.querySelector('.daily-tasks-m');
+  if(!mc||document.getElementById('modal')?.classList.contains('show')===false)return;
+  if(!G.tasks.length)genTasks();
+  mc.innerHTML=G.tasks.map(t=>{
+    const pct=Math.min(100,(t.prog/t.g)*100);
+    const done=t.prog>=t.g;
+    const isHidden=t.hidden;
+    let cls='tc'+(t.claimed?' claimed':done?' claimable':isHidden?' hidden':'');
+    const btnCls=t.claimed?'done':done?'do':'wait';
+    const btnTxt=t.claimed?'已领取':done?'领取':'进行中';
+    const tixH=t.ticket&&!t.claimed
+      ?`<div class="tc-tix">🎟️ ${poolTicketName(t.ticket)}×${t.ticketN}</div>`
+      :'';
+    return`<div class="${cls}"><div class="tc-main">
+      <div class="tc-ico-w">${t.i}</div>
+      <div class="tc-body">
+        <div class="tc-name">${t.n}</div>
+        <div class="tc-desc">${t.d} (${Math.min(t.prog,t.g)}/${t.g})</div>
+        <div class="tc-pb"><div class="tc-pf" style="width:${pct}%"></div></div>
+        ${tixH}
+      </div>
+      <div class="tc-right">
+        <div class="tc-rew">+${t.r}</div>
+        <div class="tc-btn ${btnCls}" onclick="claimTask('${t.id}')">${btnTxt}</div>
+      </div>
+    </div></div>`;
+  }).join('');
+  const de=document.querySelector('.daily-e-m');
+  if(de)de.textContent=G.dailyEarned;
+  // Render hidden tasks
+  const hmc=document.querySelector('.hidden-tasks-m');
+  if(hmc){
+    const ht=G.hiddenTasks||[];
+    if(!ht.length){
+      hmc.innerHTML='<div style="font-size:9px;color:var(--dim);text-align:center;padding:10px 0;opacity:.6">🔮 完成日常任务有概率触发隐藏任务…</div>';
+    }else{
+      hmc.innerHTML=ht.map(t=>{
+        const pct=Math.min(100,(t.prog/t.g)*100);
+        const done=t.prog>=t.g;
+        let cls='tc hidden'+(t.claimed?' claimed':done?' claimable':'');
+        const btnCls=t.claimed?'done':done?'do':'wait';
+        const btnTxt=t.claimed?'已领取':done?'领取':'??';
+        const tixH=t.ticket&&!t.claimed
+          ?`<div class="tc-tix">🎟️ ${poolTicketName(t.ticket)}×${t.ticketN}</div>`
+          :'';
+        return`<div class="${cls}"><div class="tc-main">
+          <div class="tc-ico-w">${t.i}</div>
+          <div class="tc-body">
+            <div class="tc-name">${t.n}</div>
+            <div class="tc-desc">${t.d} (${Math.min(t.prog,t.g)}/${t.g})</div>
+            <div class="tc-pb"><div class="tc-pf" style="width:${pct}%"></div></div>
+            ${tixH}
+          </div>
+          <div class="tc-right">
+            <div class="tc-rew">+${t.r}</div>
+            <div class="tc-btn ${btnCls}" onclick="claimModalHiddenTask('${t.id}')">${btnTxt}</div>
+          </div>
+        </div></div>`;
+      }).join('');
+    }
+  }
 }
 function renderTasks(){
   if(!G.tasks.length)genTasks();
-  const c=$('daily-tasks');if(!c)return;
+  const c=document.getElementById('daily-tasks');if(!c)return;
   c.innerHTML=G.tasks.map(t=>{
     const pct=Math.min(100,(t.prog/t.g)*100);
     const done=t.prog>=t.g;
@@ -3208,7 +3340,7 @@ function claimTask(id){
   } else {
     notify(`✅ ${t.n}完成！+${t.r} 魂力`,'epic');
   }
-  renderTasks();saveG();
+  renderTasks();renderModalTasks();saveG();
   // Update dot — remove if all done
   const hasPending=G.tasks.some(x=>x.prog>=x.g&&!x.claimed);
   setTaskDot(hasPending);
@@ -3222,20 +3354,28 @@ function progressTask(type,amt=1){
     if(!wasDone&&nowDone)setTaskDot(true); // newly completed
   });
   const c=$('daily-tasks');if(c)renderTasks();
+  renderModalTasks();
   // Also progress hidden tasks
   progressHiddenTask(type,amt);
 }
 function updateCultUI(){
-  const ci=$('cult-cnt'),ei=$('expl-cnt');
+  const ci=document.getElementById('cult-cnt'),ei=document.getElementById('expl-cnt');
   if(ci)ci.textContent=`${G.cultCount}/10`;if(ei)ei.textContent=`${G.explCount}/10`;
-  const bc=$('btn-cult'),be=$('btn-expl');
+  const bc=document.getElementById('btn-cult'),be=document.getElementById('btn-expl');
   if(bc){bc.className='cw-btn cult-b'+(G.cultCount>=10?' dis':'');}
   if(be){be.className='cw-btn expl-b'+(G.explCount>=10?' dis':'');}
   // Progress bars — new ids same, just update width and text
-  const it=$('idle-txt');if(it)it.textContent=G.idleEarned+'/5000';
-  const ib=$('idle-bar');if(ib)ib.style.width=Math.min(100,G.idleEarned/50)+'%';
-  const et=$('expl-txt');if(et)et.textContent=G.explEarned+'/5000';
-  const eb=$('expl-bar');if(eb)eb.style.width=Math.min(100,G.explEarned/50)+'%';
+  const it=document.getElementById('idle-txt');if(it)it.textContent=G.idleEarned+'/5000';
+  const ib=document.getElementById('idle-bar');if(ib)ib.style.width=Math.min(100,G.idleEarned/50)+'%';
+  const et=document.getElementById('expl-txt');if(et)et.textContent=G.explEarned+'/5000';
+  const eb=document.getElementById('expl-bar');if(eb)eb.style.width=Math.min(100,G.explEarned/50)+'%';
+  // Modal elements
+  const cim=document.querySelector('.cult-cnt-m');if(cim)cim.textContent=G.cultCount+'/10';
+  const eim=document.querySelector('.expl-cnt-m');if(eim)eim.textContent=G.explCount+'/10';
+  const itm=document.querySelector('.idle-txt-m');if(itm)itm.textContent=G.idleEarned+'/5000';
+  const etm=document.querySelector('.expl-txt-m');if(etm)etm.textContent=G.explEarned+'/5000';
+  const ibm=document.querySelector('.idle-bar-m');if(ibm)ibm.style.width=Math.min(100,G.idleEarned/50)+'%';
+  const ebm=document.querySelector('.expl-bar-m');if(ebm)ebm.style.width=Math.min(100,G.explEarned/50)+'%';
   // Init geo on first call
   if(!_cwGeoRaf)initCwGeo();
 }
@@ -5005,8 +5145,6 @@ function updateSidebar(){
   }
   // Check-in
   renderCheckInUI();
-  // Sidebar tasks
-  renderSidebarTasks();
   // Header color
   const card=$('ls-soul-card');
   if(card)card.style.setProperty('--ls-col',hasSoul?(QC[s.quality]?.c||'#c9a227'):'#c9a227');
@@ -5050,46 +5188,8 @@ function openSidebar(){
   },{passive:true});
 })();
 
-// ── Theme System: Dark / Light ──
-function setTheme(theme){
-  const root=document.documentElement; // <html>
-  const darkBtn=$('th-dark');
-  const lightBtn=$('th-light');
-  if(!darkBtn||!lightBtn)return;
 
-  // Apply data-theme attribute
-  if(theme==='light'){
-    root.setAttribute('data-theme','light');
-    darkBtn.classList.remove('active');
-    lightBtn.classList.add('active');
-  }else{
-    root.removeAttribute('data-theme');
-    darkBtn.classList.add('active');
-    lightBtn.classList.remove('active');
-  }
 
-  // Save preference
-  try{localStorage.setItem('dlv3-theme',theme);}catch(e){}
-
-  // Notify
-  notify(theme==='light'?'☀️ 已切换到浅灰主题':'🌙 已切换到暗黑主题','normal');
-
-  // Re-render current page for dynamic elements that may need refresh
-  renderSoulPage();
-}
-
-function initTheme(){
-  try{
-    const saved=localStorage.getItem('dlv3-theme');
-    if(saved==='light'){
-      document.documentElement.setAttribute('data-theme','light');
-      const darkBtn=$('th-dark');
-      const lightBtn=$('th-light');
-      if(darkBtn)darkBtn.classList.remove('active');
-      if(lightBtn)lightBtn.classList.add('active');
-    }
-  }catch(e){}
-}
 
 function gsFilter(q,el){
   _gsFilter=q;
@@ -5194,8 +5294,7 @@ function gsRenderGrid(){
       <div class="gc-q" style="${isFound?`color:${qc.c}`:''}">
         ${isFound?qc.n:'未知'}
       </div>
-      ${isCurrent?`<div class="gc-owned" style="background:${qc.c};box-shadow:0 0 6px ${qc.c}">★</div>`
-        :isFound?`<div class="gc-owned" style="background:${qc.c};box-shadow:0 0 4px ${qc.c}">✓</div>`:''}
+      ${isCurrent?`<div class="gc-owned" style="background:${qc.c};box-shadow:0 0 5px ${qc.c}">★</div>`:''}
     </div>`;
   }).join('');
 }
@@ -5210,7 +5309,7 @@ function gsShowDetail(encodedName){
   $set('gs-d-content','innerHTML',`
     <div class="gs-d-top">
       <div class="gs-d-ico-wrap">
-        <span class="gs-d-ico" style="display:flex;align-items:center;justify-content:center;">${getSoulIcon(s.n,s.q,{sizeClass:'size-large'})}</span>
+        <span class="gs-d-ico" style="display:flex;align-items:center;justify-content:center;">${getSoulIcon(s.n,s.q,{sizeClass:''})}</span>
         <div class="gs-d-glow" style="--qglow:${qc.glow}"></div>
       </div>
       <div class="gs-d-info">
@@ -5369,7 +5468,6 @@ checkContentUnlocks();
 updateHUD();updateExpBar();
 initBagFabDrag();
 mergeTaskModulesIntoHunt();
-initTheme(); // 初始化主题偏好
 if(!G.tasks.length)genTasks();
 renderSoulPage();renderLotPage();
 updateActivityHUD();
@@ -5403,22 +5501,57 @@ function openAwakenLevel(){
   const frags=Object.values(G.soulFragments||{}).reduce((a,b)=>a+b,0);
   const nextCost=lv<10?AWK_FRAG_COSTS[lv+1]:null;
   const canUp=nextCost&&frags>=nextCost;
-  const starsH=Array(10).fill(0).map((_,i)=>`<div class="awk-star ${i<lv?'lit':''}"></div>`).join('');
-  const listH=Array(10).fill(0).map((_,i)=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:10px;${i<lv?'opacity:.45':''}">
-      <span style="color:${i<lv?'var(--hc)':i===lv?qc.c:'rgba(255,255,255,.25)'}">觉醒 Lv.${i+1}</span>
-      <span style="color:var(--dim);font-size:9px">${AWK_FX[i+1]}</span>
-      <span style="color:${i<lv?'var(--hc)':qc.c}">+${AWK_POWER_BONUS[i+1].toLocaleString()}</span>
-    </div>`).join('');
-  openModal(`<div class="m-title" style="color:${qc.c}">✦ 武魂觉醒等级</div>
-    <div class="m-sub">当前 Lv.${lv}/10 · 战力+${AWK_POWER_BONUS[lv].toLocaleString()}</div>
-    <div class="awk-star-row">${starsH}</div>
-    <div style="text-align:center;margin-bottom:10px">
-      <div style="font-size:11px;color:var(--dim)">通用碎片总计: <span style="color:${qc.c};font-weight:700">${frags}</span></div>
-      ${nextCost?`<div style="font-size:10px;color:var(--dim);margin-top:3px">升级需要: <span style="color:${canUp?'var(--hc)':'var(--apex)'}">${nextCost} 碎片（任意品质均可）</span></div>`:'<div style="color:var(--hc);font-size:10px;margin-top:3px">已达最高觉醒等级！</div>'}
-    </div>
-    <div style="max-height:200px;overflow-y:auto">${listH}</div>
-    ${canUp?`<div class="m-acts" style="margin-top:10px"><div class="m-btn ok" onclick="doAwakenUp()">升级觉醒 (消耗${nextCost}碎片)</div></div>`:''}
+  const isMax=lv>=10;
+  // 觉醒主色调使用紫色系
+  const awkG='#a78bfa';
+
+  // Stars arc with current glow
+  const starsH=Array(10).fill(0).map((_,i)=>{
+    let cls='awk-star'+(i<lv?' lit':'')+(i===lv-1?' current':'');
+    // Stagger animation delay
+    return `<div class="${cls}" style="animation-delay:${i*0.12}s"></div>`;
+  }).join('');
+
+  // ∞ emblem for max level
+  const infH=isMax?`<div class="awk-infinity">∞</div>`:'';
+  const heroH=`<div class="awk-hero" style="--soul-col:${awkG};--soul-r:167;--soul-g:139;--soul-b:250">
+    <div class="awk-lv-badge"><div class="awk-dot"></div>觉醒等级</div>
+    ${isMax?`<div class="awk-max-badge">✦ 极限形态 · 封神之境 ✦</div>`:''}
+    ${isMax?infH:`<div class="awk-level-number">Lv.${lv}/10</div>`}
+    <div class="awk-sub" style="color:var(--dim)">${isMax?'已达觉醒之巅':'觉醒 Lv.'+lv+'/10'}</div>
+    <div class="awk-power">+${(AWK_POWER_BONUS[lv]||0).toLocaleString()} 战力</div>
+    <div class="awk-star-arc">${starsH}</div>
+  </div>`;
+
+  // Fragment bar
+  const fragH=`<div class="awk-frag-bar" style="--soul-col:${awkG}">
+    <span class="awk-frag-n">${frags}</span>
+    <span class="awk-frag-l">通用碎片</span>
+    ${nextCost?`<span class="awk-frag-next">· 升级需 <span>${nextCost}</span></span>`:`<span class="awk-frag-next">· 巅峰已至</span>`}
+  </div>`;
+
+  // Level list
+  const listH=Array(10).fill(0).map((_,i)=>{
+    const l=i+1;
+    const isActive=i===lv;
+    const isDone=i<lv;
+    return `<div class="awk-list-item${isActive?' active':''}${isDone?' done':''}" style="${isActive?`--soul-r:167;--soul-g:139;--soul-b:250`:''}">
+      <span class="awk-li-lv" style="color:${isActive?awkG:isDone?'rgba(255,255,255,.25)':'rgba(255,255,255,.6)'}">
+        ${isDone?'✅ ':isActive?'✦ ':'· '}Lv.${l}
+      </span>
+      <span class="awk-li-fx">${AWK_FX[l]||''}</span>
+      <span class="awk-li-pw" style="color:${isActive?awkG:'var(--dim)'}">+${AWK_POWER_BONUS[l].toLocaleString()}</span>
+    </div>`;
+  }).join('');
+
+  openModal(`<div class="m-title" style="color:${awkG};display:flex;align-items:center;gap:8px;">
+    <span style="display:flex;align-items:center;">${getSoulIcon(G.soul.name,G.soul.quality,{sizeClass:'size-small'})}</span>
+    <span>${G.soul.name} · 觉醒</span>
+  </div>
+  ${heroH}
+  ${fragH}
+  <div class="awk-list">${listH}</div>
+  ${canUp?`<div class="awk-upgrade-btn" onclick="doAwakenUp()" style="--soul-col:${awkG}">✦ 突破觉醒 Lv.${lv+1} (${nextCost}碎片)</div>`:isMax?'':''}
   `);
 }
 function doAwakenUp(){
@@ -5552,10 +5685,10 @@ function checkCalendarLogin(){
   updateSidebar();
 }
 function renderCalendar(){
-  const row=$('cal-days-row');if(!row)return;
+  const row=document.getElementById('cal-days-row');if(!row)return;
   const streak=G.calendarStreak||0;
   const dayInCycle=streak===0?0:(streak-1)%7;
-  $set('cal-streak-n','textContent',streak);
+  const sn=document.getElementById('cal-streak-n');if(sn)sn.textContent=streak;
   row.innerHTML=CAL_REWARDS.map((r,i)=>{
     const done=i<dayInCycle;
     const today=i===dayInCycle&&streak>0;
@@ -5709,7 +5842,7 @@ function claimSidebarTask(id){
   }else{
     notify(`✅ ${t.n}完成！+${t.r}魂力`,'epic');
   }
-  saveG();renderTasks();renderSidebarTasks();
+  saveG();renderTasks();renderModalTasks();
   // Chance to unlock hidden task on daily completion
   tryUnlockHiddenTask();
 }
@@ -5722,7 +5855,18 @@ function claimSidebarHiddenTask(id){
   const tn=t.ticket?poolTicketName(t.ticket):'';
   notify(`🔮 隐藏任务！${t.n}！+${t.r}魂力${tn?'+'+tn+'×'+t.ticketN:''}`,'divine');
   spawnBurst('#a855f7',50);
-  saveG();renderSidebarTasks();
+  saveG();renderTasks();renderModalTasks();
+}
+function claimModalHiddenTask(id){
+  const ht=G.hiddenTasks||[];
+  const t=ht.find(x=>x.id==id);
+  if(!t||t.claimed||t.prog<t.g)return;
+  t.claimed=true;addSP(t.r,`隐藏:${t.n}`);addExp(t.r/5);
+  if(t.ticket&&t.ticketN)addTicketToBag(t.ticket,t.ticketN);
+  const tn=t.ticket?poolTicketName(t.ticket):'';
+  notify(`🔮 隐藏任务！${t.n}！+${t.r}魂力${tn?'+'+tn+'×'+t.ticketN:''}`,'divine');
+  spawnBurst('#a855f7',50);
+  saveG();renderTasks();renderModalTasks();
 }
 function tryUnlockHiddenTask(){
   const ht=G.hiddenTasks||[];
@@ -5740,7 +5884,7 @@ function tryUnlockHiddenTask(){
   G.hiddenTasks.push(newTask);
   notify(`🔮 触发隐藏任务：${pick.n}`,'divine');
   spawnBurst('#a855f7',40);
-  saveG();renderSidebarTasks();
+  saveG();renderTasks();renderModalTasks();
 }
 function progressHiddenTask(type,amount){
   const ht=G.hiddenTasks||[];
@@ -5750,7 +5894,7 @@ function progressHiddenTask(type,amount){
     t.prog=Math.min(t.g,(t.prog||0)+(amount||1));
     changed=true;
   });
-  if(changed){saveG();renderSidebarTasks();}
+  if(changed){saveG();renderTasks();renderModalTasks();}
 }
 function renderArenaPage(){
   const pw=calcPower();
@@ -5929,7 +6073,7 @@ function openShareCard(){
   // Update DOM elements
   const card=$('share-card');
   if(card)card.style.setProperty('--sc-col',col);
-  const scIco=$('sc-ico');if(scIco){scIco.innerHTML=hasSoul?getSoulIcon(s.name,s.quality,{sizeClass:'size-large'}):'<span style=\"font-size:88px\">🌀</span>';scIco.style.display='flex';scIco.style.alignItems='center';scIco.style.justifyContent='center';}
+  const scIco=$('sc-ico');if(scIco){scIco.innerHTML=hasSoul?getSoulIcon(s.name,s.quality,{sizeClass:'size-large'}):'<span style=\"font-size:64px\">🌀</span>';scIco.style.display='flex';scIco.style.alignItems='center';scIco.style.justifyContent='center';}
   $set('sc-name','textContent',hasSoul?s.name:'尚未觉醒');
   $set('sc-name','style.color',col);
 
@@ -5979,7 +6123,7 @@ function drawShareBg(col){
   g.addColorStop(0,'#050810');g.addColorStop(.5,'#0d1630');g.addColorStop(1,'#050810');
   ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
   // Radial glow behind icon
-  const rg=ctx.createRadialGradient(w/2,h*.38,10,w/2,h*.38,120);
+  const rg=ctx.createRadialGradient(w/2,h*.32,10,w/2,h*.32,100);
   rg.addColorStop(0,col+'30');rg.addColorStop(1,'transparent');
   ctx.fillStyle=rg;ctx.fillRect(0,0,w,h);
   // Subtle stars
@@ -6012,7 +6156,7 @@ function shareDownload(){
     ctx.fillStyle=g;ctx.fillRect(0,0,rect.width,rect.height);
     // Glow
     const col=card.style.getPropertyValue('--sc-col')||'#f59e0b';
-    const rg=ctx.createRadialGradient(rect.width/2,rect.height*.38,10,rect.width/2,rect.height*.38,120);
+    const rg=ctx.createRadialGradient(rect.width/2,rect.height*.32,10,rect.width/2,rect.height*.32,100);
     rg.addColorStop(0,col+'35');rg.addColorStop(1,'transparent');
     ctx.fillStyle=rg;ctx.fillRect(0,0,rect.width,rect.height);
     // Stars
@@ -6029,18 +6173,18 @@ function shareDownload(){
     }
     // Title
     drawText('武魂模拟器 · SOUL AWAKENED',rect.width/2,28,{font:'bold 9px sans-serif',color:'rgba(201,162,39,.5)',align:'center'});
-    // Icon
+    // Icon (smaller, shifted up)
     const ico=$('sc-ico')?.textContent||'⚡';
-    drawText(ico,rect.width/2,rect.height*.30,{font:'88px serif',color:col,align:'center',shadow:col+'60',blur:30});
-    // Name
+    drawText(ico,rect.width/2,rect.height*.27,{font:'68px serif',color:col,align:'center',shadow:col+'50',blur:24});
+    // Name (moved down for more gap)
     const name=$('sc-name')?.textContent||'武魂';
-    drawText(name,rect.width/2,rect.height*.48,{font:'32px "Ma Shan Zheng",serif',color:col,align:'center',shadow:col+'50',blur:20});
+    drawText(name,rect.width/2,rect.height*.45,{font:'32px "Ma Shan Zheng",serif',color:col,align:'center',shadow:col+'50',blur:20});
     // Quality
     const q=$('sc-quality')?.textContent||'';
-    drawText(q,rect.width/2,rect.height*.56,{font:'11px sans-serif',color:'rgba(255,255,255,.5)',align:'center'});
+    drawText(q,rect.width/2,rect.height*.53,{font:'11px sans-serif',color:'rgba(255,255,255,.5)',align:'center'});
     // Line
     ctx.strokeStyle=col+'40';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(rect.width/2-80,rect.height*.60);ctx.lineTo(rect.width/2+80,rect.height*.60);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(rect.width/2-80,rect.height*.57);ctx.lineTo(rect.width/2+80,rect.height*.57);ctx.stroke();
     // Stats
     const stats=[
       {v:$('sc-pow')?.textContent||'0',l:'总战力'},
@@ -6049,13 +6193,13 @@ function shareDownload(){
     ];
     const sx=rect.width/2-(stats.length-1)*40;
     stats.forEach((st,i)=>{
-      drawText(st.v,sx+i*80,rect.height*.66,{font:'bold 20px sans-serif',color:col,align:'center'});
-      drawText(st.l,sx+i*80,rect.height*.66+22,{font:'8px sans-serif',color:'rgba(255,255,255,.35)',align:'center'});
+      drawText(st.v,sx+i*80,rect.height*.63,{font:'bold 20px sans-serif',color:col,align:'center'});
+      drawText(st.l,sx+i*80,rect.height*.63+22,{font:'8px sans-serif',color:'rgba(255,255,255,.35)',align:'center'});
     });
     // Attrs
     const attrs=Array.from(card.querySelectorAll('.sc-attr')).map(a=>({t:a.textContent,c:getComputedStyle(a).color}));
     if(attrs.length){
-      let ax=rect.width/2-((attrs.length*70-10)/2),ay=rect.height*.78;
+      let ax=rect.width/2-((attrs.length*70-10)/2),ay=rect.height*.76;
       attrs.forEach(a=>{
         ctx.fillStyle='rgba(255,255,255,.06)';ctx.strokeStyle='rgba(255,255,255,.1)';
         ctx.beginPath();roundRect(ctx,ax-2,ay-8,ctx.measureText(a.t).width+18,18,9);ctx.fill();ctx.stroke();
@@ -6065,7 +6209,7 @@ function shareDownload(){
     }
     // Realm
     const realm=$('sc-realm')?.textContent||'';
-    drawText(realm,rect.width/2,rect.height*.88,{font:'10px sans-serif',color:'rgba(255,255,255,.35)',align:'center'});
+    drawText(realm,rect.width/2,rect.height*.87,{font:'10px sans-serif',color:'rgba(255,255,255,.35)',align:'center'});
     // Watermark
     drawText('武魂模拟器 · 武魂传承',rect.width-14,rect.height-14,{font:'8px sans-serif',color:'rgba(255,255,255,.15)',align:'right'});
 

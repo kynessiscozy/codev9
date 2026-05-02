@@ -8,6 +8,57 @@ import { updateHUD } from '../core/exp.js';
 let _lotCurPool = 0;
 let curLotMode = 0;
 
+// ── 保底系统配置 ──
+// 普通/高级奖池：每抽累计进度，N抽必出高价值
+const PITY_CONFIG = {
+  common: {
+    tenPullGuarantee: true,      // 十连保底：必出稀有物品
+    pityThresholds: [10, 20],     // 保底阈值
+    pityItems: [
+      { idx: 1, l: "千年魂环+魂骨" },   // 10抽保底
+      { idx: 3, l: "低潮+十万年魂骨" }  // 20抽保底
+    ]
+  },
+  advanced: {
+    tenPullGuarantee: true,
+    pityThresholds: [10, 20],
+    pityItems: [
+      { idx: 3, l: "低潮" },
+      { idx: 4, l: "百万年魂环+魂骨" }
+    ]
+  },
+  apex: {
+    tenPullGuarantee: true,
+    pityThresholds: [50, 80],     // 顶级奖池更宽松
+    pityItems: [
+      { idx: 3, l: "十万年魂骨+低潮" },
+      { idx: 4, l: "百万年魂环+魂骨" }
+    ]
+  }
+};
+
+// 奖池稀有等级定义（用于保底判定）
+const ITEM_TIERS = {
+  sp: 0,              // 普通
+  herb: 0,
+  resource: 0,
+  ring: (ti) => ti || 0,
+  ringbone: (ti) => ti || 0,
+  bone: (ti) => ti || 0,
+  artifact: 5,         // 固定稀有
+  title: (pool) => pool === 'special' ? 8 : pool === 'legend' ? 7 : pool === 'advanced' ? 5 : 3
+};
+
+// 初始化保底计数（从存档恢复或创建）
+function initPityCounter(poolType) {
+  const key = 'lotPity_' + poolType;
+  if (!G.lotPity) G.lotPity = {};
+  if (G.lotPity[poolType] === undefined) {
+    G.lotPity[poolType] = { count: 0, lastPityIdx: -1 };
+  }
+  return G.lotPity[poolType];
+}
+
 // 奖池配置
 export const LOT = [
   { name: "普通奖池", sub: "基础奖励", bg: "linear-gradient(135deg,rgba(156,163,175,.16),rgba(59,130,246,.09))", cost: 100,
@@ -109,6 +160,10 @@ export function renderLotHist() {
 export function stopLotGeo() {
   // 占位：由 game.js 覆盖
 }
+
+// ── 导出新增函数 ──
+export { rollLottery, applyLotResult, getLotTier, getItemTier };
+export { PITY_CONFIG, initPityCounter, updatePityCounterUI };
 
 /**
  * 智能抽奖（优先使用券）
@@ -241,65 +296,291 @@ export function doLot(times) {
 }
 
 /**
- * 滚动抽奖结果
+ * 滚动抽奖结果（完整实现）
  * @param {string} pool - 奖池类型
  * @param {number} times - 抽奖次数
  * @returns {Array} 抽奖结果数组
  */
 function rollLottery(pool, times) {
+  const poolIdx = ['common', 'advanced', 'apex'].indexOf(pool);
+  const cfg = LOT[poolIdx >= 0 ? poolIdx : 0];
   const results = [];
+  
+  // 初始化保底计数
+  const pity = initPityCounter(pool);
+  
+  // 追踪十连中是否有高价值物品
+  let tenPullHasRare = false;
+  
   for (let i = 0; i < times; i++) {
-    // 根据奖池权重随机获取物品
-    const weights = getPoolWeights(pool);
-    const item = weightedRandom(weights);
-    results.push(item);
+    const isTen = times >= 10;
+    const rollIdx = i; // 在十连中的位置
+    
+    // 1. 检查欧皇状态（顶级奖池特有）
+    if (G.ouhuang) {
+      G.ouhuang = false;
+      notify('👑 欧皇激活！', 'divine');
+      if (G.ouhuangSpecial) {
+        G.ouhuangSpecial = false;
+        // 欧皇保底：神器/怒潮/宇宙之核 (1/3 each)
+        const r3 = Math.random();
+        if (r3 < 0.333) {
+          results.push({ t: 'artifact', self: true, l: '自选神器(欧皇保底)' });
+        } else if (r3 < 0.666) {
+          results.push({ t: 'ring', ti: 5, l: '怒潮(欧皇保底)', bonus: true });
+        } else {
+          results.push({ t: 'ring', cosmic: true, l: '宇宙之核(欧皇保底)' });
+        }
+        pity.count = 0; // 重置保底计数
+        continue;
+      }
+      // 普通欧皇：必出高价值物品
+      const topItem = cfg.pool[cfg.pool.length - 2] || cfg.pool[cfg.pool.length - 1];
+      results.push(topItem.fn(isTen));
+      pity.count = 0;
+      tenPullHasRare = true;
+      continue;
+    }
+    
+    // 2. 十连保底机制（最后一位必出稀有）
+    if (isTen && rollIdx === 9) {
+      // 前9抽已经确定，检查是否需要保底
+      if (!tenPullHasRare) {
+        // 十连保底：必出高价值物品
+        const rarePool = cfg.pool.filter((p, idx) => {
+          // 过滤掉魂力和基础资源，保留稀有物品
+          const result = p.fn(false);
+          return result.t !== 'sp' && result.t !== 'herb' && result.t !== 'resource';
+        });
+        
+        if (rarePool.length > 0) {
+          const selected = rarePool[Math.floor(Math.random() * rarePool.length)];
+          results.push(selected.fn(true));
+          tenPullHasRare = true;
+          pity.count = 0;
+          continue;
+        }
+      }
+    }
+    
+    // 3. 普通抽卡（加权随机）
+    const poolItems = cfg.pool.map(p => {
+      let w = p.w;
+      // 药草双倍权重
+      try {
+        const r = p.fn(false);
+        if (r && r.t === 'herb') w *= 2;
+      } catch (e) {}
+      // 幸运加成
+      if (G.luckBonus > 0) w *= (1 + G.luckBonus * 0.03);
+      return { ...p, _w: w };
+    });
+    
+    const total = poolItems.reduce((s, p) => s + (p._w || 0), 0);
+    if (total <= 0) {
+      results.push(poolItems[0].fn(isTen));
+      continue;
+    }
+    
+    let r = Math.random() * total;
+    let c = 0;
+    for (const p of poolItems) {
+      c += (p._w || 0);
+      if (r <= c) {
+        const result = p.fn(isTen);
+        
+        // 4. 更新保底计数
+        const tier = getItemTier(result, pool);
+        if (tier >= 3) {
+          // 高价值物品，重置保底
+          pity.count = 0;
+          tenPullHasRare = true;
+        } else {
+          pity.count++;
+        }
+        
+        // 5. 检查保底触发
+        const pityCfg = PITY_CONFIG[pool];
+        if (pityCfg && pity.count >= pityCfg.pityThresholds[0]) {
+          const pityItem = pityCfg.pityItems[0];
+          if (pityItem && !tenPullHasRare) {
+            notify(`🎯 保底触发！`, 'legend');
+          }
+        }
+        
+        results.push(result);
+        break;
+      }
+    }
   }
+  
+  // 保存保底状态
+  saveG();
   return results;
 }
 
 /**
- * 显示抽奖结果
+ * 获取物品稀有等级
+ */
+function getItemTier(result, poolType) {
+  if (!result) return 0;
+  const t = result.t;
+  
+  if (t === 'ring' || t === 'ringbone') {
+    return Math.min(result.ti || 0, 7);
+  }
+  if (t === 'bone') return result.ti || 0;
+  if (t === 'artifact') return result.self ? 6 : 5;
+  if (t === 'title') {
+    const pool = result.pool;
+    if (pool === 'special') return 8;
+    if (pool === 'legend') return 7;
+    if (pool === 'advanced') return 5;
+    return 3;
+  }
+  return 0; // sp, herb, resource
+}
+
+/**
+ * 应用抽奖结果到背包
+ */
+function applyLotResult(result, isTen = false) {
+  if (!result) return;
+  
+  const t = result.t;
+  const label = result.l || '--';
+  
+  switch (t) {
+    case 'sp':
+      // 由调用方处理魂力
+      break;
+    case 'ring':
+    case 'ringbone':
+      notify(`🔮 ${label}`, 'normal');
+      if (result.bonus) notify(`✨ 附带特殊属性！`, 'epic');
+      break;
+    case 'bone':
+      notify(`🦴 ${label} 战力+???`, 'epic');
+      break;
+    case 'artifact':
+      if (result.self) {
+        notify(`⚔️ 自选神器！请选择...`, 'legend');
+      } else {
+        notify(`⚔️ ${label}！战力×???`, 'legend');
+      }
+      break;
+    case 'herb':
+      notify(`🌿 ${label}！`, 'epic');
+      break;
+    case 'resource':
+      notify(`📦 ${label}！`, 'normal');
+      break;
+    case 'title':
+      notify(`👑 ${label}·战力+???`, 'divine');
+      break;
+    default:
+      notify(`🎲 获得 ${label}`, 'normal');
+  }
+}
+
+/**
+ * 获取抽奖结果稀有等级（S/A/B/C）
+ */
+function getLotTier(result) {
+  if (!result) return 'C';
+  if (result.t === 'ring' && result.cosmic) return 'S';
+  if (result.t === 'ring' && (result.ti || 0) >= 6) return 'S';
+  if (result.t === 'title' && result.pool === 'special') return 'S';
+  if (result.t === 'ring' && (result.ti || 0) === 5) return 'A';
+  if (result.t === 'title' && result.pool === 'legend') return 'A';
+  if (result.t === 'artifact' && result.self) return 'A';
+  if (result.t === 'ring' && (result.ti || 0) === 4) return 'B';
+  if (result.t === 'artifact') return 'B';
+  if (result.t === 'title' && result.pool === 'advanced') return 'B';
+  if (result.t === 'bone' && result.bonus) return 'B';
+  return 'C';
+}
+
+/**
+ * 显示抽奖结果反馈
  * @param {Array|Object} results - 抽奖结果
  * @param {string} pool - 奖池类型
  * @param {number} times - 抽奖次数
  */
 function showLotteryResult(results, pool, times) {
-  if (times === 1) {
-    notify(`🎲 抽奖结果：${results.name}`, 'normal');
+  const isSingle = times === 1;
+  
+  if (isSingle) {
+    const result = results[0];
+    const tier = getLotTier(result);
+    
+    // 根据稀有度显示不同反馈
+    if (tier === 'S') {
+      notify(`🌟 绝世！${result.l}`, 'divine');
+    } else if (tier === 'A') {
+      notify(`✨ 顶级！${result.l}`, 'legend');
+    } else if (tier === 'B') {
+      notify(`⭐ ${result.l}`, 'epic');
+    } else {
+      applyLotResult(result, false);
+    }
   } else {
-    const summary = results.map(r => r.name).join(', ');
-    notify(`🎲 十连结果：${summary}`, 'epic');
+    // 十连结果
+    const tiers = results.map(r => getLotTier(r));
+    const hasS = tiers.includes('S');
+    const hasA = tiers.includes('A');
+    const hasB = tiers.includes('B');
+    
+    if (hasS) {
+      notify(`🌟🌟🌟 十连出绝世！！！`, 'divine');
+    } else if (hasA) {
+      notify(`✨✨ 十连出顶级！！！`, 'legend');
+    } else if (hasB) {
+      notify(`⭐ 获得稀有物品！`, 'epic');
+    } else {
+      notify(`🎲 十连完成！`, 'normal');
+    }
   }
 }
 
 /**
- * 获取奖池权重
- * @param {string} pool - 奖池类型
- * @returns {Array} 权重数组
+ * 加权随机选择（基于LOT配置）
  */
-function getPoolWeights(pool) {
-  // 根据奖池类型返回对应的权重配置
-  const weightMap = {
-    common: [{ name: '普通物品', weight: 70 }, { name: '稀有物品', weight: 25 }, { name: '史诗物品', weight: 5 }],
-    advanced: [{ name: '普通物品', weight: 40 }, { name: '稀有物品', weight: 40 }, { name: '史诗物品', weight: 15 }, { name: '传说物品', weight: 5 }],
-    apex: [{ name: '稀有物品', weight: 30 }, { name: '史诗物品', weight: 40 }, { name: '传说物品', weight: 25 }, { name: '顶级物品', weight: 5 }]
-  };
-  return weightMap[pool] || weightMap.common;
+function weightedRandomFromPool(poolItems) {
+  const total = poolItems.reduce((s, p) => s + (p._w || 0), 0);
+  if (total <= 0) return null;
+  
+  let r = Math.random() * total;
+  for (const p of poolItems) {
+    r -= (p._w || 0);
+    if (r <= 0) return p;
+  }
+  return poolItems[poolItems.length - 1];
 }
 
 /**
- * 加权随机
- * @param {Array} weights - 权重数组
- * @returns {Object} 随机选择的项目
+ * 获取奖池抽数统计
  */
-function weightedRandom(weights) {
-  const total = weights.reduce((sum, w) => sum + w.weight, 0);
-  let rand = Math.random() * total;
-  for (const item of weights) {
-    rand -= item.weight;
-    if (rand <= 0) return item;
+export function getLotPullCount(poolType) {
+  if (!G.lotPity || !G.lotPity[poolType]) return 0;
+  return G.lotPity[poolType].count;
+}
+
+/**
+ * 获取奖池保底进度描述
+ */
+export function getPityProgress(poolType) {
+  const pity = initPityCounter(poolType);
+  const cfg = PITY_CONFIG[poolType];
+  if (!cfg) return '';
+  
+  const nextThreshold = cfg.pityThresholds.find(t => t > pity.count);
+  if (!nextThreshold) {
+    return `已触发保底！`;
   }
-  return weights[weights.length - 1];
+  
+  const remaining = nextThreshold - pity.count;
+  return `保底进度：${pity.count}/${nextThreshold}（还差${remaining}抽）`;
 }
 
 /**
@@ -364,6 +645,7 @@ export function updateLotPoolUI(idx) {
   const cfg = LOT[idx];
   const col = LOT_POOL_COL[idx];
   const [r, g, b] = LOT_GEO_CFG[idx].rgb;
+  const poolType = ['common', 'advanced', 'apex'][idx];
   
   // 更新面板样式
   const panel = document.getElementById('lot-panel');
@@ -381,10 +663,17 @@ export function updateLotPoolUI(idx) {
   // 更新奖池详情
   const pd = document.getElementById('pool-detail');
   if (pd) {
-    pd.innerHTML = cfg.detail.map(d => `
+    // 构建奖池详情HTML
+    const pityInfo = getPityProgress(poolType);
+    const pityHtml = pityInfo ? `<div class="lr-pity-bar" style="border-color:${col}40;background:${col}10">
+      <span class="lr-pity-icon">📊</span>
+      <span class="lr-pity-text" style="color:${col}">${pityInfo}</span>
+    </div>` : '';
+    
+    const detailHtml = cfg.detail.map(d => `
       <div class="lr-row">
         <div class="lr-item">
-          <div class="lr-dot" style="background:${d.col || 'var(--gold)'}"></div>
+          <div class="lr-dot" style="background:${d.col || col}"></div>
           ${d.n}
         </div>
         <div>
@@ -393,5 +682,50 @@ export function updateLotPoolUI(idx) {
         </div>
       </div>
     `).join('');
+    
+    pd.innerHTML = pityHtml + detailHtml;
+  }
+  
+  // 更新保底计数器显示
+  updatePityCounterUI(idx);
+}
+
+/**
+ * 更新保底计数器UI
+ */
+function updatePityCounterUI(idx) {
+  const poolType = ['common', 'advanced', 'apex'][idx];
+  const pity = initPityCounter(poolType);
+  const cfg = PITY_CONFIG[poolType];
+  const col = LOT_POOL_COL[idx];
+  
+  // 查找或创建保底显示元素
+  let pityEl = document.getElementById('lot-pity-counter');
+  if (!pityEl) {
+    const panel = document.getElementById('lot-panel');
+    if (panel) {
+      pityEl = document.createElement('div');
+      pityEl.id = 'lot-pity-counter';
+      pityEl.className = 'lot-pity-counter';
+      panel.insertBefore(pityEl, panel.firstChild);
+    }
+  }
+  
+  if (pityEl && cfg) {
+    const thresholds = cfg.pityThresholds;
+    const nextThreshold = thresholds.find(t => t > pity.count) || thresholds[thresholds.length - 1];
+    const progress = Math.min(1, pity.count / nextThreshold);
+    const percent = Math.round(progress * 100);
+    
+    pityEl.innerHTML = `
+      <div class="lp-title" style="color:${col}">📊 保底进度</div>
+      <div class="lp-bar-bg">
+        <div class="lp-bar-fill" style="width:${percent}%;background:${col}"></div>
+      </div>
+      <div class="lp-info">
+        <span>${pity.count} / ${nextThreshold}</span>
+        <span style="color:${col}">${nextThreshold - pity.count > 0 ? `还差${nextThreshold - pity.count}抽触发保底` : '⚡保底已触发！'}</span>
+      </div>
+    `;
   }
 }

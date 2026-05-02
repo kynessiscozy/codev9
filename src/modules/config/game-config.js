@@ -40,7 +40,8 @@ const GAME_CONFIG = {
     notificationDuration: 3000,
     modalAnimation: true,
     enableSoundEffects: false,
-    theme: 'dark', // 'light' | 'dark' | 'auto'
+
+
   },
 
   // 保存配置
