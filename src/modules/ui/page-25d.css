@@ -1483,8 +1483,8 @@
 /* 卡片标题 */
 #page-soul.soul-page-25d .sv2-title {
   font-family: 'Ma Shan Zheng', serif;
-  font-size: 17px;
-  letter-spacing: 2px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
   margin-bottom: 10px;
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -1547,6 +1547,61 @@
   text-shadow: 0 0 10px var(--soul-col, rgba(240,208,96,0.3));
 }
 
+/* ─── 魂骨/神器双列卡 ─── */
+#page-soul.soul-page-25d .sv2-gear {
+  margin: 0 10px 10px;
+}
+#page-soul.soul-page-25d .sv2-gcol {
+  position: relative;
+  padding: 14px 12px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(14,14,32,0.96), rgba(8,8,22,0.94));
+  border: 1px solid rgba(255,255,255,0.04);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#page-soul.soul-page-25d .sv2-gcol::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,0.02) 0%, transparent 40%, rgba(0,0,0,0.05) 100%);
+  pointer-events: none;
+}
+#page-soul.soul-page-25d .sv2-gcol::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.3), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+#page-soul.soul-page-25d .sv2-gcol:hover {
+  transform: translateY(-3px) scale(1.005);
+  border-color: rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.12);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.45), 0 0 30px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.04);
+}
+#page-soul.soul-page-25d .sv2-gcol:hover::after {
+  opacity: 1;
+}
+#page-soul.soul-page-25d .sv2-gc-title {
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.8);
+}
+#page-soul.soul-page-25d .sv2-gc-action {
+  font-size: 9px;
+  color: var(--dim);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+#page-soul.soul-page-25d .sv2-gc-action:hover {
+  color: rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.7);
+}
 /* ─── 魂骨槽 - 宝石镶嵌 ─── */
 #page-soul.soul-page-25d .sv2-b-slot {
   position: relative;
@@ -1985,78 +2040,14 @@
   box-shadow: 0 4px 15px rgba(201, 162, 39, 0.2);
 }
 
-/* 背包物品卡片2.5D效果 */
-.bag-item-25d {
-  position: relative;
-  aspect-ratio: 1;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(25, 25, 50, 0.95), rgba(18, 18, 40, 0.95));
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  animation: bagItemEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
-  transform-style: preserve-3d;
-  overflow: hidden;
-}
-
-.bag-item-25d::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.bag-item-25d:hover {
-  transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(201, 162, 39, 0.15);
-  border-color: rgba(201, 162, 39, 0.3);
-}
-
-.bag-item-25d:hover::before {
-  opacity: 1;
-}
-
-.bag-item-25d:active {
-  transform: translateY(-2px) scale(0.98);
-}
-
-.bag-item-25d .bi {
-  font-size: 28px;
-  margin-bottom: 4px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-  transition: transform 0.3s ease;
-}
-
-.bag-item-25d:hover .bi {
-  transform: scale(1.1);
-}
-
-.bag-item-25d .bn {
-  font-size: 9px;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 2px;
-  text-align: center;
-  line-height: 1.2;
-}
-
-.bag-item-25d .bc {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  font-size: 9px;
-  font-weight: 700;
-  color: #f0d060;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 6px;
-  padding: 2px 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
+/* 背包物品卡片2.5D效果（v10紧凑版） */
+.bg-i{position:relative;aspect-ratio:4/3;border-radius:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;overflow:hidden;gap:1px}
+.bg-i:hover{background:rgba(201,162,39,.06);border-color:rgba(201,162,39,.15);transform:translateY(-1px)}
+.bg-i:active{transform:scale(.96)}
+.bg-i-i{font-size:18px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));transition:transform .2s}
+.bg-i:hover .bg-i-i{transform:scale(1.12)}
+.bg-i-n{font-size:7px;color:var(--bc,rgba(255,255,255,.55));text-align:center;line-height:1.1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;padding:0 2px}
+.bg-cnt{position:absolute;top:2px;right:2px;font-size:7px;font-weight:700;color:#f0d060;background:rgba(0,0,0,.55);border-radius:4px;padding:1px 4px;line-height:1.2}
 
 @keyframes bagItemEnter {
   0% { opacity: 0; transform: scale(0.8) rotateX(15deg); }
@@ -2347,19 +2338,100 @@ button:active::after, .btn:active::after, .cw-btn:active::after, .tc-btn:active:
   50% { transform: translateY(-8px); }
 }
 
-/* ─── 觉醒覆盖层 ─── */
-#SA .aw-c {
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+/* ─── 觉醒覆盖层 - 2.5D ─── */
+#SA {
+  perspective: 800px;
+}
+#SA .aw-glow {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.12), transparent 65%);
+  animation: awGlow25d 3s ease-in-out infinite;
+}
+@keyframes awGlow25d {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.4; }
+  33% { transform: scale(1.08) rotate(120deg); opacity: 0.8; }
+  66% { transform: scale(0.95) rotate(240deg); opacity: 0.5; }
+  100% { transform: scale(1) rotate(360deg); opacity: 0.4; }
+}
+#SA .aw-t {
+  font-size: 34px;
+  letter-spacing: 10px;
+  text-shadow: 0 0 40px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.4), 0 0 80px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.15);
+  animation: awTitleFloat 3s ease-in-out infinite;
   transform-style: preserve-3d;
+}
+@keyframes awTitleFloat {
+  0%, 100% { transform: translateY(0) rotateX(0deg); }
+  50% { transform: translateY(-4px) rotateX(2deg); }
+}
+#SA .aw-s {
+  letter-spacing: 3px;
+  opacity: 0.7;
+}
+#SA .aw-c {
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  width: 210px;
+  height: 210px;
+  box-shadow: 
+    0 0 60px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.08),
+    0 0 120px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.04),
+    inset 0 0 40px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.03);
 }
 
 #SA .aw-c:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 40px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.15), 0 0 80px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.05);
+  transform: scale(1.06) rotateX(4deg);
+  box-shadow: 
+    0 0 60px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.25),
+    0 0 120px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.1),
+    0 0 200px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.04);
 }
-
-#SA .aw-t {
-  text-shadow: 0 0 30px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.3);
+#SA .aw-c:active {
+  transform: scale(0.94);
+}
+#SA .ar1 {
+  border-color: rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.25);
+  animation: rot 9s linear infinite;
+}
+#SA .ar2 {
+  border-color: rgba(var(--qcR,168), var(--qcG,85), var(--qcB,247),0.25);
+  animation: rot 14s linear infinite reverse;
+}
+#SA .ar3 {
+  border-color: rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.1);
+  animation: rot 21s linear infinite;
+}
+#SA .aw-ico {
+  font-size: 76px;
+  filter: drop-shadow(0 0 20px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.5));
+  animation: awIcoLevitate 3s ease-in-out infinite;
+}
+@keyframes awIcoLevitate {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-5px) scale(1.04); }
+}
+#SA .aw-hint {
+  font-size: 11px;
+  letter-spacing: 2px;
+  animation: blk 1.8s infinite;
+}
+#SA .aw-btn {
+  padding: 14px 42px;
+  border-radius: 16px;
+  font-size: 18px;
+  letter-spacing: 6px;
+  background: linear-gradient(135deg, rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.25), rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.08));
+  border-color: rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.35);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+#SA .aw-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 40px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.3), 0 0 60px rgba(var(--qcR,201), var(--qcG,162), var(--qcB,39),0.1);
+}
+#SA .aw-btn:active {
+  transform: translateY(0) scale(0.97);
 }
 
 /* ─── 境界突破覆盖层 ─── */

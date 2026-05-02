@@ -207,13 +207,13 @@ function openTalentSelect(){
       <div class="tc-desc">${t.desc}</div>
       ${t.stats.map(s=>`<div class="tc-stat">▶ ${s}</div>`).join('')}
     </div>`).join('');
-  openModal(`<div class="m-title" style="color:var(--gold)">⚔️ 封号天赋</div>
+  openModal(`
     <div class="m-sub">${G.talent?'当前：'+TALENTS.find(t=>t.id===G.talent).name+' · 可重置':'Lv.91专属·永久强化战力'}</div>
     <div class="talent-grid">${cardsH}</div>
     ${G.talent?`<div style="margin-top:10px;text-align:center;font-size:10px;color:var(--dim)">重置需 <span style="color:var(--apex)">${resetCost.toLocaleString()} 魂力</span>
       <span onclick="resetTalent()" style="color:var(--apex);cursor:pointer;margin-left:8px;padding:2px 8px;border:1px solid rgba(239,68,68,.3);border-radius:5px">重置</span>
     </div>`:''}
-  `);
+  ', '⚔️ 封号天赋'`);
 }
 function selectTalent(id){
   if(G.talent&&G.talent!==id){notify('已有天赋，请先重置','normal');return;}
@@ -397,12 +397,13 @@ function genBonePw(ringYear){
 }
 
 const BONE_SLOTS=[
-  {s:"head",n:"头部",i:"💀",bonus:"精神力+15%",types:["head"]},
-  {s:"body",n:"躯干",i:"🦴",bonus:"生命值+20%",types:["body"]},
-  {s:"la",  n:"左臂",i:"💪",bonus:"攻击力+12%",types:["arm"]},
-  {s:"ra",  n:"右臂",i:"💪",bonus:"攻击力+12%",types:["arm"]},
-  {s:"ll",  n:"左腿",i:"🦵",bonus:"速度+10%",  types:["leg"]},
-  {s:"rl",  n:"右腿",i:"🦵",bonus:"速度+10%",  types:["leg"]},
+  // 2.5D crystal/armor style — faceted polygons, quality-color fills, diamond accents
+  {s:"head",n:"头部",i:'<svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block" stroke="currentColor" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="8,3 16,3 21,8 21,16 16,20 8,20 3,16 3,8" stroke-width="1.4"/><path d="M8 3l1-2h6l1 2" opacity=".65"/><polygon points="9,9 8,11 9,13 10,11" fill="currentColor" opacity=".5" stroke="none"/><polygon points="15,9 14,11 15,13 16,11" fill="currentColor" opacity=".5" stroke="none"/><path d="M10 15h4" stroke-width="1.3" opacity=".85"/><rect x="9" y="5" width="6" height="3" rx="1" fill="currentColor" opacity=".12" stroke="none"/></svg>',bonus:"精神力+15%",types:["head"]},
+  {s:"body",n:"躯干",i:'<svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block" stroke="currentColor" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7,5 17,5 21,9 20,15 15,16 13,20 11,20 9,16 4,15 3,9" stroke-width="1.4"/><path d="M7 5l5-2 5 2" opacity=".5"/><line x1="12" y1="5" x2="12" y2="20" opacity=".3" stroke-width=".8" stroke="currentColor"/><polygon points="10,9 14,9 12,13" fill="currentColor" opacity=".12" stroke="none"/><line x1="6" y1="11" x2="18" y2="11" opacity=".25" stroke-width=".8" stroke="currentColor"/></svg>',bonus:"生命值+20%",types:["body"]},
+  {s:"la",  n:"左臂",i:'<svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block" stroke="currentColor" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l8 3v8l-6 3" stroke-width="1.4"/><path d="M4 4l-2 3 3 2" stroke-width="1.3"/><path d="M12 7l3 2-2 3" stroke-width="1.3"/><circle cx="9" cy="12" r="1.5" fill="currentColor" opacity=".3" stroke="none"/><path d="M4 9l4 1" opacity=".4"/><path d="M5 20l-1 2m4-2l1 2" stroke-width="1"/><path d="M6 6l5 2v4l-4 2z" fill="currentColor" opacity=".1" stroke="none"/></svg>',bonus:"攻击力+12%",types:["arm"]},
+  {s:"ra",  n:"右臂",i:'<svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block" stroke="currentColor" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4l-8 3v8l6 3" stroke-width="1.4"/><path d="M20 4l2 3-3 2" stroke-width="1.3"/><path d="M12 7l-3 2 2 3" stroke-width="1.3"/><circle cx="15" cy="12" r="1.5" fill="currentColor" opacity=".3" stroke="none"/><path d="M20 9l-4 1" opacity=".4"/><path d="M19 20l1 2m-4-2l-1 2" stroke-width="1"/><path d="M18 6l-5 2v4l4 2z" fill="currentColor" opacity=".1" stroke="none"/></svg>',bonus:"攻击力+12%",types:["arm"]},
+  {s:"ll",  n:"左腿",i:'<svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block" stroke="currentColor" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v5l-5 5v7" stroke-width="1.4"/><path d="M12 3l-4 5" opacity=".5"/><line x1="3" y1="15" x2="7" y2="18" opacity=".4" stroke-width=".8" stroke="currentColor"/><circle cx="7" cy="12" r="1.5" fill="currentColor" opacity=".3" stroke="none"/><path d="M3 20l-2 2m4-2l1 2" stroke-width="1.2"/><path d="M9 4l-2 4-3 2z" fill="currentColor" opacity=".1" stroke="none"/></svg>',bonus:"速度+10%",  types:["leg"]},
+  {s:"rl",  n:"右腿",i:'<svg viewBox="0 0 24 24" style="width:20px;height:20px;display:block" stroke="currentColor" fill="none" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3v5l5 5v7" stroke-width="1.4"/><path d="M12 3l4 5" opacity=".5"/><line x1="21" y1="15" x2="17" y2="18" opacity=".4" stroke-width=".8" stroke="currentColor"/><circle cx="17" cy="12" r="1.5" fill="currentColor" opacity=".3" stroke="none"/><path d="M21 20l2 2m-4-2l-1 2" stroke-width="1.2"/><path d="M15 4l2 4 3 2z" fill="currentColor" opacity=".1" stroke="none"/></svg>',bonus:"速度+10%",  types:["leg"]},
 ];
 
 // Each slot-typed bone pool — ensures slot-matching
@@ -631,7 +632,7 @@ function openSoulResonance(){
 
   const sourcesH=FRAGMENT_SOURCES.map(s=>`
     <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.03)">
-      <span style="display:flex;align-items:center;flex-shrink:0">${getSoulIcon(s.name,s.quality,{sizeClass:'size-small',animated:false})}</span>
+      <span style="font-size:16px;flex-shrink:0">${s.icon}</span>
       <div>
         <div style="font-size:10px;font-weight:600;color:var(--txt)">${s.label}</div>
         <div style="font-size:9px;color:var(--dim)">${s.desc}</div>
@@ -639,11 +640,10 @@ function openSoulResonance(){
     </div>`).join('');
 
   const totalPow=calcResonancePower();
-  openModal(`<div class="m-title">✨ 武魂共鸣</div>
-    <div class="m-sub">总共鸣战力 +${totalPow.toLocaleString()}</div>
+  openModal(`<div class="m-sub" style="margin-bottom:10px">总共鸣战力 +${totalPow.toLocaleString()}</div>
     <div style="margin-bottom:10px">${rows}</div>
     <div class="m-sec-t" style="margin:10px 0 6px">碎片获取途径</div>
-    <div>${sourcesH}</div>`);
+    <div>${sourcesH}</div>`,'✨ 武魂共鸣');
 }
 
 function openSoulEvolution(){
@@ -651,17 +651,16 @@ function openSoulEvolution(){
   const ev=SOUL_EVOLUTIONS[G.soul.name];
   const frags=Object.values(G.soulFragments||{}).reduce((a,b)=>a+b,0);
   if(!ev){
-    openModal(`<div class="m-title">🌟 武魂传承</div>
-      <div class="m-sub" style="color:var(--dim)">当前武魂暂无传承链</div>
+    openModal(`<div class="m-sub" style="color:var(--dim)">当前武魂暂无传承链</div>
       <div style="font-size:11px;color:var(--dim);text-align:center;padding:20px;line-height:1.8">
         ${G.soul.name} 暂无已知传承形态。<br>
         特殊武魂、双生武魂可通过其他方式进化。<br><br>
         <span style="color:var(--gl)">已有碎片：${frags} 枚</span>
-      </div>`);
+      </div>`,'🌟 武魂传承');
     return;
   }
   const canEvolve=frags>=ev.fragCost&&G.level>=ev.reqLv;
-  openModal(`<div class="m-title" style="color:var(--gl)">🌟 武魂传承</div>
+  openModal(`
     <div class="m-sub" style="display:flex;align-items:center;justify-content:center;gap:6px;"><span style="display:flex;align-items:center;">${getSoulIcon(G.soul.name,G.soul.quality,{sizeClass:'size-small'})}</span> <span>${G.soul.name} → ${ev.to}</span></div>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:16px 0">
       <div style="text-align:center">
@@ -680,7 +679,7 @@ function openSoulEvolution(){
     </div>
     <div class="m-acts">
       <div class="m-btn ok" style="${canEvolve?'':'opacity:.4;pointer-events:none'}" onclick="execSoulEvolution()">传承进化</div>
-    </div>`);
+    </div>`,'🌟 武魂传承');
 }
 
 function execSoulEvolution(){
@@ -843,7 +842,7 @@ function defState(){
     lastSave:Date.now(),
     _ver:10,
     // V8 fields
-    talent:null, awakenLevel:0, honorPoints:0,
+    talent:null, awakenLevel:0, honorPoints:0, soundEnabled:true,
     realmBonusClaimed:[],
     achievements:{},
     arenaHonor:0, arenaWins:0, arenaLosses:0,
@@ -1130,25 +1129,31 @@ function toggleBagFab(){
   _bagOpen=!_bagOpen;
   const fab=$('bag-fab');
   if(_bagOpen){
-    // Show bag as overlay page on top of current page
     let bagOv=$('bag-overlay');
     if(!bagOv){
       bagOv=document.createElement('div');
       bagOv.id='bag-overlay';
-      bagOv.style.cssText='position:fixed;inset:0 0 58px 0;z-index:90;background:linear-gradient(180deg,#050810,#08101a);overflow-y:auto;animation:sUp .25s ease;padding:11px';
-      bagOv.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><div class="st">🎒 背包</div></div>'+
-        '<div class="bag-tabs" id="bag-tabs-ov"><div class="btab active" onclick="fBagOv(\'all\',this)">全部</div><div class="btab" onclick="fBagOv(\'bone\',this)">魂骨</div><div class="btab" onclick="fBagOv(\'artifact\',this)">神器</div><div class="btab" onclick="fBagOv(\'herb\',this)">药草</div><div class="btab" onclick="fBagOv(\'resource\',this)">资源</div><div class="btab" onclick="fBagOv(\'ticket\',this)">奖券</div></div>'+
-        '<div class="bag-grid" id="bag-grid-ov"></div>';
+      bagOv.innerHTML='<div id="bag-backdrop" onclick="toggleBagFab()"></div><div id="bag-panel"><div class="bag-hd"><span class="bag-hd-i">🎒</span><span class="bag-hd-t">背包</span><span class="bag-hd-c" onclick="toggleBagFab()">✕</span></div>'+
+        '<div class="bag-tabs-25d" id="bag-tabs-ov"></div>'+
+        '<div class="bag-g" id="bag-grid-ov"></div></div>';
       $('app').appendChild(bagOv);
+      // Build tabs
+      const tabsEl=$('bag-tabs-ov');
+      if(tabsEl){
+        const TAB_IDS=['all','bone','artifact','herb','resource','ticket'];
+        const TAB_NMS=['全部','魂骨','神器','药草','资源','奖券'];
+        tabsEl.innerHTML=TAB_IDS.map((id,i)=>'<div class="bag-tab'+(i===0?' active':'')+'" data-f="'+id+'" onclick="fBagOv(\''+id+'\',this)">'+TAB_NMS[i]+'</div>').join('');
+      }
     }
     bagOv.style.display='block';
+    setTimeout(()=>bagOv.classList.add('open'),10);
     curBagFilter='all';
     renderBagOv();
     if(fab)fab.classList.add('open');
     setBagFabIcon(true);
   }else{
     const bagOv=$('bag-overlay');
-    if(bagOv)bagOv.style.display='none';
+    if(bagOv){bagOv.classList.remove('open');setTimeout(()=>bagOv.style.display='none',300);}
     if(fab)fab.classList.remove('open');
     setBagFabIcon(false);
   }
@@ -1177,7 +1182,7 @@ function initBagFabDrag(){
 }
 function fBagOv(f,el){
   curBagFilter=f;
-  document.querySelectorAll('#bag-tabs-ov .btab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('#bag-tabs-ov .bag-tab').forEach(t=>t.classList.remove('active'));
   if(el)el.classList.add('active');
   renderBagOv();
 }
@@ -1406,7 +1411,7 @@ function renderSoulPage(){
   const boneSlotH=BONE_SLOTS.map(bs=>{
     const eq=G.equippedBones[bs.s];
     return`<div class="sv2-b-slot${eq?' on':''}" onclick="openBoneSlot('${bs.s}')">
-      ${eq?eq.i:bs.i}
+      ${bs.i}
       <div class="sv2-b-pw">${eq?'+'+eq.pw:'空'}</div>
     </div>`;
   }).join('');
@@ -1492,6 +1497,7 @@ function renderSoulPage(){
 
   p.innerHTML=`
     <div class="soul-v2-hero">
+      <div class="sol-qbadge" onclick="showQualityInfo()" style="cursor:pointer;border-color:${qt.col};color:${qt.col};background:rgba(${qt.rgb},.1);box-shadow:0 0 8px rgba(${qt.rgb},.2)"><div class="sol-qb-dot" style="background:${qt.col};box-shadow:0 0 4px ${qt.col}"></div>${qc.n}</div>
       <!-- Orbit system -->
       <div class="soul-orbit">
         <div class="sol-ring r1" style="border-color:${qt.col}"></div>
@@ -1509,11 +1515,6 @@ function renderSoulPage(){
       <!-- Identity -->
       <div class="sol-name" style="color:${qt.col};text-shadow:0 0 22px ${qt.glow}">${s.name}</div>
       <div class="sol-meta">
-        <div class="sol-quality-tag" style="border-color:${qt.col};color:${qt.col};background:rgba(${qt.rgb},.1);box-shadow:0 0 10px rgba(${qt.rgb},.25)">
-            <div class="sol-qt-dot" style="background:${qt.col};box-shadow:0 0 5px ${qt.col}"></div>
-            ${qc.n}
-          </div>
-        <div class="sol-dot-sep"></div>
         <div class="sol-rank">${rankStr(G.level)}</div>
         ${s.secondAwakened||s.divine?`<div class="sol-dot-sep"></div><div class="sol-rank" style="color:rgba(255,255,255,.3)">${s.isGod?'神位传承':'二次觉醒'}</div>`:''}
         <div class="sol-dot-sep"></div>
@@ -1592,10 +1593,7 @@ function renderSoulPage(){
       ${skillsH||'<div style="font-size:10px;color:var(--dim)">暂无魂技</div>'}
     </div>
 
-    <div class="sv2-bottom-row" style="margin-top:0">
-      <div class="sv2-reawaken-btn" onclick="confirmReset()">🔄 再次觉醒</div>
-    </div>
-    <div style="height:6px;position:relative;z-index:1"></div>
+    <div style="height:8px;position:relative;z-index:1"></div>
   `;
 
   // 重新应用2.5D效果
@@ -1682,19 +1680,19 @@ function openBoneSlot(slot){
       html+=`<div style="text-align:center;padding:20px;color:var(--dim);font-size:12px">背包中暂无魂骨</div>`;
     }
   }
-  openModal(html);
+  openModal(html,'🦴 魂骨详情');
 }
 
 function openBonePanel(){
   if(!G.unlockedSystems?.bone&&G.level<10){
     notify('🦴 魂骨系统在 Lv.10 解锁！当前：Lv.'+G.level,'normal');return;
   }
-  let html=`<div class="m-title">🦴 魂骨总览</div><div class="m-sub">点击部位管理魂骨</div>`;
+  let html=`<div class="m-sub" style="margin-bottom:8px">点击部位管理魂骨</div>`;
   html+=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px">`;
   BONE_SLOTS.forEach(bs=>{
     const eq=G.equippedBones[bs.s];
     html+=`<div style="background:${eq?'rgba(251,191,36,.06)':'var(--bgc)'};border:1px solid ${eq?'rgba(251,191,36,.35)':'var(--bdr)'};border-radius:8px;padding:8px 5px;text-align:center;cursor:pointer" onclick="openBoneSlot('${bs.s}');cModal(event);setTimeout(()=>document.getElementById('modal').classList.add('show'),50)">
-      <div style="font-size:22px">${eq?eq.i:bs.i}</div>
+      <div style="display:flex;align-items:center;justify-content:center;height:28px">${bs.i}</div>
       <div style="font-size:9px;color:var(--dim);margin-top:2px">${bs.n}</div>
       <div style="font-size:9px;color:var(--gold);margin-top:1px">${eq?`+${eq.pw}`:'-'}</div>
     </div>`;
@@ -1719,7 +1717,7 @@ function openBonePanel(){
       <div class="m-btn ok" style="padding:4px 8px;font-size:10px">装备</div>
     </div>`).join('');
   }
-  openModal(html);
+  openModal(html,'🦴 魂骨总览');
 }
 
 function equipBoneToSlot(id,slot){
@@ -1784,6 +1782,13 @@ function doSecondAwaken(){
   addExp(250);updateHUD();saveG();renderSoulPage();
 }
 
+function showQualityInfo(){
+  if(!G.soul)return;
+  const qc=QC[G.soul.quality]||QC.common;
+  const qt=QTHEMES[G.soul.quality]||QTHEMES.common;
+  const pwMul=qc.pwMul||1;
+  notify(`${G.soul.name} · ${qc.n}品质\n战力倍率 ×${pwMul}\n初始魂力 ${G.soul.initPow||'?'}`,'epic');
+}
 function openSoulDetail(){
   if(!G.soul)return;
   const s=G.soul,qc=QC[s.quality]||QC.common;
@@ -1793,15 +1798,24 @@ function openSoulDetail(){
       <div class="ski-desc">${sk.desc}</div>
       <div class="ski-params">${(sk.params||[]).map(p=>`<span class="ski-p">${p}</span>`).join('')}</div>
     </div>`).join('');
+  const qTag=`<div class="gs-d-qtag" style="color:${qc.c};border-color:${qc.c}55;background:${qc.c}15"><div class="gs-d-qdot" style="background:${qc.c};box-shadow:0 0 5px ${qc.c}"></div>${qc.n}</div>`;
   openModal(`
-    <div style="font-size:11px;color:var(--dim);text-align:center;margin-bottom:11px;line-height:1.7">${s.desc}</div>
-    <div class="m-ag" style="margin-bottom:11px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="display:flex;align-items:center;">${getSoulIcon(s.name,s.quality,{sizeClass:'size-small'})}</span>
+        <div>
+          <div style="font-family:'Ma Shan Zheng',serif;font-size:17px;color:${qc.c};letter-spacing:2px">${s.name}</div>
+          ${qTag}
+        </div>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--dim);text-align:center;margin-bottom:10px;line-height:1.7">${s.desc}</div>
+    <div class="m-ag" style="margin-bottom:10px">
       <div class="m-at"><div class="m-an">初始魂力</div><div class="m-av">${s.initPow}</div></div>
-      <div class="m-at"><div class="m-an">品质</div><div class="m-av" style="color:${qc.c};font-size:12px">${qc.n}</div></div>
       ${s.attrs.map(a=>`<div class="m-at"><div class="m-an">属性</div><div class="m-av" style="font-size:11px">${a}</div></div>`).join('')}
     </div>
     <div class="m-sec"><div class="m-sec-t">魂技列表</div>${skH||'<div style="font-size:11px;color:var(--dim)">暂无</div>'}</div>`,
-    `<span style="display:flex;align-items:center;gap:8px;"><span style="display:flex;align-items:center;">${getSoulIcon(s.name,s.quality,{sizeClass:'size-small'})}</span><span>${s.name} · ${qc.n}品质</span></span>`);
+    '魂技详情');
 }
 
 function openTaskPage(){
@@ -1960,6 +1974,31 @@ function assignRingFromSel(rid){
   notify(`✅ ${it.data.n} 魂环装配成功！战力+${t.pw}`,'normal');
 }
 
+// ═══ 全局音效开关 ═══
+function toggleSound(){
+  G.soundEnabled=!G.soundEnabled;
+  saveG();
+  // 同步音频模块静音状态
+  if(window.fxAudio?.setMute)window.fxAudio.setMute(!G.soundEnabled);
+  const ico=document.getElementById('sound-ico');
+  const lbl=document.getElementById('sound-lbl');
+  const btn=ico?.closest('.ls-sound-btn');
+  if(ico)ico.textContent=G.soundEnabled?'🔊':'🔇';
+  if(lbl)lbl.textContent=G.soundEnabled?'音效':'静音';
+  if(btn)btn.classList.toggle('on',G.soundEnabled);
+  notify(G.soundEnabled?'🔊 音效已开启':'🔇 音效已关闭','normal');
+}
+function updateSoundUI(){
+  const ico=document.getElementById('sound-ico');
+  const lbl=document.getElementById('sound-lbl');
+  const btn=ico?.closest('.ls-sound-btn');
+  if(ico)ico.textContent=G.soundEnabled?'🔊':'🔇';
+  if(lbl)lbl.textContent=G.soundEnabled?'音效':'静音';
+  if(btn)btn.classList.toggle('on',G.soundEnabled);
+  // 初始化时同步音频状态
+  if(window.fxAudio?.setMute)window.fxAudio.setMute(!G.soundEnabled);
+}
+// ════════════════════════════════════════════
 function confirmReset(){
   if(confirm('⚠️ 再次觉醒将重置所有游戏数据！\n仅保留武魂图鉴中觉醒过的历史。\n\n确认继续？')){
     if(confirm('最终确认：清除所有进度，仅保留武魂图鉴历史？\n此操作不可撤销！')){
@@ -2565,7 +2604,7 @@ function openLotShop(){
       <div class="m-btn ok" style="padding:5px 12px;font-size:10px;flex-shrink:0;${canAfford?'':'opacity:.35;pointer-events:none'}" onclick="buyLotTicket('${item.id}')">购买</div>
     </div>`;
   }).join('');
-  openModal(`<div class="m-title">🛒 星运商店</div>
+  openModal(`
     <div class="m-sub">当前魂力: <span style="color:var(--gl);font-weight:700">${G.sp.toLocaleString()}</span></div>
     <div style="margin-top:8px">${rows}</div>`);
 }
@@ -3159,7 +3198,7 @@ function openActivityShop(){
       </div>
     </div>`;
   }).join('');
-  openModal(`<div class="m-title">🌸 活动商店</div>
+  openModal(`
     <div class="m-sub">春分灵露: <span style="color:#f9a8d4;font-weight:700">${cur}</span> 💧</div>
     <div style="font-size:10px;color:var(--dim);text-align:center;margin:6px 0 8px">修炼·探索·任务完成均可获得春分灵露</div>
     <div>${rows}</div>`);
@@ -3409,20 +3448,23 @@ function claimHidden(){}
 //  BAG
 // ══════════════════════════════════════════════════
 // ── Shared bag render helper (v9) ──
-function _bagItemHtml(it){
+function _bagItemHtml(it,idx){
   let ico,nm,col='var(--dim)';
-  if(it.type==='ring'){ico='⭕';nm=it.data.n;col=it.data.c;}
-  else if(it.type==='bone'){ico=it.data.i||'🦴';nm=it.data.n;col='#fbbf24';}
-  else if(it.type==='artifact'){ico=it.data.i;nm=it.data.n;col='var(--legend)';}
-  else if(it.type==='herb'){ico=it.data.i;nm=it.data.n;col=it.data.c;}
-  else if(it.type==='resource'){ico=it.data.i;nm=it.data.n;col=it.data.c;}
-  else if(it.type==='ticket'){ico=it.data.i||'🎟️';nm=it.data.n;col=it.data.c||'#9ca3af';}
-  else if(it.type==='title'){ico='👑';nm=it.data?.n||it.data;col=it.data?.c||'var(--divine)';}
-  else{ico=it.data?.i||'📦';nm=it.data?.n||it.type;col=it.data?.c||'var(--dim)';}
-  return`<div class="bag-item" onclick="openBagItem('${it.id||it.data?.id}','${it.type}')">
-    <div class="bi">${ico}</div>
-    <div class="bn" style="color:${col}">${nm}</div>
-    ${it.count>1?`<div class="bc">${it.count}</div>`:''}
+  const c=it.data;
+  if(it.type==='ring'){ico='⭕';nm=c?.n;col=c?.c;}
+  else if(it.type==='bone'){ico=c?.i||'🦴';nm=c?.n;col='#fbbf24';}
+  else if(it.type==='artifact'){ico=c?.i;nm=c?.n;col='var(--legend)';}
+  else if(it.type==='herb'){ico=c?.i;nm=c?.n;col=c?.c;}
+  else if(it.type==='resource'){ico=c?.i;nm=c?.n;col=c?.c;}
+  else if(it.type==='ticket'){ico=c?.i||'🎟️';nm=c?.n;col=c?.c||'#9ca3af';}
+  else if(it.type==='title'){ico='👑';nm=c?.n||it.data;col=c?.c||'var(--divine)';}
+  else{ico=c?.i||'📦';nm=c?.n||it.type;col=c?.c||'var(--dim)';}
+  const delay=((idx||0)%12)*0.03;
+  const countBadge=it.count>1?`<span class="bag-cnt">${it.count}</span>`:'';
+  return`<div class="bg-i" style="animation-delay:${delay}s;--bc:${col}" onclick="openBagItem('${it.id||c?.id}','${it.type}')">
+    <div class="bg-i-i">${ico}</div>
+    <div class="bg-i-n">${nm}</div>
+    ${countBadge}
   </div>`;
 }
 function _renderBagGrid(gridId,filter){
@@ -3430,8 +3472,8 @@ function _renderBagGrid(gridId,filter){
   let items=G.bag;
   if(filter==='other')items=items.filter(it=>bagIsOther(it));
   else if(filter&&filter!=='all')items=items.filter(i=>i.type===filter);
-  if(!items.length){c.innerHTML='<div style="grid-column:span 4" class="empty-st"><div class="ei">🎒</div><div class="em">此分类为空</div></div>';return;}
-  c.innerHTML=items.map(it=>_bagItemHtml(it)).join('');
+  if(!items.length){c.innerHTML='<div class="bg-empty">此分类为空</div>';return;}
+  c.innerHTML=items.map((it,i)=>_bagItemHtml(it,i)).join('');
 }
 function fBag(f,el){
   curBagFilter=f;
@@ -3442,19 +3484,21 @@ function bagIsOther(it){
   return!['ring','bone','artifact','herb','resource','ticket','title'].includes(it.type);
 }
 function renderBag(){_renderBagGrid('bag-grid',curBagFilter);}
-function renderBagOv(){_renderBagGrid('bag-grid-ov',curBagFilter);}
+function renderBagOv(){_renderBagGrid('bag-grid-ov',curBagFilter);updBagTab();}
+function updBagTab(){const a=document.querySelector('#bag-tabs-ov .bag-tab.active');if(!a)document.querySelector('#bag-tabs-ov .bag-tab')?.classList.add('active');}
 function openBagItem(id,type){
   const it=G.bag.find(i=>(i.id==id)||(i.data?.id==id));
   if(!it)return;
   let html='';
   if(type==='ring'){
+    const ringTier=it.data.y||it.data.tier||'--';
     html=`<div class="m-title" style="color:${it.data.c}">⭕ ${it.data.n}</div>
-      <div class="m-sub">魂环 · 数量: ${it.count}</div>
+      <div class="m-sub">${ringTier}魂环 · 数量: ${it.count}</div>
       <div class="m-ag" style="margin-bottom:11px">
-        <div class="m-at"><div class="m-an">年份</div><div class="m-av" style="color:${it.data.c};font-size:12px">${it.data.n}</div></div>
+        <div class="m-at"><div class="m-an">年份</div><div class="m-av" style="color:${it.data.c};font-size:12px">${ringTier}</div></div>
         <div class="m-at"><div class="m-an">战力</div><div class="m-av">+${it.data.pw||0}</div></div>
         <div class="m-at" style="grid-column:span 2"><div class="m-an">魂技</div><div class="m-av" style="font-size:11px">${it.data.sk||it.data.skill||'--'}</div></div>
-        ${it.data.n==='不可估量'?`<div class="m-at" style="grid-column:span 2"><div class="m-an">特殊</div><div class="m-av" style="font-size:10px;color:var(--rUnk)">装配时可触发质变魂技</div></div>`:''}
+        ${ringTier==='不可估量'?`<div class="m-at" style="grid-column:span 2"><div class="m-an">特殊</div><div class="m-av" style="font-size:10px;color:var(--rUnk)">装配时可触发质变魂技</div></div>`:''}
       </div>
       <div class="m-acts">
         <div class="m-btn ok" onclick="openAssignRing();cModal(event)">装配武魂</div>
@@ -3462,11 +3506,12 @@ function openBagItem(id,type){
         <div class="m-btn bad" onclick="dropItem('${it.id||id}');cModal(event)">丢弃</div>
       </div>`;
   }else if(type==='bone'){
-    html=`<div class="m-title">🦴 ${it.data.n}</div>
+    const slotName=BONE_SLOTS.find(s=>s.s===it.data.s)?.n||it.data.slot||'--';
+    html=`<div class="m-title">${it.data.n}</div>
       <div class="m-sub">${it.data.ringYear||'魂骨'}</div>
       <div class="m-ag" style="margin-bottom:11px">
         <div class="m-at"><div class="m-an">战力</div><div class="m-av">+${it.data.pw||0}</div></div>
-        <div class="m-at"><div class="m-an">部位</div><div class="m-av" style="font-size:11px">${it.data.s||'--'}</div></div>
+        <div class="m-at"><div class="m-an">部位</div><div class="m-av" style="font-size:11px">${slotName}</div></div>
         ${it.data.bonus?`<div class="m-at" style="grid-column:span 2"><div class="m-an">增益效果</div><div class="m-av" style="font-size:11px;color:var(--gold)">${it.data.bonus}</div></div>`:''}
         ${it.data.special?`<div class="m-at" style="grid-column:span 2"><div class="m-an">特殊效果</div><div class="m-av" style="font-size:11px;color:var(--hc)">${it.data.special}</div></div>`:''}
       </div>
@@ -3585,7 +3630,7 @@ function openTitleSelect(){
       </div>
     </div>`;
   }).join('');
-  openModal(`<div class="m-title">👑 称号选择</div>
+  openModal(`
     <div class="m-sub">共 ${G.titles.length} 个称号 · 当前: ${G.equippedTitle?G.equippedTitle.n:'未装备'}</div>
     <div style="margin-top:8px">${rows}</div>`);
 }
@@ -3637,8 +3682,7 @@ function useTicket(id,useCount){
 // ──── ARTIFACT SELF-SELECT ────
 function openArtSelect(){
   const normalArts=ARTS.filter(a=>!a.extreme);
-  const html=`<div class="m-title" style="color:var(--legend)">⚔️ 自选神器</div>
-    <div class="m-sub">从以下神器中选择一件</div>
+  const html=`<div class="m-sub">从以下神器中选择一件</div>
     <div style="display:flex;flex-direction:column;gap:7px;margin-top:10px">
       ${normalArts.map(a=>`<div class="art-row" style="cursor:pointer" onclick="claimArtSelect('${a.id}')">
         <div class="art-i">${a.i}</div>
@@ -3650,7 +3694,7 @@ function openArtSelect(){
         <div class="art-btn">选择</div>
       </div>`).join('')}
     </div>`;
-  openModal(html);
+  openModal(html,'⚔️ 自选神器');
 }
 function claimArtSelect(id){
   const a=ARTS.find(x=>x.id===id);if(!a)return;
@@ -3791,7 +3835,7 @@ function showGodExamSelect(){
       </div>
       <div style="font-size:9px;color:var(--apex);margin-top:6px">⚠️ 选择后不可更改</div>
     </div>`).join('');
-  openModal(`<div class="m-title" style="color:#ffd700">🙏 神位传承</div>
+  openModal(`
     <div class="m-sub">选择你的神位道路，此选择永久不可逆</div>
     <div style="font-size:11px;color:var(--dim);text-align:center;margin:8px 0 14px;line-height:1.7">
       成神之路已完全打通。<br/>三位神祇正在等待继承者的选择。
@@ -4891,7 +4935,7 @@ function openAbyssShop(){
       <div class="m-btn ok" style="padding:5px 12px;font-size:10px;flex-shrink:0;${canAfford?'cursor:pointer':'opacity:.35;pointer-events:none'}" onclick="buyAbyssItem('${item.id}')">兑换</div>
     </div>`;
   }).join('');
-  openModal(`<div class="m-title">🛒 世界兑换商店</div>
+  openModal(`
     <div class="m-sub">碎片: <span style="color:var(--gl);font-weight:700">${G.abyss.shards}</span> &nbsp;·&nbsp; 魂力: <span style="color:var(--gl);font-weight:700">${G.sp.toLocaleString()}</span></div>
     <div style="margin-top:8px">${tokenSection}${tokenRows}${otherSection}${otherRows}</div>`);
 }
@@ -5472,6 +5516,7 @@ if(!G.tasks.length)genTasks();
 renderSoulPage();renderLotPage();
 updateActivityHUD();
 setTimeout(()=>{
+  updateSoundUI();
   updateCultUI();
   updateGodPath();
   if(G.tasks.some(t=>t.prog>=t.g&&!t.claimed))setTaskDot(true);
@@ -5502,57 +5547,51 @@ function openAwakenLevel(){
   const nextCost=lv<10?AWK_FRAG_COSTS[lv+1]:null;
   const canUp=nextCost&&frags>=nextCost;
   const isMax=lv>=10;
-  // 觉醒主色调使用紫色系
-  const awkG='#a78bfa';
 
-  // Stars arc with current glow
+  const svgDone='<svg viewBox="0 0 14 14" width="9" height="9" style="display:inline-block;vertical-align:middle;flex-shrink:0"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M4 7L6.5 10L11 4.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const svgCur='<svg viewBox="0 0 14 14" width="9" height="9" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M7 1.5L8.8 5.5L13 6.2L10 9.1L10.7 13.5L7 11.5L3.3 13.5L4 9.1L1 6.2L5.2 5.5Z" fill="currentColor"/></svg>';
+
+  // Stars row — compact
   const starsH=Array(10).fill(0).map((_,i)=>{
-    let cls='awk-star'+(i<lv?' lit':'')+(i===lv-1?' current':'');
-    // Stagger animation delay
-    return `<div class="${cls}" style="animation-delay:${i*0.12}s"></div>`;
+    let cls='awk-star'+(i<lv?' lit':'');
+    return `<div class="${cls}"></div>`;
   }).join('');
 
-  // ∞ emblem for max level
-  const infH=isMax?`<div class="awk-infinity">∞</div>`:'';
-  const heroH=`<div class="awk-hero" style="--soul-col:${awkG};--soul-r:167;--soul-g:139;--soul-b:250">
-    <div class="awk-lv-badge"><div class="awk-dot"></div>觉醒等级</div>
-    ${isMax?`<div class="awk-max-badge">✦ 极限形态 · 封神之境 ✦</div>`:''}
-    ${isMax?infH:`<div class="awk-level-number">Lv.${lv}/10</div>`}
-    <div class="awk-sub" style="color:var(--dim)">${isMax?'已达觉醒之巅':'觉醒 Lv.'+lv+'/10'}</div>
-    <div class="awk-power">+${(AWK_POWER_BONUS[lv]||0).toLocaleString()} 战力</div>
-    <div class="awk-star-arc">${starsH}</div>
-  </div>`;
+  // Level indicator
+  const lvLabel=isMax?'∞':'Lv.'+lv;
+  const lvSub=isMax?'极限觉醒':'觉醒 Lv.'+lv+'/10';
+  const lvPower='+'+(AWK_POWER_BONUS[lv]||0).toLocaleString()+' 战力';
 
-  // Fragment bar
-  const fragH=`<div class="awk-frag-bar" style="--soul-col:${awkG}">
-    <span class="awk-frag-n">${frags}</span>
-    <span class="awk-frag-l">通用碎片</span>
-    ${nextCost?`<span class="awk-frag-next">· 升级需 <span>${nextCost}</span></span>`:`<span class="awk-frag-next">· 巅峰已至</span>`}
-  </div>`;
-
-  // Level list
+  // Level list compact
   const listH=Array(10).fill(0).map((_,i)=>{
     const l=i+1;
     const isActive=i===lv;
     const isDone=i<lv;
-    return `<div class="awk-list-item${isActive?' active':''}${isDone?' done':''}" style="${isActive?`--soul-r:167;--soul-g:139;--soul-b:250`:''}">
-      <span class="awk-li-lv" style="color:${isActive?awkG:isDone?'rgba(255,255,255,.25)':'rgba(255,255,255,.6)'}">
-        ${isDone?'✅ ':isActive?'✦ ':'· '}Lv.${l}
-      </span>
-      <span class="awk-li-fx">${AWK_FX[l]||''}</span>
-      <span class="awk-li-pw" style="color:${isActive?awkG:'var(--dim)'}">+${AWK_POWER_BONUS[l].toLocaleString()}</span>
-    </div>`;
+    return '<div class="awk-row'+(isActive?' awk-cur':'')+(isDone?' awk-done':'')+'">'+
+      '<span class="awk-r-lv">'+(isDone?svgDone:isActive?svgCur:'·')+' Lv.'+l+'</span>'+
+      '<span class="awk-r-fx">'+(AWK_FX[l]||'')+'</span>'+
+      '<span class="awk-r-pw'+(isActive?' awk-r-pw-ac':'')+'">+'+AWK_POWER_BONUS[l].toLocaleString()+'</span>'+
+    '</div>';
   }).join('');
 
-  openModal(`<div class="m-title" style="color:${awkG};display:flex;align-items:center;gap:8px;">
-    <span style="display:flex;align-items:center;">${getSoulIcon(G.soul.name,G.soul.quality,{sizeClass:'size-small'})}</span>
-    <span>${G.soul.name} · 觉醒</span>
-  </div>
-  ${heroH}
-  ${fragH}
-  <div class="awk-list">${listH}</div>
-  ${canUp?`<div class="awk-upgrade-btn" onclick="doAwakenUp()" style="--soul-col:${awkG}">✦ 突破觉醒 Lv.${lv+1} (${nextCost}碎片)</div>`:isMax?'':''}
-  `);
+  var _next=nextCost?'<span class="awk-fnxt">· 升需 <span class="awk-fnxt-v">'+nextCost+'</span></span>':'<span class="awk-fnxt">· 已满</span>';
+  var _btn=canUp?'<span class="awk-up" onclick="doAwakenUp()">升级</span>':'';
+  var _icon=getSoulIcon(G.soul.name,G.soul.quality,{sizeClass:'size-small'});
+  openModal('<div class="awk-wrap">'+
+    '<div class="awk-hd">'+
+      '<div class="awk-hd-lv">'+lvLabel+'</div>'+
+      '<div class="awk-hd-stars">'+starsH+'</div>'+
+      '<div class="awk-hd-sub">'+lvSub+'</div>'+
+      '<div class="awk-hd-pw">'+lvPower+'</div>'+
+    '</div>'+
+    '<div class="awk-frag">'+
+      '<span class="awk-fn">'+frags+'</span>'+
+      '<span class="awk-fl">碎片</span>'+
+      _next+
+      _btn+
+    '</div>'+
+    '<div class="awk-ls">'+listH+'</div>'+
+  '</div>','<span style="display:flex;align-items:center;gap:6px;">'+_icon+'<span>'+G.soul.name+' · 觉醒</span></span>');
 }
 function doAwakenUp(){
   if(!G.soul)return;
@@ -6173,9 +6212,20 @@ function shareDownload(){
     }
     // Title
     drawText('武魂模拟器 · SOUL AWAKENED',rect.width/2,28,{font:'bold 9px sans-serif',color:'rgba(201,162,39,.5)',align:'center'});
-    // Icon (smaller, shifted up)
-    const ico=$('sc-ico')?.textContent||'⚡';
-    drawText(ico,rect.width/2,rect.height*.27,{font:'68px serif',color:col,align:'center',shadow:col+'50',blur:24});
+    // Icon — use existing img element from DOM
+    const icoEl=$('sc-ico');
+    if(icoEl){
+      const img=icoEl.querySelector('img');
+      if(img&&img.complete&&img.naturalWidth>0){
+        try{
+          const iw=Math.min(img.naturalWidth,46),ih=Math.min(img.naturalHeight,46);
+          ctx.save();
+          ctx.shadowColor=col+'60';ctx.shadowBlur=24;
+          ctx.drawImage(img,rect.width/2-iw/2,rect.height*.30-ih/2,iw,ih);
+          ctx.restore();
+        }catch(e){drawText(icoEl.textContent||'⚡',rect.width/2,rect.height*.30,{font:'38px serif',color:col,align:'center',shadow:col+'30',blur:14});}
+      }else{drawText(icoEl.textContent||'⚡',rect.width/2,rect.height*.30,{font:'38px serif',color:col,align:'center',shadow:col+'30',blur:14});}
+    }else{drawText('⚡',rect.width/2,rect.height*.30,{font:'38px serif',color:col,align:'center',shadow:col+'30',blur:14});}
     // Name (moved down for more gap)
     const name=$('sc-name')?.textContent||'武魂';
     drawText(name,rect.width/2,rect.height*.45,{font:'32px "Ma Shan Zheng",serif',color:col,align:'center',shadow:col+'50',blur:20});

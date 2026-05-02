@@ -367,9 +367,9 @@
     </div>
 
     <!-- ===== BAG PAGE ===== -->
-    <div class="page" id="page-bag">
+    <div class="page bag-page-25d" id="page-bag">
       <div class="sh"><div class="st">背包</div></div>
-      <div class="bag-tabs" id="bag-tabs">
+      <div class="bag-tabs-25d" id="bag-tabs">
         <div class="btab active" onclick="fBag('all',this)">全部</div>
         <div class="btab" onclick="fBag('bone',this)">魂骨</div>
         <div class="btab" onclick="fBag('artifact',this)">神器</div>
@@ -587,8 +587,11 @@
         <div id="ls-ci-btn-wrap"></div>
       </div>
       <div class="ls-bottom-action">
+        <div class="ls-sound-btn" onclick="toggleSound()">
+          <span class="ico" id="sound-ico">🔊</span> <span id="sound-lbl">音效</span>
+        </div>
         <div class="ls-reawaken-btn" onclick="confirmReset();closeSidebar()">
-          <span class="ico">🔄</span> 重新开始
+          <span class="ico">🔄</span> 重新觉醒
         </div>
       </div>
     </div>
