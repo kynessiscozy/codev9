@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-优化武魂图标：将 PNG 转换为 WebP 格式，保留透明背景
+[已弃用] 请使用 scripts/process_soul_icon.py 替代。
+
+原功能：优化武魂图标
+新脚本：智能去底、边缘羽化、自动裁剪留白、去水印、WebP输出
+  → python3 scripts/process_soul_icon.py --repair
+  → python3 scripts/process_soul_icon.py input.png -o output.webp
 """
 
 import os

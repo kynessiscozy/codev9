@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-去除武魂图标背景 - 将白色/近白色背景转为透明
+[已弃用] 请使用 scripts/process_soul_icon.py 替代。
+
+原功能：去除武魂图标背景 - 将白色/近白色背景转为透明
+新脚本功能更完善：智能去底、边缘羽化、自动裁剪留白、去水印、WebP输出
+  → python3 scripts/process_soul_icon.py --repair
+  → python3 scripts/process_soul_icon.py input.png -o output.webp
 """
 
 from pathlib import Path
