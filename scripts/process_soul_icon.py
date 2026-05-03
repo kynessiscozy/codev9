@@ -40,6 +40,7 @@ WATERMARK_HEIGHT_RATIO = 0.08 # 水印区域占图高比例
 BG_TOLERANCE = 40             # 背景色容差 (0-255)
 WEBP_QUALITY = 90             # WebP 质量 (0-100)
 SUPPORTED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.webp', '.bmp'}
+MAX_SIZE = 1024               # 最大尺寸（避免 MemoryError）
 
 
 def detect_background_color(img, sample_corners=True):
@@ -211,20 +212,159 @@ def auto_crop_with_padding(img, padding_ratio=PADDING_RATIO):
     return result
 
 
-def detect_and_crop_watermark(img):
+def detect_text_regions(img):
     """
-    检测并裁剪 AI 水印。
-    策略：检查图片底部区域是否有水印文字/Logo。
-    返回裁剪后的图片（如果检测到水印则裁剪掉底部水印区）。
+    AI 生成字符/文字检测。
+    策略：扫描边缘区域（四边 + 四角），查找密集的小像素簇（字符特征）。
+    返回需要裁剪的区域列表 [(x1,y1,x2,y2), ...]。
     """
     w, h = img.size
     if h < 100 or w < 100:
-        return img  # 图片太小，跳过
+        return []
 
+    if img.mode != 'RGBA':
+        img = img.convert('RGBA')
+
+    pixels = img.load()
+    regions_to_crop = []
+
+    # 检测参数
+    edge_thickness = int(h * 0.04)    # 检查边沿 4% 区域
+    edge_thickness = max(edge_thickness, 12)
+    corner_size = int(w * 0.08)       # 检查四角 8% 区域
+    corner_size = max(corner_size, 24)
+    min_text_height = 5               # 最小文字高度
+    max_text_height = int(h * 0.05)   # 最大文字高度
+    max_text_height = min(max_text_height, 25)
+    cluster_density_threshold = 0.20  # 像素密度阈值（提高减少误判）
+
+    def scan_band(x1, y1, x2, y2, name=""):
+        """扫描一个矩形区域，检测是否有"字符状"像素簇"""
+        if x1 >= x2 or y1 >= y2:
+            return None
+
+        bw = x2 - x1
+        bh = y2 - y1
+
+        # 计算整体密度，太稀疏则跳过（减少误判）
+        total_pixels = bw * bh
+        opaque_count = 0
+        for py in range(y1, y2):
+            for px in range(x1, x2):
+                _, _, _, a = pixels[px, py]
+                if a > 50:
+                    opaque_count += 1
+
+        overall_density = opaque_count / total_pixels if total_pixels > 0 else 0
+        # 如果整体密度极低或极高，不太可能是文字区域
+        if overall_density < 0.01 or overall_density > 0.6:
+            return None
+
+        # 按行扫描，统计每行的非透明像素占比
+        row_densities = []
+        for py in range(y1, y2):
+            count = 0
+            for px in range(x1, x2):
+                _, _, _, a = pixels[px, py]
+                if a > 50:
+                    count += 1
+            row_densities.append(count / bw if bw > 0 else 0)
+
+        # 查找连续的高密度行（文字行特征）
+        text_rows = []
+        in_text = False
+        text_start = 0
+        for i, density in enumerate(row_densities):
+            is_text_row = density > cluster_density_threshold
+            if is_text_row and not in_text:
+                text_start = i
+                in_text = True
+            elif not is_text_row and in_text:
+                text_height = i - text_start
+                if min_text_height <= text_height <= max_text_height:
+                    text_rows.append((text_start, i))
+                in_text = False
+        if in_text:
+            text_height = len(row_densities) - text_start
+            if min_text_height <= text_height <= max_text_height:
+                text_rows.append((text_start, len(row_densities)))
+
+        if text_rows:
+            print(f"  🔤 在{name}检测到可能的字符区域 ({len(text_rows)}段, 密度{overall_density:.0%})")
+            return text_rows
+        return None
+
+    # 检查四边和四角
+    checks = [
+        (0, 0, w, edge_thickness, "上边"),
+        (0, h - edge_thickness, w, h, "下边"),
+        (0, 0, edge_thickness, h, "左边"),
+        (w - edge_thickness, 0, w, h, "右边"),
+        (0, 0, corner_size, corner_size, "左上角"),
+        (w - corner_size, 0, w, corner_size, "右上角"),
+        (0, h - corner_size, corner_size, h, "左下角"),
+        (w - corner_size, h - corner_size, w, h, "右下角"),
+    ]
+
+    for x1, y1, x2, y2, name in checks:
+        result = scan_band(x1, y1, x2, y2, name)
+        if result:
+            for row_start, row_end in result:
+                crop_y1 = max(0, y1 + row_start - 3)
+                crop_y2 = min(h, y1 + row_end + 3)
+                extend = int(w * 0.015)
+                regions_to_crop.append((max(0, x1 - extend), crop_y1,
+                                        min(w, x2 + extend), crop_y2))
+
+    # 合并重叠或相邻的区域
+    if regions_to_crop:
+        regions_to_crop.sort(key=lambda r: (r[1], r[0]))
+        merged = [regions_to_crop[0]]
+        for r in regions_to_crop[1:]:
+            prev = merged[-1]
+            # 仅在同一水平区域（y坐标重叠或相邻）才合并
+            y_overlap = max(0, min(prev[3], r[3]) - max(prev[1], r[1]))
+            x_overlap = max(0, min(prev[2], r[2]) - max(prev[0], r[0]))
+            # 如果y重叠或相邻且x重叠或相邻
+            if y_overlap > 0 and x_overlap > 0:
+                merged[-1] = (min(prev[0], r[0]), min(prev[1], r[1]),
+                              max(prev[2], r[2]), max(prev[3], r[3]))
+            elif y_overlap > 0 or (abs(r[1] - prev[3]) < 5 and x_overlap > 0):
+                merged[-1] = (min(prev[0], r[0]), min(prev[1], r[1]),
+                              max(prev[2], r[2]), max(prev[3], r[3]))
+            else:
+                merged.append(r)
+
+        # 过滤掉过大区域（超过图片高度的一半可能是误判）
+        merged = [r for r in merged if r[3] - r[1] < h * 0.15]
+
+        return merged
+
+    return []
+
+
+def detect_and_crop_watermark(img):
+    """
+    检测并移除 AI 水印/文字。
+    策略：
+    1. 检测所有边缘区域的字符簇（AI 生成的文字）
+    2. 特殊检测底部细长水印条
+    返回处理后的图片。
+    """
+    w, h = img.size
+    if h < 100 or w < 100:
+        return img
+
+    if img.mode != 'RGBA':
+        img = img.convert('RGBA')
+
+    # Step 1: 检测 AI 生成的字符
+    text_regions = detect_text_regions(img)
+
+    # Step 2: 检测底部传统水印条
     watermark_h = int(h * WATERMARK_HEIGHT_RATIO)
     watermark_h = max(watermark_h, WATERMARK_MARGIN)
 
-    # 检查底部区域是否有非透明像素且与主体分离
     bottom_region = img.crop((0, h - watermark_h, w, h))
     if img.mode != 'RGBA':
         bottom_region = bottom_region.convert('RGBA')
@@ -240,10 +380,8 @@ def detect_and_crop_watermark(img):
             if a > 50:
                 non_transparent += 1
 
-    # 如果底部有大量不透明像素但面积不大（水印特征）
     watermark_ratio = non_transparent / total if total > 0 else 0
-    if 0.01 < watermark_ratio < 0.30:
-        # 检查是否在底部连续有内容（从下到上扫描）
+    if 0.01 < watermark_ratio < 0.25:
         content_rows = 0
         for py in range(bh - 1, -1, -1):
             row_has = any(
@@ -256,8 +394,32 @@ def detect_and_crop_watermark(img):
                 break
 
         if 3 < content_rows < watermark_h * 0.7:
-            print(f"  💧 检测到可能的水印区域 ({watermark_h}px)，已裁剪")
-            return img.crop((0, 0, w, h - watermark_h - 2))
+            print(f"  💧 检测到底部水印条 ({watermark_h}px)")
+            text_regions.append((0, h - watermark_h - 2, w, h))
+
+    # Step 3: 统一裁剪
+    if text_regions:
+        # 合并重叠区域并裁剪
+        text_regions.sort(key=lambda r: r[1])  # 按 y1 排序
+        merged = [text_regions[0]]
+        for r in text_regions[1:]:
+            prev = merged[-1]
+            # 如果区域有重叠或非常接近，合并
+            if abs(r[1] - prev[3]) < 5 or (r[0] < prev[2] and r[2] > prev[0]):
+                merged[-1] = (min(prev[0], r[0]), min(prev[1], r[1]),
+                              max(prev[2], r[2]), max(prev[3], r[3]))
+            else:
+                merged.append(r)
+
+        # 从底部到顶部依次裁剪（避免坐标偏移）
+        merged.sort(key=lambda r: -r[1])  # 从下到上
+        for r in merged:
+            if r[1] < r[3] and r[0] < r[2]:
+                x1, y1, x2, y2 = r
+                print(f"  ✂️  裁剪文字/水印区域: y={y1}~{y2}")
+                img = img.crop((0, 0, w, y1))
+
+        h = img.height  # 裁剪后更新高度
 
     return img
 
@@ -286,7 +448,15 @@ def process_image(input_path, output_path=None, auto_output=True):
 
     try:
         img = Image.open(input_path)
+        w, h = img.size
         print(f"  原始尺寸: {img.size}, 模式: {img.mode}")
+
+        # 缩放超大图片（避免 MemoryError）
+        if max(w, h) > MAX_SIZE:
+            ratio = MAX_SIZE / max(w, h)
+            new_w, new_h = int(w * ratio), int(h * ratio)
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+            print(f"  📐 缩放至: {new_w}x{new_h}")
 
         # Step 1: 水印检测与裁剪
         img = detect_and_crop_watermark(img)
