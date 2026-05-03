@@ -73,7 +73,6 @@ export const SOUL_ICONS = {
   "堕落天使":    { img: "/souls/legend/堕落天使.webp",    theme: "dark" },
   "极品火凤凰":  { img: "/souls/legend/极品火凤凰.webp",  theme: "fire" },
   "金龙王":      { img: "/souls/legend/金龙王.webp",      theme: "dragon" },
-  "海神武魂":    { img: "/souls/legend/海神武魂.webp",    theme: "water" },
   "七杀剑":      { img: "/souls/legend/七杀剑.webp",      theme: "metal" },
   "雷灵王":      { img: "/souls/legend/雷灵王.webp",      theme: "thunder" },
   "星宿命盘":    { img: "/souls/legend/星宿命盘.webp",    theme: "holy" },
@@ -129,6 +128,11 @@ export const SOUL_ICONS = {
   "昊天极光混沌三生":    { img: "/souls/triple/昊天极光混沌三生.webp",    theme: "dark" },
   "神圣幽冥混沌三生":    { img: "/souls/triple/神圣幽冥混沌三生.webp",    theme: "holy" },
   "时空因果三生":        { img: "/souls/triple/时空因果三生.webp",        theme: "dark" },
+
+  // ── 神祇 (god) ──
+  "海神武魂":    { img: "/souls/god/海神武魂.webp",    theme: "water" },
+  "天使神":      { img: "/souls/god/天使神.webp",      theme: "holy" },
+  "修罗神":      { img: "/souls/god/修罗神.webp",      theme: "dark" },
 };
 
 // ═══════════════════════════════════════════════

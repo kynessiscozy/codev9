@@ -10,6 +10,7 @@ export const QC = {
   ha: { n: "顶级隐藏", c: "#ec4899", p: 2, bc: "rgba(236,72,153,.65)", pwMul: 4 },
   twin: { n: "双生武魂", c: "#f0abfc", p: 4, bc: "rgba(240,171,252,.65)", pwMul: 6 },
   triple: { n: "三生武魂", c: "#e2e8f0", p: 0.5, bc: "rgba(226,232,240,.5)", pwMul: 10 },
+  god: { n: "神祇", c: "#fbbf24", p: 0.3, bc: "rgba(251,191,36,.7)", pwMul: 12 },
 };
 
 // 根据品质获取配置

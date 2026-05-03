@@ -307,7 +307,7 @@ export function doGodExam(examId, idx) {
       G.soul.icon = ex.i;
       G.soul.isGod = true;
       G.soul.godType = ex.id;
-      G.soul.quality = 'triple';
+      G.soul.quality = 'god';
       G.soul.divine = true;
       G.soul.attrs = [ex.godName + '·神格', '神力觉醒', '超越一切', '∞战力'];
       G.extraPower += 100000;
