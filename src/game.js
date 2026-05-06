@@ -18,6 +18,7 @@ const QC={
   ha:     {n:"顶级隐藏",c:"#ec4899",p:2, bc:"rgba(236,72,153,.65)", pwMul:4},
   twin:   {n:"双生武魂",c:"#f0abfc",p:4, bc:"rgba(240,171,252,.65)",pwMul:6},
   triple: {n:"三生武魂",c:"#e2e8f0",p:0.5,bc:"rgba(226,232,240,.5)",pwMul:10},
+  god:    {n:"神祇",    c:"#fbbf24",p:2,   bc:"rgba(251,191,36,.65)", pwMul:8},
 };
 
 // ──── REALM DEFINITIONS ────
@@ -1357,6 +1358,7 @@ function renderSoulPage(){
     ha:     {col:'#ec4899',glow:'rgba(236,72,153,.45)',bg1:'rgba(236,72,153,.1)',rgb:'236,72,153',geo:4},
     twin:   {col:'#f0abfc',glow:'rgba(240,171,252,.5)',bg1:'rgba(240,171,252,.08)',rgb:'240,171,252',geo:5},
     triple: {col:'#e2e8f0',glow:'rgba(226,232,240,.5)',bg1:'rgba(226,232,240,.08)',rgb:'226,232,240',geo:6},
+    god:    {col:'#fbbf24',glow:'rgba(251,191,36,.55)',bg1:'rgba(251,191,36,.1)',rgb:'251,191,36',geo:6},
   };
   const qt=QTHEMES[s.quality]||QTHEMES.common;
 

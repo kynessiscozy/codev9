@@ -185,7 +185,7 @@ const THEME_MAP = {
  * @returns {string} HTML字符串（img标签）
  */
 export function getSoulIcon(soulName, quality = "common", options = {}) {
-  const { animated = true, sizeClass = "" } = options;
+  const { animated = true, sizeClass = "", priority = false } = options;
   const iconData = SOUL_ICONS[soulName];
 
   if (!iconData) {
@@ -201,11 +201,13 @@ export function getSoulIcon(soulName, quality = "common", options = {}) {
 
   const className = `soul-icon ${qualityClass} ${animClass} ${szClass}`.trim();
   const themeAttr = cssTheme ? ` data-theme="${cssTheme}"` : "";
+  const fetchPriorityAttr = priority ? ` fetchpriority="high"` : "";
   const fallbackSVG = createFallbackSVG(soulName, quality);
   return `<img class="${className}"`
     + ` src="${imgSrc}"`
     + ` alt="${soulName}"`
     + themeAttr
+    + fetchPriorityAttr
     + ` draggable="false"`
     + ` loading="lazy"`
     + ` decoding="async"`
@@ -289,9 +291,9 @@ export function preloadSoulIcons(soulNames = null) {
     if (!iconData || !iconData.img) return;
 
     const img = new Image();
+    img.fetchPriority = "low";
     img.src = baseUrl.replace(/\/+$/, '') + iconData.img;
 
-    // 可选：加载完成后日志
     img.onload = () => {
       console.log(`[SoulIcons] 已加载: ${soulName}`);
     };
@@ -302,13 +304,72 @@ export function preloadSoulIcons(soulNames = null) {
 }
 
 /**
- * 预加载常用武魂图标（高频使用的）
+ * 分批次预加载武魂图标（优先级由高到低）
+ * 高频武魂先加载，其余在空闲时加载
  */
 export function preloadCommonSoulIcons() {
-  // 默认觉醒的武魂 + 常见品质
-  const commonSouls = [
+  // ── 第一梯队：核心/高频武魂（觉醒 + 主流品质）立即加载 ──
+  const tier1 = [
     '蓝银草', '昊天锤', '白虎', '火凤凰', '七宝琉璃塔',
-    '蓝电霸王龙', '六翼天使', '泰坦巨猿', '九宝琉璃塔', '蓝银皇'
+    '蓝电霸王龙', '六翼天使', '泰坦巨猿', '九宝琉璃塔', '蓝银皇',
+    // 神祇品质
+    '海神武魂', '天使神', '修罗神',
+    // 混沌/隐藏 - 常见
+    '幽莲血心', '月影神狐', '如意环',
+    // 幻境/绝世
+    '昊天九绝锤', '死神镰刀',
   ];
-  preloadSoulIcons(commonSouls);
+
+  // ── 第二梯队：中频武魂（请求空闲时加载） ──
+  const tier2 = [
+    '冰凤凰', '幽冥灵猫', '碧磷蛇皇', '金龙爪', '朱雀圣火',
+    '玄武神盾', '白鹤翎羽', '青龙护卫', '冰火蛟龙', '雷电狼王',
+    '幽灵蝶', '赤炎狮王', '碧海银鲸', '紫电金鹰', '幽影黑豹',
+    '碎星陨铁', '盘龙棍',
+    // 史诗
+    '噬魂蛛皇', '死亡蛛皇', '冰碧帝皇蝎', '烈火剑圣',
+    '星辰神兽', '雷霆战神', '极寒冰皇', '焰灵骑士',
+    '黄金圣龙', '狂风战鹰', '暗域鬼王', '极焱炎神',
+    // 传说
+    '堕落天使', '极品火凤凰', '金龙王', '七杀剑', '雷灵王',
+    '星宿命盘', '幽冥神眼', '混沌之翼', '天罚神雷', '永恒冰魂',
+    '炎狱魔神', '天命神弓', '混沌剑魂',
+    // 神话/巅峰
+    '神圣天使', '柔骨兔王', '宇宙之源', '时空裂缝',
+    '虚无之主', '因果律者', '神格化身',
+    // 双生
+    '蓝银草+昊天锤', '圣天使+堕天使', '金龙+银龙',
+    '冰火双凤', '雷剑双生', '星辰+混沌',
+    // 三生
+    '冰火雷三生龙', '时空因果三生',
+  ];
+
+  // ── 第三梯队：低频武魂（requestIdleCallback 或 setTimeout 延迟加载） ──
+  const tier3 = [
+    '镰刀', '香草', '木棍', '含羞草', '铁锤', '渔网',
+    '蒲公英', '芦苇杆', '铁锅', '荆棘藤', '石头', '陶笛',
+    // 其他隐藏/绝世/双生/三生
+    '幽冥之眼', '九心海棠', '奇茸通天菊', '无形剑意', '千机算盘',
+    '饕餮神牛', '虚空裂爪', '天魔琴', '混沌神炉',
+    '幽冥+圣光', '时间+空间', '神火+神冰',
+    '昊天极光混沌三生', '神圣幽冥混沌三生',
+    // 已被删除的epic图标
+    '时沙巨蟒',
+  ];
+
+  // 立即加载第一梯队
+  preloadSoulIcons(tier1);
+
+  // setTimeout 延迟加载第二梯队（100ms后，不阻塞首屏）
+  setTimeout(() => {
+    preloadSoulIcons(tier2);
+  }, 100);
+
+  // requestIdleCallback 或 setTimeout 延迟加载第三梯队（1s后）
+  const loadTier3 = () => preloadSoulIcons(tier3);
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(loadTier3, { timeout: 2000 });
+  } else {
+    setTimeout(loadTier3, 1000);
+  }
 }

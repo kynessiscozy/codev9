@@ -25,7 +25,7 @@ export function renderSoulPage() {
 
   const s = G.soul;
   const qc = QC[s.quality] || QC.common;
-  const svgIcon = getSoulIcon(s.name, s.quality, { sizeClass: 'size-large' });
+  const svgIcon = getSoulIcon(s.name, s.quality, { sizeClass: 'size-large', priority: true });
 
   p.innerHTML = `
     <div class="soul-v2-hero">
@@ -146,7 +146,7 @@ export function openSoulEvolution() {
     return;
   }
   const canEvolve = frags >= ev.fragCost && G.level >= ev.reqLv;
-  const fromIcon = getSoulIcon(G.soul.name, G.soul.quality, 'size-large');
+  const fromIcon = getSoulIcon(G.soul.name, G.soul.quality, { sizeClass: 'size-large' });
   const toQColor = getQualityColor(ev.toQ) || '#ffd700';
   openModal(`<div class="m-title" style="color:var(--gl)">🌟 武魂传承</div>
     <div class="m-sub">${G.soul.name} → ${ev.to}</div>
