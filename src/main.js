@@ -367,6 +367,15 @@ if (typeof window !== 'undefined' && window.__DEV__) {
 // game.js 提供完整的UI渲染，模块系统提供新功能（SVG图标、特效等）
 import gameScript from './game.js?raw';
 
+
+function warmSoulIconCache() {
+  if (!window.preloadCommonSoulIcons) return;
+
+  window.preloadCommonSoulIcons({
+    currentSoulName: window.G?.soul?.name,
+  });
+}
+
 function injectGameScript() {
   try {
     if (!gameScript) {
@@ -392,13 +401,8 @@ function injectGameScript() {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     injectGameScript();
-    // 预加载常用武魂图标，优化加载速度
-    if (window.preloadCommonSoulIcons) {
-      setTimeout(() => {
-        window.preloadCommonSoulIcons();
-        console.log('✨ 武魂图标预加载完成');
-      }, 100);
-    }
+    // 立即预热当前武魂图标，其余图标在空闲期低并发加载。
+    warmSoulIconCache();
     // 初始化2.5D页面效果
     setTimeout(() => {
       if (window.initPage25D) {
@@ -408,13 +412,8 @@ if (document.readyState === 'loading') {
   });
 } else {
   injectGameScript();
-  // 预加载常用武魂图标，优化加载速度
-  if (window.preloadCommonSoulIcons) {
-    setTimeout(() => {
-      window.preloadCommonSoulIcons();
-      console.log('✨ 武魂图标预加载完成');
-    }, 100);
-  }
+  // 立即预热当前武魂图标，其余图标在空闲期低并发加载。
+  warmSoulIconCache();
   // 初始化2.5D页面效果
   setTimeout(() => {
     if (window.initPage25D) {

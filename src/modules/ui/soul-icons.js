@@ -157,21 +157,152 @@ const QUALITY_COLORS = {
 
 const THEME_MAP = {
   grass:   "grass",
-  metal:   "dragon",
+  metal:   "metal",
   nature:  "grass",
   wood:    "grass",
-  water:   "ice",
-  wind:    "thunder",
-  earth:   "dragon",
-  beast:   "dragon",
+  water:   "water",
+  wind:    "wind",
+  earth:   "earth",
+  beast:   "beast",
   fire:    "fire",
   ice:     "ice",
   dragon:  "dragon",
   holy:    "holy",
   dark:    "dark",
-  poison:  "dark",
+  poison:  "poison",
   thunder: "thunder",
 };
+
+const SECOND_AWAKEN_EFFECTS = {
+  fire: { accent: "#ff6b1a", glow: "rgba(255, 93, 26, 0.82)", icon: "🔥", label: "炎魂燎原", desc: "火焰武魂二觉后会喷发余烬与灼烧光尾。" },
+  ice: { accent: "#67e8f9", glow: "rgba(103, 232, 249, 0.78)", icon: "❄️", label: "霜冕凝晶", desc: "冰霜武魂二觉后凝出冰晶冠冕与寒雾边缘。" },
+  thunder: { accent: "#fde047", glow: "rgba(253, 224, 71, 0.82)", icon: "⚡", label: "雷纹贯体", desc: "雷电武魂二觉后闪电沿图标轮廓跃迁。" },
+  dragon: { accent: "#fbbf24", glow: "rgba(251, 191, 36, 0.8)", icon: "🐉", label: "龙威显化", desc: "龙系武魂二觉后出现龙息脉冲与威压环。" },
+  holy: { accent: "#fff7ad", glow: "rgba(255, 247, 173, 0.84)", icon: "✦", label: "圣辉加冕", desc: "神圣武魂二觉后释放圣光羽芒与净化光环。" },
+  dark: { accent: "#a855f7", glow: "rgba(168, 85, 247, 0.78)", icon: "☾", label: "幽影蚀光", desc: "暗影武魂二觉后暗纹吞吐并形成虚影残像。" },
+  grass: { accent: "#34d399", glow: "rgba(52, 211, 153, 0.78)", icon: "✿", label: "生息绽放", desc: "植物武魂二觉后生命脉络沿叶脉持续扩散。" },
+  water: { accent: "#38bdf8", glow: "rgba(56, 189, 248, 0.78)", icon: "🌊", label: "潮汐共鸣", desc: "水系武魂二觉后出现潮汐涟漪与流光水纹。" },
+  metal: { accent: "#cbd5e1", glow: "rgba(203, 213, 225, 0.76)", icon: "◆", label: "锋芒淬炼", desc: "器武魂二觉后金属刃光与锻造火星交替闪现。" },
+  wind: { accent: "#a7f3d0", glow: "rgba(167, 243, 208, 0.74)", icon: "✧", label: "疾风羽化", desc: "风系武魂二觉后出现轻羽流线与高速残影。" },
+  earth: { accent: "#d6a35d", glow: "rgba(214, 163, 93, 0.76)", icon: "⬢", label: "地脉镇魂", desc: "大地武魂二觉后岩纹护盾和沉稳脉冲环绕。" },
+  beast: { accent: "#fb923c", glow: "rgba(251, 146, 60, 0.78)", icon: "✹", label: "兽魂狂化", desc: "兽武魂二觉后野性气焰与爪痕冲击同步爆发。" },
+  poison: { accent: "#84cc16", glow: "rgba(132, 204, 22, 0.76)", icon: "☣", label: "毒雾蚀脉", desc: "毒系武魂二觉后毒雾脉冲沿外圈缓慢蔓延。" },
+};
+
+const SECOND_AWAKEN_KEYWORDS = [
+  { keys: ["三生", "时间", "空间", "因果", "宇宙", "虚无", "混沌"], theme: "dark" },
+  { keys: ["双生", "+", "金银"], theme: "holy" },
+  { keys: ["火", "炎", "焰", "朱雀", "凤凰"], theme: "fire" },
+  { keys: ["冰", "寒", "霜"], theme: "ice" },
+  { keys: ["雷", "电", "紫电", "天罚"], theme: "thunder" },
+  { keys: ["龙", "蛟"], theme: "dragon" },
+  { keys: ["天使", "神圣", "圣光", "琉璃", "海棠", "星宿", "神格"], theme: "holy" },
+  { keys: ["幽", "冥", "暗", "堕落", "死神", "修罗", "蛛", "魔", "虚空"], theme: "dark" },
+  { keys: ["草", "藤", "莲", "菊", "花", "茸"], theme: "grass" },
+  { keys: ["海", "水", "鲸", "玄武", "潮"], theme: "water" },
+  { keys: ["锤", "剑", "镰", "铁", "金", "爪", "棍", "炉", "锅"], theme: "metal" },
+  { keys: ["风", "鹰", "鹤", "羽", "无形"], theme: "wind" },
+  { keys: ["石", "土", "泰坦", "牛", "盾"], theme: "earth" },
+  { keys: ["虎", "猫", "豹", "狮", "狐", "兔", "猿", "狼", "兽"], theme: "beast" },
+  { keys: ["毒", "磷", "蛇", "蝎"], theme: "poison" },
+];
+
+function escapeAttr(value = "") {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+const PRELOADED_ICON_URLS = new Set();
+const PRELOADING_ICON_URLS = new Set();
+const PRELOAD_LINK_URLS = new Set();
+
+function getAssetBaseUrl() {
+  return (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+}
+
+function resolveIconUrl(iconData) {
+  return iconData?.img ? getAssetBaseUrl() + iconData.img : '';
+}
+
+function requestIdleTask(task, timeout = 1200) {
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(task, { timeout });
+    return;
+  }
+  setTimeout(task, Math.min(timeout, 300));
+}
+
+function addImagePreloadLink(url, fetchPriority = 'high') {
+  if (!url || typeof document === 'undefined' || PRELOAD_LINK_URLS.has(url)) return;
+
+  PRELOAD_LINK_URLS.add(url);
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'image';
+  link.href = url;
+  link.fetchPriority = fetchPriority;
+  document.head.appendChild(link);
+}
+
+function preloadIconUrl(url, fetchPriority = 'low') {
+  if (!url || PRELOADED_ICON_URLS.has(url) || PRELOADING_ICON_URLS.has(url) || typeof Image === 'undefined') {
+    return Promise.resolve();
+  }
+
+  PRELOADING_ICON_URLS.add(url);
+  return new Promise(resolve => {
+    const img = new Image();
+    img.decoding = 'async';
+    img.fetchPriority = fetchPriority;
+    img.onload = () => {
+      PRELOADED_ICON_URLS.add(url);
+      PRELOADING_ICON_URLS.delete(url);
+      resolve();
+    };
+    img.onerror = () => {
+      PRELOADING_ICON_URLS.delete(url);
+      resolve();
+    };
+    img.src = url;
+  });
+}
+
+function preloadIconUrls(urls, options = {}) {
+  const { concurrency = 3, fetchPriority = 'low', usePreloadLink = false } = options;
+  const queue = [...new Set(urls)].filter(url => url && !PRELOADED_ICON_URLS.has(url));
+  if (!queue.length) return;
+
+  if (usePreloadLink) {
+    queue.slice(0, Math.min(6, queue.length)).forEach(url => addImagePreloadLink(url, fetchPriority));
+  }
+
+  let cursor = 0;
+  let active = 0;
+  const pump = () => {
+    while (active < concurrency && cursor < queue.length) {
+      active += 1;
+      preloadIconUrl(queue[cursor], fetchPriority).finally(() => {
+        active -= 1;
+        pump();
+      });
+      cursor += 1;
+    }
+  };
+
+  pump();
+}
+
+export function getSoulEffectProfile(soulName, attrs = []) {
+  const iconData = SOUL_ICONS[soulName];
+  const source = [soulName, ...(attrs || [])].filter(Boolean).join(" ");
+  const matched = SECOND_AWAKEN_KEYWORDS.find(({ keys }) => keys.some(key => source.includes(key)));
+  const theme = matched?.theme || THEME_MAP[iconData?.theme] || iconData?.theme || "holy";
+  const effect = SECOND_AWAKEN_EFFECTS[theme] || SECOND_AWAKEN_EFFECTS.holy;
+  return { theme, ...effect };
+}
 
 /**
  * 根据武魂名称获取图标 HTML
@@ -185,7 +316,7 @@ const THEME_MAP = {
  * @returns {string} HTML字符串（img标签）
  */
 export function getSoulIcon(soulName, quality = "common", options = {}) {
-  const { animated = true, sizeClass = "", priority = false } = options;
+  const { animated = true, sizeClass = "", priority = false, secondAwakened = false, attrs = [] } = options;
   const iconData = SOUL_ICONS[soulName];
 
   if (!iconData) {
@@ -196,20 +327,27 @@ export function getSoulIcon(soulName, quality = "common", options = {}) {
   const animClass = animated ? "soul-icon-animated" : "";
   const szClass = sizeClass || "";
   const cssTheme = THEME_MAP[iconData.theme] || iconData.theme || "";
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  const imgSrc = baseUrl.replace(/\/+$/, '') + iconData.img;
+  const awakenProfile = secondAwakened ? getSoulEffectProfile(soulName, attrs) : null;
+  const awakenClass = secondAwakened ? "soul-icon-second-awakened" : "";
+  const imgSrc = resolveIconUrl(iconData);
 
-  const className = `soul-icon ${qualityClass} ${animClass} ${szClass}`.trim();
+  const className = `soul-icon ${qualityClass} ${animClass} ${szClass} ${awakenClass}`.trim();
   const themeAttr = cssTheme ? ` data-theme="${cssTheme}"` : "";
+  const awakenAttr = awakenProfile
+    ? ` data-awaken-theme="${escapeAttr(awakenProfile.theme)}" style="--soul-awaken:${escapeAttr(awakenProfile.accent)};--soul-awaken-glow:${escapeAttr(awakenProfile.glow)}"`
+    : "";
   const fetchPriorityAttr = priority ? ` fetchpriority="high"` : "";
+  const loadingAttr = priority ? ` loading="eager"` : ` loading="lazy"`;
+  if (priority) addImagePreloadLink(imgSrc, 'high');
   const fallbackSVG = createFallbackSVG(soulName, quality);
   return `<img class="${className}"`
     + ` src="${imgSrc}"`
     + ` alt="${soulName}"`
     + themeAttr
+    + awakenAttr
     + fetchPriorityAttr
     + ` draggable="false"`
-    + ` loading="lazy"`
+    + loadingAttr
     + ` decoding="async"`
     + ` onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${fallbackSVG}')">`;
 }
@@ -278,28 +416,16 @@ export function registerSoulIcon(soulName, iconData) {
  * 在应用初始化时调用，将图标缓存到浏览器
  * @param {string[]} soulNames - 要预加载的武魂名称数组，默认加载所有
  */
-export function preloadSoulIcons(soulNames = null) {
-  const baseUrl = import.meta.env.BASE_URL || '/';
+export function preloadSoulIcons(soulNames = null, options = {}) {
   const iconsToPreload = soulNames
     ? soulNames.filter(name => SOUL_ICONS[name])
     : Object.keys(SOUL_ICONS);
+  const urls = iconsToPreload.map(name => resolveIconUrl(SOUL_ICONS[name]));
 
-  console.log(`[SoulIcons] 开始预加载 ${iconsToPreload.length} 个图标...`);
-
-  iconsToPreload.forEach(soulName => {
-    const iconData = SOUL_ICONS[soulName];
-    if (!iconData || !iconData.img) return;
-
-    const img = new Image();
-    img.fetchPriority = "low";
-    img.src = baseUrl.replace(/\/+$/, '') + iconData.img;
-
-    img.onload = () => {
-      console.log(`[SoulIcons] 已加载: ${soulName}`);
-    };
-    img.onerror = () => {
-      console.warn(`[SoulIcons] 加载失败: ${soulName}`);
-    };
+  preloadIconUrls(urls, {
+    concurrency: options.concurrency || 3,
+    fetchPriority: options.fetchPriority || 'low',
+    usePreloadLink: !!options.usePreloadLink,
   });
 }
 
@@ -307,7 +433,7 @@ export function preloadSoulIcons(soulNames = null) {
  * 分批次预加载武魂图标（优先级由高到低）
  * 高频武魂先加载，其余在空闲时加载
  */
-export function preloadCommonSoulIcons() {
+export function preloadCommonSoulIcons(options = {}) {
   // ── 第一梯队：核心/高频武魂（觉醒 + 主流品质）立即加载 ──
   const tier1 = [
     '蓝银草', '昊天锤', '白虎', '火凤凰', '七宝琉璃塔',
@@ -357,19 +483,23 @@ export function preloadCommonSoulIcons() {
     '时沙巨蟒',
   ];
 
-  // 立即加载第一梯队
-  preloadSoulIcons(tier1);
+  const currentSoulName = options.currentSoulName || (typeof window !== 'undefined' ? window.G?.soul?.name : '');
+  const critical = currentSoulName && SOUL_ICONS[currentSoulName] ? [currentSoulName] : [];
 
-  // setTimeout 延迟加载第二梯队（100ms后，不阻塞首屏）
-  setTimeout(() => {
-    preloadSoulIcons(tier2);
-  }, 100);
+  // 当前展示武魂先使用 preload link + high priority，避免首屏大图仍走 lazy 队列。
+  preloadSoulIcons(critical, { concurrency: 1, fetchPriority: 'high', usePreloadLink: true });
 
-  // requestIdleCallback 或 setTimeout 延迟加载第三梯队（1s后）
-  const loadTier3 = () => preloadSoulIcons(tier3);
-  if (typeof requestIdleCallback === 'function') {
-    requestIdleCallback(loadTier3, { timeout: 2000 });
-  } else {
-    setTimeout(loadTier3, 1000);
-  }
+  // 高频图标限制并发，避免几十个 webp 同时竞争首屏网络/解码资源。
+  requestIdleTask(() => {
+    preloadSoulIcons(tier1.filter(name => name !== currentSoulName), { concurrency: 2, fetchPriority: 'low' });
+  }, 250);
+
+  // 中低频图标只在空闲期继续预热缓存。
+  requestIdleTask(() => {
+    preloadSoulIcons(tier2, { concurrency: 2, fetchPriority: 'low' });
+  }, 1600);
+
+  requestIdleTask(() => {
+    preloadSoulIcons(tier3, { concurrency: 2, fetchPriority: 'low' });
+  }, 3200);
 }

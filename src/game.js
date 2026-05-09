@@ -1514,7 +1514,7 @@ function renderSoulPage(){
         <div class="sol-dot s2" style="background:${qt.col};opacity:.6;--s:90deg;animation-name:solDotOrbit2"></div>
         <div class="sol-dot s2" style="background:${qt.col};opacity:.6;--s:270deg;animation-name:solDotOrbit2"></div>
         <div class="sol-glow" style="background:radial-gradient(ellipse at 40% 35%,${qt.bg1},transparent 70%)"></div>
-        <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qt.glow}) drop-shadow(0 4px 8px rgba(0,0,0,.6));display:flex;align-items:center;justify-content:center;">${getSoulIcon(s.name,s.quality,{sizeClass:'size-large'})}</div>
+        <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qt.glow}) drop-shadow(0 4px 8px rgba(0,0,0,.6));display:flex;align-items:center;justify-content:center;">${getSoulIcon(s.name,s.quality,{sizeClass:'size-large',priority:true,secondAwakened:!!(s.secondAwakened||s.divine),attrs:s.attrs||[]})}</div>
         ${awakenFXH}
       </div>
       ${(G.awakenLevel||0)>=10?`<div class="awk-∞-hero" style="--∞c:${qt.col};--∞r:${qR};--∞g:${qG};--∞b:${qB}"><div class="awk-∞-glow"></div><div class="awk-∞-symbol">∞</div><div class="awk-∞-label">极限觉醒</div></div>`:''}
@@ -5163,7 +5163,7 @@ function updateSidebar(){
   const s=G.soul;
   const hasSoul=!!s;
   // Soul icon & name
-  const lsIco=$('ls-soul-ico');if(lsIco){const glow=lsIco.querySelector('.ls-soul-glow');lsIco.innerHTML=(glow?glow.outerHTML:'')+(hasSoul?getSoulIcon(s.name,s.quality,{sizeClass:'size-medium'}):'<span style="font-size:32px">🌀</span>');lsIco.style.display='flex';lsIco.style.alignItems='center';lsIco.style.justifyContent='center';}
+  const lsIco=$('ls-soul-ico');if(lsIco){const glow=lsIco.querySelector('.ls-soul-glow');lsIco.innerHTML=(glow?glow.outerHTML:'')+(hasSoul?getSoulIcon(s.name,s.quality,{sizeClass:'size-medium',priority:true}):'<span style="font-size:32px">🌀</span>');lsIco.style.display='flex';lsIco.style.alignItems='center';lsIco.style.justifyContent='center';}
   $set('ls-soul-name','textContent',hasSoul?s.name:'尚未觉醒');
   // Rank pills
   const rankEl=$('ls-soul-rank');
