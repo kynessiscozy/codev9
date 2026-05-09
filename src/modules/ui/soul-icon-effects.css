@@ -556,3 +556,118 @@
 @keyframes secondAwakenEarth { 0%,100%{filter:drop-shadow(0 0 17px rgba(214,163,93,.75)) drop-shadow(0 10px 22px rgba(120,83,43,.36));transform:scale(1)} 50%{filter:drop-shadow(0 0 29px #d6a35d) drop-shadow(0 14px 32px rgba(120,83,43,.5)) brightness(1.18);transform:scale(1.055)} }
 @keyframes secondAwakenBeast { 0%,100%{filter:drop-shadow(0 0 18px rgba(251,146,60,.78)) drop-shadow(0 0 22px rgba(239,68,68,.28));transform:scale(1) rotate(0)} 45%{filter:drop-shadow(0 0 32px #fb923c) drop-shadow(0 0 48px rgba(239,68,68,.5)) saturate(1.28);transform:scale(1.07) rotate(-1.2deg)} 65%{transform:scale(1.025) rotate(1deg)} }
 @keyframes secondAwakenPoison { 0%,100%{filter:drop-shadow(0 0 18px rgba(132,204,22,.76)) drop-shadow(0 0 26px rgba(34,197,94,.3)) saturate(1.15)} 50%{filter:drop-shadow(0 0 30px #bef264) drop-shadow(0 0 46px rgba(34,197,94,.5)) saturate(1.45) brightness(1.14);transform:scale(1.035)} }
+
+/* ════════════════════════════════════════════════
+   武魂图标环绕式特效 - 根据图标主题 / 武魂特性着色
+   ════════════════════════════════════════════════ */
+
+.soul-icon-wrap {
+  --orbit-size: 78px;
+  --orbit-opacity: 0.34;
+  --orbit-speed-a: 7.5s;
+  --orbit-speed-b: 11s;
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  vertical-align: middle;
+  line-height: 0;
+  isolation: isolate;
+}
+
+.soul-icon-wrap > .soul-icon {
+  position: relative;
+  z-index: 2;
+}
+
+.soul-icon-wrap.size-small { --orbit-size: 58px; --orbit-opacity: 0.24; }
+.soul-icon-wrap.size-medium { --orbit-size: 142px; --orbit-opacity: 0.28; }
+.soul-icon-wrap.size-large { --orbit-size: 332px; --orbit-opacity: 0.36; }
+.soul-icon-wrap.size-xlarge { --orbit-size: 376px; --orbit-opacity: 0.4; }
+.soul-icon-wrap.is-second-awakened { --orbit-opacity: 0.56; --orbit-speed-a: 5.2s; --orbit-speed-b: 8.4s; }
+
+.soul-orbit-fx,
+.soul-orbit-spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.soul-orbit-fx {
+  width: var(--orbit-size);
+  height: var(--orbit-size);
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--soul-orbit, #ffd700) 58%, transparent);
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--soul-orbit, #ffd700) 30%, transparent),
+    inset 0 0 14px color-mix(in srgb, var(--soul-orbit, #ffd700) 18%, transparent);
+  opacity: var(--orbit-opacity);
+  transform: translate(-50%, -50%);
+  animation: soulOrbitSpin var(--orbit-speed-a) linear infinite;
+}
+
+.soul-orbit-fx::before,
+.soul-orbit-fx::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--soul-orbit, #ffd700);
+  box-shadow: 0 0 10px var(--soul-orbit, #ffd700), 0 0 18px var(--soul-orbit-glow, rgba(255, 215, 0, .45));
+}
+
+.soul-orbit-fx::before { top: -3px; left: 50%; transform: translateX(-50%); }
+.soul-orbit-fx::after { bottom: -3px; left: 50%; transform: translateX(-50%) scale(.68); opacity: .68; }
+
+.soul-orbit-fx-b {
+  width: calc(var(--orbit-size) * .78);
+  height: calc(var(--orbit-size) * .78);
+  border-style: dashed;
+  opacity: calc(var(--orbit-opacity) * .78);
+  animation-duration: var(--orbit-speed-b);
+  animation-direction: reverse;
+}
+
+.soul-orbit-spark {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 8px #fff, 0 0 18px var(--soul-orbit, #ffd700);
+  transform-origin: 0 0;
+  animation: soulOrbitSpark 3.6s ease-in-out infinite;
+}
+
+.soul-orbit-spark-b {
+  animation-delay: 1.8s;
+  animation-duration: 4.4s;
+  filter: hue-rotate(30deg);
+}
+
+.soul-icon-wrap[data-orbit-theme="fire"] .soul-orbit-fx { border-top-color: #ffb020; filter: drop-shadow(0 -3px 7px rgba(255, 96, 28, .42)); }
+.soul-icon-wrap[data-orbit-theme="ice"] .soul-orbit-fx { border-color: color-mix(in srgb, #cffafe 72%, transparent); box-shadow: 0 0 16px rgba(103, 232, 249, .38), inset 0 0 18px rgba(207, 250, 254, .2); }
+.soul-icon-wrap[data-orbit-theme="thunder"] .soul-orbit-fx { animation-timing-function: steps(18, end); }
+.soul-icon-wrap[data-orbit-theme="dragon"] .soul-orbit-fx { border-width: 2px; }
+.soul-icon-wrap[data-orbit-theme="holy"] .soul-orbit-fx { box-shadow: 0 0 18px rgba(255,255,255,.38), inset 0 0 18px rgba(255,247,173,.22); }
+.soul-icon-wrap[data-orbit-theme="dark"] .soul-orbit-fx { mix-blend-mode: screen; filter: drop-shadow(0 0 8px rgba(168,85,247,.44)); }
+.soul-icon-wrap[data-orbit-theme="grass"] .soul-orbit-fx { border-style: dotted; }
+.soul-icon-wrap[data-orbit-theme="water"] .soul-orbit-fx { border-radius: 45% 55% 52% 48%; }
+.soul-icon-wrap[data-orbit-theme="metal"] .soul-orbit-fx { border-style: double; }
+.soul-icon-wrap[data-orbit-theme="wind"] .soul-orbit-fx { border-style: dashed; filter: blur(.15px); }
+.soul-icon-wrap[data-orbit-theme="earth"] .soul-orbit-fx { border-width: 2px; opacity: calc(var(--orbit-opacity) * .82); }
+.soul-icon-wrap[data-orbit-theme="beast"] .soul-orbit-fx { animation-duration: calc(var(--orbit-speed-a) * .78); }
+.soul-icon-wrap[data-orbit-theme="poison"] .soul-orbit-fx { filter: saturate(1.45) drop-shadow(0 0 8px rgba(132, 204, 22, .45)); }
+
+@keyframes soulOrbitSpin {
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes soulOrbitSpark {
+  0%, 100% { opacity: 0; transform: rotate(0deg) translateX(calc(var(--orbit-size) * .46)) scale(.4); }
+  18% { opacity: .9; }
+  55% { opacity: .55; transform: rotate(170deg) translateX(calc(var(--orbit-size) * .52)) scale(1); }
+  82% { opacity: .22; }
+  100% { transform: rotate(360deg) translateX(calc(var(--orbit-size) * .46)) scale(.35); }
+}

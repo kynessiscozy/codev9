@@ -313,10 +313,13 @@ export function getSoulEffectProfile(soulName, attrs = []) {
  * @param {number} options.size - 图标大小
  * @param {boolean} options.animated - 是否启用动画
  * @param {string} options.sizeClass - 尺寸类名
- * @returns {string} HTML字符串（img标签）
+ * @param {boolean} options.orbit - 是否渲染环绕式特效，默认跟随 animated
+ * @param {boolean} options.secondAwakened - 是否启用二次觉醒强化特效
+ * @param {string[]} options.attrs - 武魂属性，用于匹配环绕特效主题
+ * @returns {string} HTML字符串（环绕容器 + img标签）
  */
 export function getSoulIcon(soulName, quality = "common", options = {}) {
-  const { animated = true, sizeClass = "", priority = false, secondAwakened = false, attrs = [] } = options;
+  const { animated = true, sizeClass = "", priority = false, secondAwakened = false, attrs = [], orbit = animated } = options;
   const iconData = SOUL_ICONS[soulName];
 
   if (!iconData) {
@@ -327,20 +330,28 @@ export function getSoulIcon(soulName, quality = "common", options = {}) {
   const animClass = animated ? "soul-icon-animated" : "";
   const szClass = sizeClass || "";
   const cssTheme = THEME_MAP[iconData.theme] || iconData.theme || "";
-  const awakenProfile = secondAwakened ? getSoulEffectProfile(soulName, attrs) : null;
+  const effectProfile = getSoulEffectProfile(soulName, attrs);
+  const awakenProfile = secondAwakened ? effectProfile : null;
   const awakenClass = secondAwakened ? "soul-icon-second-awakened" : "";
+  const orbitClass = orbit ? "soul-icon-orbiting" : "";
   const imgSrc = resolveIconUrl(iconData);
 
   const className = `soul-icon ${qualityClass} ${animClass} ${szClass} ${awakenClass}`.trim();
+  const wrapperClass = `soul-icon-wrap ${qualityClass} ${szClass} ${orbitClass} ${secondAwakened ? "is-second-awakened" : ""}`.trim();
   const themeAttr = cssTheme ? ` data-theme="${cssTheme}"` : "";
+  const orbitAttr = ` data-orbit-theme="${escapeAttr(effectProfile.theme)}"`;
+  const orbitStyle = ` style="--soul-orbit:${escapeAttr(effectProfile.accent)};--soul-orbit-glow:${escapeAttr(effectProfile.glow)};--soul-awaken:${escapeAttr(effectProfile.accent)};--soul-awaken-glow:${escapeAttr(effectProfile.glow)}"`;
   const awakenAttr = awakenProfile
     ? ` data-awaken-theme="${escapeAttr(awakenProfile.theme)}" style="--soul-awaken:${escapeAttr(awakenProfile.accent)};--soul-awaken-glow:${escapeAttr(awakenProfile.glow)}"`
     : "";
   const fetchPriorityAttr = priority ? ` fetchpriority="high"` : "";
   const loadingAttr = priority ? ` loading="eager"` : ` loading="lazy"`;
+  const orbitMarkup = orbit
+    ? `<span class="soul-orbit-fx soul-orbit-fx-a" aria-hidden="true"></span><span class="soul-orbit-fx soul-orbit-fx-b" aria-hidden="true"></span><span class="soul-orbit-spark soul-orbit-spark-a" aria-hidden="true"></span><span class="soul-orbit-spark soul-orbit-spark-b" aria-hidden="true"></span>`
+    : "";
   if (priority) addImagePreloadLink(imgSrc, 'high');
   const fallbackSVG = createFallbackSVG(soulName, quality);
-  return `<img class="${className}"`
+  const imgHtml = `<img class="${className}"`
     + ` src="${imgSrc}"`
     + ` alt="${soulName}"`
     + themeAttr
@@ -350,6 +361,8 @@ export function getSoulIcon(soulName, quality = "common", options = {}) {
     + loadingAttr
     + ` decoding="async"`
     + ` onerror="this.style.display='none';this.insertAdjacentHTML('afterend','${fallbackSVG}')">`;
+
+  return `<span class="${wrapperClass}"${orbitAttr}${orbitStyle}>${orbitMarkup}${imgHtml}</span>`;
 }
 
 /**
