@@ -51,7 +51,7 @@ export { renderBag, filterBag, openBagItem, useBagItem, discardBagItem } from ".
 export { openModal, closeModal, openSelectModal, openConfirmModal, openInputModal, showNotifyModal } from "./ui/modals.js";
 export { renderSidebar, toggleSidebar, updateSidebar } from "./ui/sidebar.js";
 export { renderGrimoire, discoverSoul, discoverRing, discoverBone } from "./ui/grimoire.js";
-export { getSoulIcon, hasSoulIcon, getSoulTheme, registerSoulIcon, SOUL_ICONS } from "./ui/soul-icons.js";
+export { getSoulIcon, hasSoulIcon, getSoulTheme, getSoulEffectProfile, registerSoulIcon, preloadSoulIcons, preloadCommonSoulIcons, SOUL_ICONS } from "./ui/soul-icons.js";
 export { initPage25D, destroyPage25D } from "./ui/page-25d.js";
 
 // ──── 特效模块 ────

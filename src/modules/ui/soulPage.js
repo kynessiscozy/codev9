@@ -7,7 +7,7 @@ import { spawnBurst } from '../core/utils.js';
 import { addExp, updateHUD } from '../core/exp.js';
 import { openModal } from './modals.js';
 import { notify } from '../core/notify.js';
-import { getSoulIcon } from './soul-icons.js';
+import { getSoulEffectProfile, getSoulIcon } from './soul-icons.js';
 import { SOUL_EVOLUTIONS, RESONANCE_CFG, FRAGMENT_SOURCES, calcResonancePower } from '../core/resonance.js';
 
 /**
@@ -25,15 +25,34 @@ export function renderSoulPage() {
 
   const s = G.soul;
   const qc = QC[s.quality] || QC.common;
-  const svgIcon = getSoulIcon(s.name, s.quality, { sizeClass: 'size-large', priority: true });
+  const effectProfile = getSoulEffectProfile(s.name, s.attrs || []);
+  const isSecondAwakened = !!(s.secondAwakened || s.divine);
+  const svgIcon = getSoulIcon(s.name, s.quality, {
+    sizeClass: 'size-large',
+    priority: true,
+    secondAwakened: isSecondAwakened,
+    attrs: s.attrs || [],
+  });
+  const secondAwakenFx = isSecondAwakened ? renderSecondAwakenFx(effectProfile, s) : '';
+  const secondAwakenBadge = isSecondAwakened
+    ? `<div class="sol-dot-sep"></div><div class="sol-rank soul-awaken-label" style="--soul-awaken:${effectProfile.accent}" title="${effectProfile.desc}">${effectProfile.icon} ${s.divine ? '神化觉醒' : '二次觉醒'} · ${effectProfile.label}</div>`
+    : '';
 
   p.innerHTML = `
-    <div class="soul-v2-hero">
-      <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qc.c});display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
+    <div class="soul-v2-hero" style="--soul-awaken:${effectProfile.accent};--soul-awaken-glow:${effectProfile.glow};--qc:${qc.c}">
+      <div class="soul-orbit ${isSecondAwakened ? 'second-awaken-orbit' : ''}" data-awaken-theme="${effectProfile.theme}">
+        <div class="sol-ring r1" style="border-color:${qc.c}"></div>
+        <div class="sol-ring r2" style="border-color:${qc.c}"></div>
+        <div class="sol-ring r3" style="border-color:${qc.c}"></div>
+        <div class="sol-glow" style="background:radial-gradient(ellipse at 40% 35%,${effectProfile.glow},transparent 70%)"></div>
+        ${secondAwakenFx}
+        <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qc.c});display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
+      </div>
       <div class="sol-name" style="color:${qc.c}">${s.name}</div>
       <div class="sol-meta">
         <div class="sol-quality-tag" style="border-color:${qc.c}">${qc.n}</div>
         <div class="sol-rank">${rankStr(G.level)}</div>
+        ${secondAwakenBadge}
       </div>
       <div class="sol-actions">
         <div class="sol-act" onclick="doSecondAwaken()">⚡ 二次觉醒</div>
@@ -50,6 +69,21 @@ export function renderSoulPage() {
 
   updateHUD();
   spawnBurst(qc.c, 50);
+}
+
+
+function renderSecondAwakenFx(profile, soul) {
+  const traits = (soul.attrs || []).slice(0, 3);
+  const traitText = traits.length ? traits.join(' · ') : profile.label;
+  return `
+    <div class="second-awaken-aura" aria-hidden="true">
+      <div class="saa-core"></div>
+      <div class="saa-ring saa-ring-a"></div>
+      <div class="saa-ring saa-ring-b"></div>
+      <div class="saa-rune saa-rune-a">${profile.icon}</div>
+      <div class="saa-rune saa-rune-b">${profile.icon}</div>
+      <div class="saa-trait">${traitText}</div>
+    </div>`;
 }
 
 /**
@@ -77,10 +111,12 @@ export function doSecondAwaken() {
   if (G.sp < 5000) { notify('需要5000魂力', 'normal'); return; }
   G.sp -= 5000;
   G.soul.secondAwakened = true;
+  const effectProfile = getSoulEffectProfile(G.soul.name, G.soul.attrs || []);
+  G.soul.secondAwakenEffect = effectProfile.theme;
   G.awakenLevel = (G.awakenLevel || 0) + 1;
   addExp(2000);
-  notify('⚡ 二次觉醒成功！战力大幅提升！', 'divine');
-  spawnBurst('#f59e0b', 100);
+  notify(`${effectProfile.icon} 二次觉醒成功：${effectProfile.label}！${effectProfile.desc}`, 'divine');
+  spawnBurst(effectProfile.accent, 120);
   updateHUD();
   saveG();
   renderSoulPage();
