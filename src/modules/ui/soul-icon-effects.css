@@ -471,3 +471,88 @@
   width: auto;
   height: auto;
 }
+
+/* ════════════════════════════════════════════════
+   二次觉醒：按武魂图标主题与特性强化
+   ════════════════════════════════════════════════ */
+
+.soul-icon-animated[data-theme="water"] { animation: waterTide 3s ease-in-out infinite; }
+.soul-icon-animated[data-theme="metal"] { animation: metalForge 2.8s ease-in-out infinite; }
+.soul-icon-animated[data-theme="wind"] { animation: windTrace 2.4s ease-in-out infinite; }
+.soul-icon-animated[data-theme="earth"] { animation: earthPulse 3.4s ease-in-out infinite; }
+.soul-icon-animated[data-theme="beast"] { animation: beastRoar 2.6s ease-in-out infinite; }
+.soul-icon-animated[data-theme="poison"] { animation: poisonMist 3s ease-in-out infinite; }
+
+@keyframes waterTide {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.45)) drop-shadow(0 4px 12px rgba(14, 165, 233, 0.25)); }
+  50% { filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.82)) drop-shadow(0 7px 20px rgba(14, 165, 233, 0.45)) brightness(1.12); }
+}
+
+@keyframes metalForge {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(203, 213, 225, 0.45)) contrast(1.05); }
+  45% { filter: drop-shadow(0 0 16px rgba(226, 232, 240, 0.75)) drop-shadow(3px -2px 12px rgba(251, 191, 36, 0.32)) brightness(1.16); }
+  55% { filter: drop-shadow(0 0 10px rgba(148, 163, 184, 0.5)) contrast(1.15); }
+}
+
+@keyframes windTrace {
+  0%, 100% { filter: drop-shadow(-5px 0 10px rgba(167, 243, 208, 0.28)) drop-shadow(0 0 8px rgba(125, 211, 252, 0.3)); }
+  50% { filter: drop-shadow(7px 0 16px rgba(167, 243, 208, 0.68)) drop-shadow(0 0 20px rgba(125, 211, 252, 0.42)) brightness(1.12); }
+}
+
+@keyframes earthPulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(214, 163, 93, 0.45)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 16px rgba(214, 163, 93, 0.78)) drop-shadow(0 8px 18px rgba(120, 83, 43, 0.35)); transform: scale(1.04); }
+}
+
+@keyframes beastRoar {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(251, 146, 60, 0.48)); transform: scale(1); }
+  35% { filter: drop-shadow(0 0 18px rgba(251, 146, 60, 0.82)) drop-shadow(0 0 30px rgba(248, 113, 113, 0.36)); transform: scale(1.055) rotate(-1deg); }
+  65% { transform: scale(1.02) rotate(1deg); }
+}
+
+@keyframes poisonMist {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(132, 204, 22, 0.48)) saturate(1.05); }
+  50% { filter: drop-shadow(0 0 16px rgba(132, 204, 22, 0.8)) drop-shadow(0 0 28px rgba(34, 197, 94, 0.35)) saturate(1.3) brightness(1.08); }
+}
+
+.soul-icon.soul-icon-second-awakened {
+  transform-origin: center;
+  will-change: filter, transform;
+  animation: secondAwakenIconBreath 2.2s ease-in-out infinite;
+}
+
+.soul-icon.soul-icon-second-awakened:hover {
+  transform: scale(1.2) rotate(1deg);
+}
+
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="fire"] { animation: secondAwakenFire 1.18s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="ice"] { animation: secondAwakenIce 2.8s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="thunder"] { animation: secondAwakenThunder 1.6s steps(2, end) infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="dragon"] { animation: secondAwakenDragon 3s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="holy"] { animation: secondAwakenHoly 2.4s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="dark"] { animation: secondAwakenDark 2.7s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="grass"] { animation: secondAwakenGrass 2.6s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="water"] { animation: secondAwakenWater 2.5s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="metal"] { animation: secondAwakenMetal 2s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="wind"] { animation: secondAwakenWind 1.9s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="earth"] { animation: secondAwakenEarth 2.7s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="beast"] { animation: secondAwakenBeast 2.1s ease-in-out infinite; }
+.soul-icon.soul-icon-second-awakened[data-awaken-theme="poison"] { animation: secondAwakenPoison 2.6s ease-in-out infinite; }
+
+@keyframes secondAwakenIconBreath {
+  0%, 100% { filter: drop-shadow(0 0 14px var(--soul-awaken-glow, rgba(255, 215, 0, 0.72))) brightness(1.08); }
+  50% { filter: drop-shadow(0 0 24px var(--soul-awaken-glow, rgba(255, 215, 0, 0.92))) drop-shadow(0 0 44px var(--soul-awaken-glow, rgba(255, 215, 0, 0.38))) brightness(1.24); }
+}
+@keyframes secondAwakenFire { 0%,100%{filter:drop-shadow(0 0 18px #ff6b1a) drop-shadow(0 -8px 20px rgba(255,80,20,.55)) brightness(1.16)} 50%{filter:drop-shadow(0 0 30px #ffb020) drop-shadow(0 -14px 34px rgba(255,60,0,.75)) saturate(1.35) brightness(1.32);transform:scale(1.06)} }
+@keyframes secondAwakenIce { 0%,100%{filter:drop-shadow(0 0 18px #67e8f9) drop-shadow(0 0 26px rgba(186,230,253,.38)) brightness(1.12)} 50%{filter:drop-shadow(0 0 28px #cffafe) drop-shadow(0 0 42px rgba(103,232,249,.68)) contrast(1.12) brightness(1.28);transform:scale(1.035)} }
+@keyframes secondAwakenThunder { 0%,86%,100%{filter:drop-shadow(0 0 14px rgba(253,224,71,.72)) brightness(1.1)} 88%{filter:drop-shadow(0 0 34px #fef08a) drop-shadow(0 0 58px rgba(250,204,21,.9)) brightness(1.7);transform:translateX(1px)} 92%{transform:translateX(-1px)} }
+@keyframes secondAwakenDragon { 0%,100%{filter:drop-shadow(0 0 18px rgba(251,191,36,.78)) drop-shadow(0 8px 22px rgba(245,158,11,.32));transform:scale(1)} 50%{filter:drop-shadow(0 0 30px #fbbf24) drop-shadow(0 0 50px rgba(248,113,113,.38));transform:scale(1.075)} }
+@keyframes secondAwakenHoly { 0%,100%{filter:drop-shadow(0 0 20px rgba(255,247,173,.78)) drop-shadow(0 0 36px rgba(255,255,255,.34)) brightness(1.1)} 50%{filter:drop-shadow(0 0 34px #fff7ad) drop-shadow(0 0 62px rgba(255,255,255,.62)) brightness(1.34);transform:scale(1.045)} }
+@keyframes secondAwakenDark { 0%,100%{filter:drop-shadow(0 0 18px rgba(168,85,247,.78)) drop-shadow(8px 0 20px rgba(49,46,129,.32)) brightness(.98)} 50%{filter:drop-shadow(0 0 30px #a855f7) drop-shadow(-8px 0 34px rgba(88,28,135,.62)) brightness(1.16) contrast(1.12);transform:scale(1.04)} }
+@keyframes secondAwakenGrass { 0%,100%{filter:drop-shadow(0 0 18px rgba(52,211,153,.78)) drop-shadow(0 7px 20px rgba(22,163,74,.32)) brightness(1.1)} 50%{filter:drop-shadow(0 0 30px #6ee7b7) drop-shadow(0 0 48px rgba(52,211,153,.5)) saturate(1.25);transform:scale(1.045)} }
+@keyframes secondAwakenWater { 0%,100%{filter:drop-shadow(0 0 18px rgba(56,189,248,.78)) drop-shadow(0 8px 22px rgba(14,165,233,.35)) brightness(1.1)} 50%{filter:drop-shadow(0 0 31px #7dd3fc) drop-shadow(0 0 48px rgba(56,189,248,.55)) hue-rotate(6deg);transform:scale(1.04)} }
+@keyframes secondAwakenMetal { 0%,100%{filter:drop-shadow(0 0 16px rgba(203,213,225,.76)) drop-shadow(5px -3px 14px rgba(251,191,36,.22)) contrast(1.12)} 50%{filter:drop-shadow(0 0 28px #e2e8f0) drop-shadow(-5px 3px 28px rgba(251,191,36,.44)) brightness(1.28) contrast(1.22);transform:scale(1.035)} }
+@keyframes secondAwakenWind { 0%,100%{filter:drop-shadow(-9px 0 18px rgba(167,243,208,.58)) drop-shadow(0 0 18px rgba(125,211,252,.32));transform:translateX(0)} 50%{filter:drop-shadow(12px 0 32px rgba(167,243,208,.8)) drop-shadow(0 0 38px rgba(125,211,252,.48)) brightness(1.24);transform:translateX(1px) scale(1.035)} }
+@keyframes secondAwakenEarth { 0%,100%{filter:drop-shadow(0 0 17px rgba(214,163,93,.75)) drop-shadow(0 10px 22px rgba(120,83,43,.36));transform:scale(1)} 50%{filter:drop-shadow(0 0 29px #d6a35d) drop-shadow(0 14px 32px rgba(120,83,43,.5)) brightness(1.18);transform:scale(1.055)} }
+@keyframes secondAwakenBeast { 0%,100%{filter:drop-shadow(0 0 18px rgba(251,146,60,.78)) drop-shadow(0 0 22px rgba(239,68,68,.28));transform:scale(1) rotate(0)} 45%{filter:drop-shadow(0 0 32px #fb923c) drop-shadow(0 0 48px rgba(239,68,68,.5)) saturate(1.28);transform:scale(1.07) rotate(-1.2deg)} 65%{transform:scale(1.025) rotate(1deg)} }
+@keyframes secondAwakenPoison { 0%,100%{filter:drop-shadow(0 0 18px rgba(132,204,22,.76)) drop-shadow(0 0 26px rgba(34,197,94,.3)) saturate(1.15)} 50%{filter:drop-shadow(0 0 30px #bef264) drop-shadow(0 0 46px rgba(34,197,94,.5)) saturate(1.45) brightness(1.14);transform:scale(1.035)} }

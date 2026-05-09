@@ -2165,3 +2165,150 @@ canvas#C{position:fixed;inset:0;z-index:0;pointer-events:none}
  } 
  
  
+/* 二次觉醒主视觉：根据武魂图标主题与属性生成专属外显 */
+.second-awaken-orbit {
+  isolation: isolate;
+}
+
+.second-awaken-orbit::before {
+  content: '';
+  position: absolute;
+  width: 238px;
+  height: 238px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, var(--soul-awaken-glow, rgba(255, 215, 0, .34)), transparent 56%),
+    conic-gradient(from 0deg, transparent, var(--soul-awaken, #ffd700), transparent 32%, transparent 66%, var(--soul-awaken, #ffd700), transparent);
+  filter: blur(18px);
+  opacity: .38;
+  animation: secondAwakenOrbitBloom 4.8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.second-awaken-orbit .sol-ring {
+  border-color: var(--soul-awaken, #ffd700) !important;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--soul-awaken, #ffd700) 48%, transparent);
+}
+
+.second-awaken-aura {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  color: var(--soul-awaken, #ffd700);
+}
+
+.saa-core,
+.saa-ring,
+.saa-rune,
+.saa-trait {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.saa-core {
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--soul-awaken-glow, rgba(255, 215, 0, .35)), transparent 68%);
+  filter: blur(10px);
+  opacity: .7;
+  animation: secondAwakenCorePulse 2.6s ease-in-out infinite;
+}
+
+.saa-ring {
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--soul-awaken, #ffd700) 72%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--soul-awaken, #ffd700) 42%, transparent), inset 0 0 18px color-mix(in srgb, var(--soul-awaken, #ffd700) 18%, transparent);
+}
+
+.saa-ring-a {
+  width: 132px;
+  height: 132px;
+  animation: secondAwakenRuneSpin 8s linear infinite;
+}
+
+.saa-ring-b {
+  width: 166px;
+  height: 166px;
+  border-style: dashed;
+  opacity: .55;
+  animation: secondAwakenRuneSpin 13s linear infinite reverse;
+}
+
+.saa-rune {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(5, 8, 18, .62);
+  border: 1px solid color-mix(in srgb, var(--soul-awaken, #ffd700) 62%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--soul-awaken, #ffd700) 45%, transparent);
+  font-size: 14px;
+  text-shadow: 0 0 8px currentColor;
+}
+
+.saa-rune-a { animation: secondAwakenRuneOrbitA 5.8s linear infinite; }
+.saa-rune-b { animation: secondAwakenRuneOrbitB 7.5s linear infinite reverse; }
+
+.saa-trait {
+  top: auto;
+  bottom: -2px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--soul-awaken, #ffd700) 34%, transparent);
+  background: rgba(5, 8, 18, .66);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--soul-awaken, #ffd700) 24%, transparent);
+  color: color-mix(in srgb, var(--soul-awaken, #ffd700) 86%, #fff);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .8px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  animation: secondAwakenTraitGlow 2.4s ease-in-out infinite;
+}
+
+.soul-awaken-label {
+  color: var(--soul-awaken, #ffd700) !important;
+  text-shadow: 0 0 10px color-mix(in srgb, var(--soul-awaken, #ffd700) 52%, transparent);
+}
+
+.second-awaken-orbit[data-awaken-theme="fire"]::before { mix-blend-mode: screen; }
+.second-awaken-orbit[data-awaken-theme="ice"] .saa-core { filter: blur(8px) contrast(1.18); }
+.second-awaken-orbit[data-awaken-theme="thunder"] .saa-ring { animation-duration: 4s; }
+.second-awaken-orbit[data-awaken-theme="dark"]::before { opacity: .46; mix-blend-mode: lighten; }
+.second-awaken-orbit[data-awaken-theme="metal"] .saa-ring { border-style: double; }
+.second-awaken-orbit[data-awaken-theme="wind"] .saa-trait { letter-spacing: 1.6px; }
+.second-awaken-orbit[data-awaken-theme="poison"] .saa-core { filter: blur(12px) saturate(1.5); }
+
+@keyframes secondAwakenOrbitBloom {
+  0%, 100% { opacity: .26; transform: scale(.92) rotate(0deg); }
+  50% { opacity: .48; transform: scale(1.08) rotate(24deg); }
+}
+
+@keyframes secondAwakenCorePulse {
+  0%, 100% { opacity: .48; transform: translate(-50%, -50%) scale(.92); }
+  50% { opacity: .9; transform: translate(-50%, -50%) scale(1.16); }
+}
+
+@keyframes secondAwakenRuneSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+@keyframes secondAwakenRuneOrbitA {
+  0% { transform: rotate(0deg) translateX(82px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(82px) rotate(-360deg); }
+}
+
+@keyframes secondAwakenRuneOrbitB {
+  0% { transform: rotate(160deg) translateX(66px) rotate(-160deg); }
+  100% { transform: rotate(520deg) translateX(66px) rotate(-520deg); }
+}
+
+@keyframes secondAwakenTraitGlow {
+  0%, 100% { opacity: .72; filter: brightness(1); }
+  50% { opacity: 1; filter: brightness(1.25); }
+}
