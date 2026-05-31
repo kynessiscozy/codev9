@@ -1,0 +1,401 @@
+/* AAA fantasy interface pass: cinematic shell, illustrated soul stage, premium HUD */
+:root {
+  --aaa-ink: #03040a;
+  --aaa-panel: rgba(7, 10, 23, 0.72);
+  --aaa-panel-strong: rgba(11, 14, 32, 0.92);
+  --aaa-line: rgba(248, 214, 118, 0.22);
+  --aaa-line-hot: rgba(255, 231, 155, 0.55);
+  --aaa-blue: #60e7ff;
+  --aaa-violet: #9b5cff;
+  --aaa-ember: #ff9b3d;
+  --aaa-shadow: 0 26px 70px rgba(0, 0, 0, 0.58);
+}
+
+body {
+  background:
+    radial-gradient(circle at 50% -8%, rgba(89, 55, 210, 0.34), transparent 30%),
+    radial-gradient(circle at 8% 18%, rgba(0, 223, 255, 0.13), transparent 34%),
+    radial-gradient(circle at 90% 28%, rgba(255, 167, 44, 0.12), transparent 32%),
+    linear-gradient(180deg, #02030a 0%, #060916 45%, #02030a 100%);
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::before {
+  background:
+    linear-gradient(115deg, transparent 0 36%, rgba(255,255,255,.045) 37%, transparent 38% 100%),
+    linear-gradient(245deg, transparent 0 52%, rgba(96,231,255,.035) 53%, transparent 54% 100%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.018) 0 1px, transparent 1px 42px);
+  mix-blend-mode: screen;
+  opacity: .85;
+}
+
+body::after {
+  background: radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,.36) 76%, rgba(0,0,0,.68) 100%);
+}
+
+#app {
+  max-width: 460px;
+  background:
+    linear-gradient(180deg, rgba(9,13,32,.82), rgba(3,5,12,.96)),
+    radial-gradient(circle at 50% 0%, rgba(92,63,220,.28), transparent 42%);
+  border-left: 1px solid rgba(255,255,255,.06);
+  border-right: 1px solid rgba(255,255,255,.06);
+  box-shadow: 0 0 0 1px rgba(248,214,118,.05), 0 30px 100px rgba(0,0,0,.75);
+  isolation: isolate;
+}
+
+#app::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 50% 10%, rgba(255, 214, 118, .08), transparent 28%),
+    radial-gradient(circle at 24% 32%, rgba(96, 231, 255, .08), transparent 24%),
+    linear-gradient(90deg, rgba(255,255,255,.03), transparent 16% 84%, rgba(255,255,255,.03));
+  pointer-events: none;
+}
+
+#topbar {
+  position: relative;
+  padding: 12px 14px 10px;
+  background:
+    linear-gradient(180deg, rgba(12,16,35,.96), rgba(4,6,16,.82)),
+    radial-gradient(circle at 50% 0%, rgba(240,208,96,.16), transparent 62%);
+  border-bottom: 1px solid var(--aaa-line);
+  box-shadow: 0 18px 38px rgba(0,0,0,.36);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+#topbar::before {
+  content: 'SOUL AWAKENING ARCHIVE';
+  position: absolute;
+  left: 58px;
+  top: 4px;
+  font-size: 7px;
+  letter-spacing: 2.4px;
+  color: rgba(255,255,255,.26);
+}
+
+.tb-title {
+  font-size: 21px;
+  letter-spacing: 4px;
+  text-shadow: 0 0 18px rgba(240,208,96,.34);
+}
+
+.tb-pills { gap: 5px; }
+.pill {
+  min-height: 24px;
+  padding: 3px 8px;
+  border-color: rgba(255, 231, 155, .26);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 10px 22px rgba(0,0,0,.22);
+}
+.pill.pow { border-color: rgba(255, 121, 87, .45); }
+.exp-row { margin-top: 10px; }
+.exp-wrap { height: 4px; border-radius: 99px; background: rgba(255,255,255,.07); }
+.exp-fill { border-radius: inherit; box-shadow: 0 0 12px rgba(240,208,96,.45); }
+
+#content {
+  position: relative;
+  padding-bottom: 82px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.02), transparent 18%),
+    radial-gradient(circle at 50% 2%, rgba(96,231,255,.06), transparent 22%);
+}
+
+#bnav {
+  height: 70px;
+  max-width: 460px;
+  padding: 8px 10px 10px;
+  gap: 6px;
+  background: linear-gradient(180deg, rgba(12,15,31,.78), rgba(3,4,11,.98));
+  border-top: 1px solid rgba(255,231,155,.2);
+  box-shadow: 0 -18px 45px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.ni {
+  border-radius: 18px;
+  gap: 3px;
+  border: 1px solid transparent;
+  overflow: hidden;
+}
+.ni::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, rgba(255,231,155,.18), transparent 58%);
+  opacity: 0;
+  transition: opacity .24s ease;
+}
+.ni-icon { font-size: 20px; line-height: 1; filter: grayscale(.35); transition: transform .24s ease, filter .24s ease; }
+.ni-label { font-size: 9px; color: rgba(232,223,192,.48); letter-spacing: .4px; position: relative; }
+.ni.active {
+  border-color: rgba(255,231,155,.28);
+  background: linear-gradient(180deg, rgba(240,208,96,.13), rgba(96,231,255,.05));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 10px 24px rgba(0,0,0,.22);
+}
+.ni.active::before { opacity: 1; }
+.ni.active::after { left: 25%; right: 25%; bottom: 5px; height: 2px; }
+.ni.active .ni-icon { transform: translateY(-2px) scale(1.12); filter: grayscale(0) drop-shadow(0 0 8px rgba(240,208,96,.44)); }
+.ni.active .ni-label { color: var(--gl); }
+
+/* Soul page cinematic reconstruction */
+#page-soul.soul-page-25d {
+  position: relative;
+  min-height: 100%;
+  padding: 0 0 16px;
+  overflow: hidden;
+  --qcR: 201;
+  --qcG: 162;
+  --qcB: 39;
+}
+
+#page-soul.soul-page-25d .soul-v2-hero {
+  margin: 10px 10px 12px;
+  padding: 16px 12px 13px;
+  min-height: 568px;
+  border-radius: 30px;
+  background:
+    linear-gradient(180deg, rgba(8,10,24,.3), rgba(3,5,13,.72) 48%, rgba(4,5,12,.96)),
+    radial-gradient(circle at 50% 17%, color-mix(in srgb, var(--qc) 25%, transparent), transparent 36%),
+    linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.015));
+  border: 1px solid color-mix(in srgb, var(--qc) 34%, rgba(255,255,255,.08));
+  box-shadow: var(--aaa-shadow), 0 0 80px color-mix(in srgb, var(--qc) 16%, transparent), inset 0 1px 0 rgba(255,255,255,.14);
+}
+
+.soul-cinematic-stage {
+  position: relative;
+  min-height: 336px;
+  display: grid;
+  place-items: center;
+  margin: -4px -2px 6px;
+  overflow: hidden;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 47%, color-mix(in srgb, var(--qc) 18%, transparent), transparent 30%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+  border: 1px solid rgba(255,255,255,.07);
+}
+
+.soul-cinematic-stage::before {
+  content: '';
+  position: absolute;
+  inset: 8px 8px 26px;
+  border-radius: 999px 999px 34px 34px;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.7), transparent 56%),
+    conic-gradient(from 180deg at 50% 64%, transparent, color-mix(in srgb, var(--qc) 38%, transparent), transparent 36%, rgba(96,231,255,.16), transparent 68%, color-mix(in srgb, var(--qc) 30%, transparent), transparent);
+  filter: blur(.2px);
+  opacity: .86;
+}
+
+.soul-cinematic-stage::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  width: 72%;
+  height: 18px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--qc) 34%, transparent), transparent 70%);
+  filter: blur(4px);
+}
+
+.soul-illustration-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.08), transparent 18%),
+    repeating-radial-gradient(circle at 50% 54%, rgba(255,255,255,.12) 0 1px, transparent 1px 22px),
+    linear-gradient(120deg, transparent 12%, rgba(255,255,255,.06) 13%, transparent 15% 70%, rgba(96,231,255,.08) 71%, transparent 73%);
+  opacity: .56;
+  mask-image: radial-gradient(circle at 50% 48%, #000 0 62%, transparent 83%);
+}
+
+.soul-companion {
+  position: absolute;
+  width: 74px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  border-radius: 22px;
+  background: rgba(3,5,12,.42);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 18px 40px rgba(0,0,0,.34);
+  opacity: .72;
+  transform: rotate(var(--r, 0deg));
+}
+.soul-companion img { width: 66px; height: 66px; object-fit: contain; filter: drop-shadow(0 0 16px rgba(255,255,255,.18)); }
+.soul-companion.c1 { left: 12px; top: 36px; --r: -10deg; }
+.soul-companion.c2 { right: 14px; top: 54px; --r: 9deg; }
+.soul-companion.c3 { left: 24px; bottom: 40px; --r: 7deg; }
+.soul-companion.c4 { right: 26px; bottom: 34px; --r: -8deg; }
+
+#page-soul.soul-page-25d .soul-orbit {
+  min-height: 240px;
+  width: 240px;
+  z-index: 3;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(255,255,255,.08), transparent 54%),
+    conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--qc) 36%, transparent), transparent 34%, rgba(255,255,255,.22), transparent 67%, color-mix(in srgb, var(--qc) 30%, transparent), transparent);
+  box-shadow: 0 0 60px color-mix(in srgb, var(--qc) 24%, transparent);
+}
+
+#page-soul.soul-page-25d .sol-icon .soul-icon,
+#page-soul.soul-page-25d .sol-icon img {
+  width: min(178px, 46vw) !important;
+  height: min(178px, 46vw) !important;
+  object-fit: contain;
+}
+
+.soul-stage-label {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 8px;
+  letter-spacing: 1.6px;
+  color: rgba(255,255,255,.36);
+  text-transform: uppercase;
+}
+.soul-stage-label b { color: var(--gl); font-weight: 700; }
+
+#page-soul.soul-page-25d .sol-name { margin-top: 10px; font-size: 32px; text-shadow: 0 0 22px color-mix(in srgb, var(--qc) 46%, transparent); }
+#page-soul.soul-page-25d .sol-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 12px; }
+#page-soul.soul-page-25d .sol-act { min-width: 0; padding: 12px 6px; background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.025)); }
+
+.soul-aaa-stats {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.soul-aaa-stat {
+  padding: 9px 7px;
+  border-radius: 15px;
+  background: rgba(255,255,255,.045);
+  border: 1px solid rgba(255,255,255,.08);
+  text-align: center;
+}
+.soul-aaa-stat .v { color: #fff4bf; font-size: 14px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.soul-aaa-stat .l { margin-top: 2px; color: rgba(255,255,255,.34); font-size: 8px; letter-spacing: 1px; }
+
+#page-soul.soul-page-25d .sv2-card {
+  margin: 0 10px 10px;
+  border-radius: 22px;
+  background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+  border-color: rgba(255,231,155,.16);
+  box-shadow: 0 18px 44px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.soul-ring-preview {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  margin-top: 12px;
+}
+.soul-ring-socket {
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  color: rgba(255,255,255,.35);
+  background: radial-gradient(circle, rgba(255,255,255,.08), rgba(255,255,255,.015));
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: inset 0 0 16px rgba(0,0,0,.3);
+}
+.soul-ring-socket.on {
+  color: #100b02;
+  font-weight: 800;
+  border-color: rgba(255,255,255,.24);
+  box-shadow: 0 0 18px var(--ring-color, var(--gl)), inset 0 0 16px rgba(255,255,255,.16);
+  background: radial-gradient(circle at 35% 30%, #fff, var(--ring-color, var(--gl)) 38%, rgba(0,0,0,.72) 78%);
+}
+
+/* Illustrated hunt chapter */
+.trial-cinematic {
+  position: relative;
+  min-height: 172px;
+  margin: 0 0 12px;
+  padding: 15px;
+  overflow: hidden;
+  border-radius: 26px;
+  border: 1px solid rgba(96,231,255,.18);
+  background:
+    radial-gradient(circle at 82% 20%, rgba(168,85,247,.34), transparent 28%),
+    radial-gradient(circle at 24% 62%, rgba(34,197,94,.20), transparent 34%),
+    linear-gradient(150deg, rgba(10,15,34,.96), rgba(4,6,15,.96));
+  box-shadow: var(--aaa-shadow), inset 0 1px 0 rgba(255,255,255,.09);
+}
+.trial-cinematic::before {
+  content: '';
+  position: absolute;
+  right: -28px;
+  bottom: -38px;
+  width: 228px;
+  height: 180px;
+  background:
+    radial-gradient(circle at 60% 42%, rgba(255,231,155,.8), transparent 8%),
+    conic-gradient(from 220deg, transparent, rgba(96,231,255,.28), transparent 42%, rgba(168,85,247,.32), transparent 70%);
+  border-radius: 50%;
+  filter: blur(.2px);
+  opacity: .82;
+}
+.trial-cinematic::after {
+  content: '试炼之门';
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  color: rgba(255,255,255,.16);
+  font-family: 'Ma Shan Zheng', serif;
+  font-size: 34px;
+  letter-spacing: 5px;
+}
+.trial-eyebrow { position: relative; z-index: 1; font-size: 8px; letter-spacing: 2.8px; color: rgba(96,231,255,.72); }
+.trial-title { position: relative; z-index: 1; margin-top: 7px; font-family: 'Ma Shan Zheng', serif; font-size: 28px; letter-spacing: 4px; color: #fff4bf; text-shadow: 0 0 22px rgba(240,208,96,.34); }
+.trial-desc { position: relative; z-index: 1; max-width: 245px; margin-top: 8px; color: rgba(232,223,192,.62); font-size: 11px; line-height: 1.7; }
+.trial-badges { position: relative; z-index: 1; display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.trial-badges span { font-size: 9px; padding: 4px 8px; border-radius: 999px; color: rgba(255,255,255,.76); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1); }
+
+.hunt-zones-25d .zone-card-25d,
+.godpath-card-25d,
+.lot-banner-outer-25d,
+.cult-widget,
+.sb-banner,
+.bag-page-25d .bag-tabs-25d,
+.bag-page-25d .bag-grid-25d,
+.lot-panel,
+.lot-rates,
+.lot-hist-wrap {
+  box-shadow: 0 18px 48px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+@media (max-width: 380px) {
+  .tb-title { font-size: 18px; letter-spacing: 2px; }
+  .pill { padding: 2px 6px; font-size: 9px; }
+  #page-soul.soul-page-25d .soul-v2-hero { min-height: 548px; }
+  .soul-companion { width: 62px; height: 62px; }
+  .soul-companion img { width: 56px; height: 56px; }
+}
