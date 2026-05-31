@@ -2,6 +2,7 @@
 
 import { G, saveG } from '../core/state.js';
 import { QC, getQualityConfig, getQualityColor } from '../config/quality.js';
+import { getRingColor } from '../data/rings.js';
 import { rankStr } from '../config/realms.js';
 import { spawnBurst } from '../core/utils.js';
 import { addExp, updateHUD } from '../core/exp.js';
@@ -16,6 +17,8 @@ import { SOUL_EVOLUTIONS, RESONANCE_CFG, FRAGMENT_SOURCES, calcResonancePower } 
 export function renderSoulPage() {
   const p = document.getElementById('page-soul');
   if (!p) return;
+
+  p.classList.add('soul-page-25d');
 
   if (!G.awakenDone || !G.soul) {
     p.innerHTML = '<div class="empty-st"><div class="ei">🌀</div><div class="em">尚未觉醒武魂</div></div>';
@@ -37,22 +40,44 @@ export function renderSoulPage() {
   const secondAwakenBadge = isSecondAwakened
     ? `<div class="sol-dot-sep"></div><div class="sol-rank soul-awaken-label" style="--soul-awaken:${effectProfile.accent}" title="${effectProfile.desc}">${effectProfile.icon} ${s.divine ? '神化觉醒' : '二次觉醒'} · ${effectProfile.label}</div>`
     : '';
+  const attrText = (s.attrs || []).slice(0, 3).join(' · ') || '未知法则';
+  const ringCount = s.rings?.length || 0;
+  const assetBase = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+  const ringSockets = Array.from({ length: 10 }, (_, i) => {
+    const ring = s.rings?.[i];
+    const color = ring ? getRingColor(ring.y || ring.tier || ring.n || '') : 'rgba(255,255,255,.14)';
+    const label = ring ? String(ring.tier || ring.n || ring.y || '魂环').replace('年', '') : i + 1;
+    return `<div class="soul-ring-socket ${ring ? 'on' : ''}" style="--ring-color:${color}" title="${ring ? (ring.y || ring.tier || ring.n || '已装配魂环') : '空魂环位'}">${label}</div>`;
+  }).join('');
 
   p.innerHTML = `
     <div class="soul-v2-hero" style="--soul-awaken:${effectProfile.accent};--soul-awaken-glow:${effectProfile.glow};--qc:${qc.c}">
-      <div class="soul-orbit ${isSecondAwakened ? 'second-awaken-orbit' : ''}" data-awaken-theme="${effectProfile.theme}">
-        <div class="sol-ring r1" style="border-color:${qc.c}"></div>
-        <div class="sol-ring r2" style="border-color:${qc.c}"></div>
-        <div class="sol-ring r3" style="border-color:${qc.c}"></div>
-        <div class="sol-glow" style="background:radial-gradient(ellipse at 40% 35%,${effectProfile.glow},transparent 70%)"></div>
-        ${secondAwakenFx}
-        <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qc.c});display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
+      <div class="soul-cinematic-stage" aria-label="武魂主视觉插画">
+        <div class="soul-illustration-bg"></div>
+        <div class="soul-companion c1"><img src="${assetBase}/souls/legend/金龙王.webp" alt="金龙王剪影" draggable="false" loading="lazy"></div>
+        <div class="soul-companion c2"><img src="${assetBase}/souls/epic/六翼天使.webp" alt="六翼天使剪影" draggable="false" loading="lazy"></div>
+        <div class="soul-companion c3"><img src="${assetBase}/souls/rare/冰火蛟龙.webp" alt="冰火蛟龙剪影" draggable="false" loading="lazy"></div>
+        <div class="soul-companion c4"><img src="${assetBase}/souls/apex/宇宙之源.webp" alt="宇宙之源剪影" draggable="false" loading="lazy"></div>
+        <div class="soul-orbit ${isSecondAwakened ? 'second-awaken-orbit' : ''}" data-awaken-theme="${effectProfile.theme}">
+          <div class="sol-ring r1" style="border-color:${qc.c}"></div>
+          <div class="sol-ring r2" style="border-color:${qc.c}"></div>
+          <div class="sol-ring r3" style="border-color:${qc.c}"></div>
+          <div class="sol-glow" style="background:radial-gradient(ellipse at 40% 35%,${effectProfile.glow},transparent 70%)"></div>
+          ${secondAwakenFx}
+          <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qc.c});display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
+        </div>
+        <div class="soul-stage-label"><span>REALM ENGINE</span><b>${qc.n}</b><span>${ringCount}/10 RINGS</span></div>
       </div>
       <div class="sol-name" style="color:${qc.c}">${s.name}</div>
       <div class="sol-meta">
         <div class="sol-quality-tag" style="border-color:${qc.c}">${qc.n}</div>
         <div class="sol-rank">${rankStr(G.level)}</div>
         ${secondAwakenBadge}
+      </div>
+      <div class="soul-aaa-stats">
+        <div class="soul-aaa-stat"><div class="v">${s.p || 0}</div><div class="l">初始魂力</div></div>
+        <div class="soul-aaa-stat"><div class="v">${attrText}</div><div class="l">核心属性</div></div>
+        <div class="soul-aaa-stat"><div class="v">Lv.${G.awakenLevel || 0}</div><div class="l">觉醒阶位</div></div>
       </div>
       <div class="sol-actions">
         <div class="sol-act" onclick="doSecondAwaken()">⚡ 二次觉醒</div>
@@ -62,8 +87,11 @@ export function renderSoulPage() {
       </div>
     </div>
     <div class="sv2-card">
-      <div class="sv2-title">魂环 ${s.rings?.length || 0}/10</div>
-      <div class="sv2-action" onclick="openAssignRing()">装配 +</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1">
+        <div class="sv2-title">魂环矩阵 ${ringCount}/10</div>
+        <div class="sv2-action" onclick="openAssignRing()">装配 +</div>
+      </div>
+      <div class="soul-ring-preview">${ringSockets}</div>
     </div>
   `;
 

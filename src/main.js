@@ -9,6 +9,7 @@ import './style.css';
 import './modules/ui/soul-icon-effects.css';
 import './modules/fx/effects.css';
 import './modules/ui/page-25d.css';
+import './modules/ui/aaa-interface.css';
 
 // 导入统一的模块索引
 import * as Modules from './modules/index.js';
