@@ -2,7 +2,9 @@
 
 import { G, saveG } from '../core/state.js';
 import { QC, getQualityConfig, getQualityColor } from '../config/quality.js';
-import { rankStr } from '../config/realms.js';
+import { getCurrentRealm, getNextRealm, rankStr } from '../config/realms.js';
+import { getRingColor } from '../data/rings.js';
+import { calcPower } from '../core/power.js';
 import { spawnBurst } from '../core/utils.js';
 import { addExp, updateHUD } from '../core/exp.js';
 import { openModal } from './modals.js';
@@ -10,15 +12,111 @@ import { notify } from '../core/notify.js';
 import { getSoulEffectProfile, getSoulIcon } from './soul-icons.js';
 import { SOUL_EVOLUTIONS, RESONANCE_CFG, FRAGMENT_SOURCES, calcResonancePower } from '../core/resonance.js';
 
+const THEME_ASSETS = {
+  fire: ['legend/极品火凤凰.webp', 'epic/极焱炎神.webp', 'rare/朱雀圣火.webp'],
+  ice: ['legend/永恒冰魂.webp', 'epic/极寒冰皇.webp', 'rare/冰凤凰.webp'],
+  thunder: ['legend/天罚神雷.webp', 'epic/雷霆战神.webp', 'epic/蓝电霸王龙.webp'],
+  dragon: ['legend/金龙王.webp', 'epic/黄金圣龙.webp', 'rare/冰火蛟龙.webp'],
+  holy: ['god/天使神.webp', 'epic/六翼天使.webp', 'legend/九宝琉璃塔.webp'],
+  dark: ['god/修罗神.webp', 'legend/堕落天使.webp', 'epic/暗域鬼王.webp'],
+  grass: ['legend/蓝银皇.webp', 'hc/奇茸通天菊.webp', 'common/蓝银草.webp'],
+  water: ['god/海神武魂.webp', 'rare/碧海银鲸.webp', 'rare/玄武神盾.webp'],
+  metal: ['legend/七杀剑.webp', 'epic/昊天锤.webp', 'ha/昊天九绝锤.webp'],
+  wind: ['epic/狂风战鹰.webp', 'rare/白鹤翎羽.webp', 'hc/月影神狐.webp'],
+  earth: ['epic/泰坦巨猿.webp', 'ha/饕餮神牛.webp', 'rare/玄武神盾.webp'],
+  beast: ['rare/白虎.webp', 'rare/赤炎狮王.webp', 'epic/泰坦巨猿.webp'],
+  poison: ['rare/碧磷蛇皇.webp', 'epic/冰碧帝皇蝎.webp', 'epic/死亡蛛皇.webp'],
+};
+
+const FALLBACK_ASSETS = ['apex/宇宙之源.webp', 'apex/时空裂缝.webp', 'triple/时空因果三生.webp'];
+
+function esc(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function getAssetBase() {
+  return (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+}
+
+function getThemeAssets(theme) {
+  return THEME_ASSETS[theme] || FALLBACK_ASSETS;
+}
+
+function renderBackdropCards(theme, assetBase) {
+  return getThemeAssets(theme).map((src, idx) => `
+    <figure class="cin-art-card cin-art-${idx + 1}">
+      <img src="${assetBase}/souls/${src}" alt="武魂插画素材 ${idx + 1}" loading="lazy" decoding="async" draggable="false">
+    </figure>`).join('');
+}
+
+function renderRingOrbit(rings = []) {
+  return Array.from({ length: 10 }, (_, idx) => {
+    const ring = rings[idx];
+    const deg = idx * 36 - 90;
+    const color = ring ? (ring.c || getRingColor(ring.y || ring.n || 0)) : 'rgba(255,255,255,.16)';
+    const label = ring ? String(ring.n || ring.tier || '魂环').replace('年', '') : idx + 1;
+    return `<div class="cin-ring-node ${ring ? 'filled' : ''}" style="--deg:${deg}deg;--ring:${color}" title="${esc(ring ? `${ring.n || '魂环'} · ${ring.sk || '魂技待觉醒'}` : `第${idx + 1}魂环位`)}"><span>${esc(label)}</span></div>`;
+  }).join('');
+}
+
+function renderRingList(rings = []) {
+  if (!rings.length) {
+    return `<div class="cin-empty-row">尚未装配魂环。前往试炼狩猎，点亮魂环星轨。</div>`;
+  }
+  return rings.slice(0, 4).map((ring, idx) => {
+    const color = ring.c || getRingColor(ring.y || ring.n || 0);
+    return `<div class="cin-ring-row">
+      <i style="--ring:${color}"></i>
+      <div class="cin-ring-main"><b>${esc(ring.sk || `第${idx + 1}魂技`)}</b><span>${esc(ring.n || ring.tier || '未知年限')}</span></div>
+      <em>+${Number(ring.pw || 0).toLocaleString()}</em>
+    </div>`;
+  }).join('') + (rings.length > 4 ? `<button class="cin-text-btn" type="button" onclick="openSoulDetail()">查看全部 ${rings.length} 个魂技 ›</button>` : '');
+}
+
+function renderSkillPreview(skills = []) {
+  if (!skills.length) return `<div class="cin-empty-row">魂技尚未记录，装配魂环后将在此展示。</div>`;
+  return skills.slice(0, 3).map((sk, idx) => `
+    <div class="cin-skill-card">
+      <div class="cin-skill-mark">${['Ⅰ', 'Ⅱ', 'Ⅲ'][idx] || '✦'}</div>
+      <div><b>${esc(sk.name || '未命名魂技')}</b><span>${esc(sk.desc || '魂力涌动，效果待解析。')}</span></div>
+    </div>`).join('');
+}
+
+function renderResourceDeck() {
+  const artifact = G.equippedArt;
+  const bones = Object.values(G.equippedBones || {}).filter(Boolean);
+  const title = G.equippedTitle;
+  const totalFragments = Object.values(G.soulFragments || {}).reduce((a, b) => a + b, 0);
+  return `
+    <div class="cin-deck">
+      <div class="cin-deck-card"><span>魂骨</span><b>${bones.length}/6</b><small>${bones.length ? `共鸣战力 +${bones.reduce((sum, bone) => sum + (bone.pw || 0), 0).toLocaleString()}` : '暂无装备'}</small></div>
+      <div class="cin-deck-card"><span>神器</span><b>${artifact ? esc(artifact.i || '✦') : '—'}</b><small>${artifact ? esc(artifact.n || '已装备') : '试炼中获取'}</small></div>
+      <div class="cin-deck-card"><span>称号</span><b>${title ? '★' : '—'}</b><small>${title ? esc(title.n) : '未佩戴称号'}</small></div>
+      <div class="cin-deck-card"><span>碎片</span><b>${totalFragments}</b><small>共鸣素材</small></div>
+    </div>`;
+}
+
 /**
- * 渲染武魂页面（简化版，完整版需从game.js提取更多代码）
+ * 渲染武魂页面（电影化指挥舱版）
  */
 export function renderSoulPage() {
   const p = document.getElementById('page-soul');
   if (!p) return;
+  p.classList.add('soul-cinematic-page');
 
   if (!G.awakenDone || !G.soul) {
-    p.innerHTML = '<div class="empty-st"><div class="ei">🌀</div><div class="em">尚未觉醒武魂</div></div>';
+    p.innerHTML = `
+      <div class="cin-awaken-empty">
+        <div class="cin-empty-sigil">🌀</div>
+        <h2>尚未觉醒武魂</h2>
+        <p>触碰祭坛，开启属于你的魂师命运。</p>
+        <button type="button" onclick="window.triggerAwaken && window.triggerAwaken()">感应武魂</button>
+      </div>`;
     hideSoulGeo();
     return;
   }
@@ -27,6 +125,11 @@ export function renderSoulPage() {
   const qc = QC[s.quality] || QC.common;
   const effectProfile = getSoulEffectProfile(s.name, s.attrs || []);
   const isSecondAwakened = !!(s.secondAwakened || s.divine);
+  const realm = getCurrentRealm(G.level);
+  const nextRealm = getNextRealm(G.level);
+  const realmPct = nextRealm ? Math.min(100, Math.max(0, ((G.level - realm.lv) / (nextRealm.lv - realm.lv)) * 100)) : 100;
+  const assetBase = getAssetBase();
+  const attrs = (s.attrs || []).slice(0, 4);
   const svgIcon = getSoulIcon(s.name, s.quality, {
     sizeClass: 'size-large',
     priority: true,
@@ -34,37 +137,66 @@ export function renderSoulPage() {
     attrs: s.attrs || [],
   });
   const secondAwakenFx = isSecondAwakened ? renderSecondAwakenFx(effectProfile, s) : '';
-  const secondAwakenBadge = isSecondAwakened
-    ? `<div class="sol-dot-sep"></div><div class="sol-rank soul-awaken-label" style="--soul-awaken:${effectProfile.accent}" title="${effectProfile.desc}">${effectProfile.icon} ${s.divine ? '神化觉醒' : '二次觉醒'} · ${effectProfile.label}</div>`
-    : '';
+  const power = calcPower();
+  const rings = s.rings || [];
 
   p.innerHTML = `
-    <div class="soul-v2-hero" style="--soul-awaken:${effectProfile.accent};--soul-awaken-glow:${effectProfile.glow};--qc:${qc.c}">
-      <div class="soul-orbit ${isSecondAwakened ? 'second-awaken-orbit' : ''}" data-awaken-theme="${effectProfile.theme}">
-        <div class="sol-ring r1" style="border-color:${qc.c}"></div>
-        <div class="sol-ring r2" style="border-color:${qc.c}"></div>
-        <div class="sol-ring r3" style="border-color:${qc.c}"></div>
-        <div class="sol-glow" style="background:radial-gradient(ellipse at 40% 35%,${effectProfile.glow},transparent 70%)"></div>
-        ${secondAwakenFx}
-        <div class="sol-icon" style="filter:drop-shadow(0 0 16px ${qc.c});display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
+    <section class="cin-hero" style="--soul:${qc.c};--soulGlow:${effectProfile.glow};--theme:${effectProfile.accent}" data-theme="${esc(effectProfile.theme)}">
+      <div class="cin-hero-bg"></div>
+      ${renderBackdropCards(effectProfile.theme, assetBase)}
+      <div class="cin-identity">
+        <div class="cin-kicker">MARTIAL SOUL · ${esc(effectProfile.label)}</div>
+        <h1 style="color:${qc.c}">${esc(s.name)}</h1>
+        <div class="cin-tags">
+          <span style="border-color:${qc.c};color:${qc.c}">${esc(qc.n)}</span>
+          <span>${esc(rankStr(G.level))}</span>
+          ${isSecondAwakened ? `<span style="color:${effectProfile.accent}">${s.divine ? '神化觉醒' : '二次觉醒'}</span>` : ''}
+        </div>
       </div>
-      <div class="sol-name" style="color:${qc.c}">${s.name}</div>
-      <div class="sol-meta">
-        <div class="sol-quality-tag" style="border-color:${qc.c}">${qc.n}</div>
-        <div class="sol-rank">${rankStr(G.level)}</div>
-        ${secondAwakenBadge}
+      <div class="cin-stage">
+        <div class="cin-ring-orbit">${renderRingOrbit(rings)}</div>
+        <div class="soul-orbit ${isSecondAwakened ? 'second-awaken-orbit' : ''}" data-awaken-theme="${effectProfile.theme}">
+          <div class="sol-ring r1" style="border-color:${qc.c}"></div>
+          <div class="sol-ring r2" style="border-color:${qc.c}"></div>
+          <div class="sol-ring r3" style="border-color:${qc.c}"></div>
+          <div class="sol-glow" style="background:radial-gradient(ellipse at 40% 35%,${effectProfile.glow},transparent 70%)"></div>
+          ${secondAwakenFx}
+          <div class="sol-icon" style="filter:drop-shadow(0 0 18px ${qc.c});display:flex;align-items:center;justify-content:center;">${svgIcon}</div>
+        </div>
       </div>
-      <div class="sol-actions">
-        <div class="sol-act" onclick="doSecondAwaken()">⚡ 二次觉醒</div>
-        <div class="sol-act" onclick="openSoulResonance()">✨ 武魂共鸣</div>
-        <div class="sol-act" onclick="openSoulEvolution()">🌟 武魂传承</div>
-        <div class="sol-act" onclick="openSoulDetail()">📖 魂技详情</div>
+      <div class="cin-dashboard">
+        <div><span>战力评级</span><b>${power.toLocaleString()}</b></div>
+        <div><span>初始魂力</span><b>${Number(s.p || 0).toLocaleString()}</b></div>
+        <div><span>魂环进度</span><b>${rings.length}/10</b></div>
       </div>
-    </div>
-    <div class="sv2-card">
-      <div class="sv2-title">魂环 ${s.rings?.length || 0}/10</div>
-      <div class="sv2-action" onclick="openAssignRing()">装配 +</div>
-    </div>
+      <div class="cin-attrs">
+        ${(attrs.length ? attrs : [effectProfile.label]).map(attr => `<span>${esc(attr)}</span>`).join('')}
+      </div>
+      <div class="cin-actions">
+        <button type="button" onclick="doSecondAwaken()"><i>⚡</i><span>二次觉醒</span></button>
+        <button type="button" onclick="openSoulResonance()"><i>✨</i><span>武魂共鸣</span></button>
+        <button type="button" onclick="openSoulEvolution()"><i>🌟</i><span>武魂传承</span></button>
+        <button type="button" onclick="openSoulDetail()"><i>📖</i><span>魂技档案</span></button>
+      </div>
+    </section>
+
+    <section class="cin-panel cin-realm-panel">
+      <div class="cin-panel-head"><div><span>REALM PATH</span><h2>境界航线</h2></div><b>${esc(realm.ico)} ${esc(realm.n)}</b></div>
+      <div class="cin-realm-track"><i style="width:${realmPct}%"></i></div>
+      <div class="cin-realm-copy"><span>${esc(realm.sub)}</span><em>${nextRealm ? `下一境界：Lv.${nextRealm.lv} · ${nextRealm.n}` : '已抵达神级领域'}</em></div>
+    </section>
+
+    <section class="cin-panel">
+      <div class="cin-panel-head"><div><span>SOUL RINGS</span><h2>魂环星轨</h2></div><button type="button" onclick="switchPage('hunt')">前往试炼 ›</button></div>
+      <div class="cin-ring-list">${renderRingList(rings)}</div>
+    </section>
+
+    ${renderResourceDeck()}
+
+    <section class="cin-panel">
+      <div class="cin-panel-head"><div><span>COMBAT SKILLS</span><h2>魂技演算</h2></div><button type="button" onclick="openSoulDetail()">完整档案 ›</button></div>
+      <div class="cin-skill-grid">${renderSkillPreview(s.skills || [])}</div>
+    </section>
   `;
 
   updateHUD();

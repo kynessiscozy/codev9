@@ -1,0 +1,269 @@
+/* Cinematic interface reconstruction for the martial-soul fantasy UI. */
+:root {
+  --cin-void: #03040b;
+  --cin-panel: rgba(8, 11, 27, .78);
+  --cin-line: rgba(246, 211, 118, .18);
+  --cin-line-strong: rgba(246, 211, 118, .42);
+  --cin-text-soft: rgba(232, 223, 192, .68);
+  --cin-shadow: 0 24px 70px rgba(0, 0, 0, .55);
+}
+
+body {
+  background:
+    radial-gradient(circle at 50% -15%, rgba(117, 74, 255, .28), transparent 34%),
+    radial-gradient(circle at 12% 22%, rgba(0, 229, 255, .12), transparent 32%),
+    radial-gradient(circle at 88% 34%, rgba(255, 173, 70, .1), transparent 28%),
+    linear-gradient(180deg, #02030a 0%, #080b18 46%, #02030a 100%);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.018) 0 1px, transparent 1px 42px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 1px, transparent 1px 48px),
+    radial-gradient(ellipse at center, transparent 48%, rgba(0,0,0,.42) 100%);
+  mix-blend-mode: screen;
+}
+
+#app {
+  max-width: 460px;
+  background:
+    linear-gradient(180deg, rgba(8, 12, 28, .92), rgba(4, 6, 16, .98)),
+    radial-gradient(circle at 50% 0%, rgba(240, 208, 96, .1), transparent 36%);
+  border-left: 1px solid rgba(255,255,255,.06);
+  border-right: 1px solid rgba(255,255,255,.06);
+  box-shadow: 0 0 0 1px rgba(240,208,96,.05), 0 34px 110px rgba(0,0,0,.72);
+}
+
+#topbar {
+  background: linear-gradient(180deg, rgba(11,15,35,.96), rgba(5,7,18,.9));
+  border-bottom: 1px solid var(--cin-line);
+  box-shadow: 0 18px 36px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.tb-title { text-shadow: 0 0 18px rgba(240,208,96,.28); }
+.pill {
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+  border-color: rgba(246,211,118,.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 10px 22px rgba(0,0,0,.18);
+}
+.exp-wrap { height: 4px; border-radius: 999px; }
+.exp-fill { border-radius: inherit; box-shadow: 0 0 14px rgba(240,208,96,.45); }
+
+#bnav {
+  max-width: 460px;
+  height: 68px;
+  padding: 7px 10px 9px;
+  gap: 6px;
+  background: linear-gradient(180deg, rgba(11,15,32,.84), rgba(3,4,11,.98));
+  border-top: 1px solid rgba(246,211,118,.2);
+  box-shadow: 0 -20px 50px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.ni { border-radius: 16px; border: 1px solid transparent; overflow: hidden; }
+.ni::before { content: ''; position: absolute; inset: 0; opacity: 0; background: radial-gradient(circle at 50% 0%, rgba(240,208,96,.16), transparent 58%); transition: opacity .22s; }
+.ni-icon { position: relative; font-size: 20px; filter: grayscale(.25); transition: transform .22s, filter .22s; }
+.ni-label { position: relative; font-size: 9px; color: rgba(232,223,192,.48); }
+.ni.active { border-color: rgba(246,211,118,.28); background: linear-gradient(180deg, rgba(240,208,96,.12), rgba(96,231,255,.045)); }
+.ni.active::before { opacity: 1; }
+.ni.active .ni-icon { transform: translateY(-2px) scale(1.08); filter: grayscale(0) drop-shadow(0 0 8px rgba(240,208,96,.42)); }
+.ni.active .ni-label { color: var(--gl); }
+
+.soul-cinematic-page {
+  position: relative;
+  padding: 10px 10px 18px !important;
+  overflow: hidden;
+}
+.soul-cinematic-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 14%, rgba(240,208,96,.08), transparent 26%),
+    radial-gradient(circle at 14% 30%, rgba(96,231,255,.07), transparent 24%),
+    radial-gradient(circle at 88% 36%, rgba(168,85,247,.08), transparent 24%);
+}
+
+.cin-hero {
+  position: relative;
+  min-height: 610px;
+  padding: 18px 14px 14px;
+  border-radius: 30px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(12,15,35,.42), rgba(4,6,16,.9) 62%, rgba(3,4,10,.98)),
+    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--soul) 22%, transparent), transparent 34%);
+  border: 1px solid color-mix(in srgb, var(--soul) 34%, rgba(255,255,255,.08));
+  box-shadow: var(--cin-shadow), 0 0 90px color-mix(in srgb, var(--soul) 18%, transparent), inset 0 1px 0 rgba(255,255,255,.12);
+  isolation: isolate;
+}
+.cin-hero-bg,
+.cin-hero::before,
+.cin-hero::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+.cin-hero-bg {
+  inset: 0;
+  z-index: -3;
+  background:
+    linear-gradient(120deg, transparent 8%, rgba(255,255,255,.06) 9%, transparent 11% 72%, rgba(96,231,255,.08) 73%, transparent 75%),
+    repeating-radial-gradient(circle at 50% 42%, rgba(255,255,255,.12) 0 1px, transparent 1px 28px);
+  opacity: .48;
+  mask-image: radial-gradient(circle at 50% 38%, #000 0 62%, transparent 86%);
+}
+.cin-hero::before {
+  inset: 64px 18px 190px;
+  z-index: -2;
+  border-radius: 999px 999px 42px 42px;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(0,0,0,.62), transparent 56%),
+    conic-gradient(from 180deg at 50% 64%, transparent, color-mix(in srgb, var(--soul) 44%, transparent), transparent 34%, rgba(96,231,255,.16), transparent 68%, color-mix(in srgb, var(--theme) 34%, transparent), transparent);
+  filter: blur(.2px);
+}
+.cin-hero::after {
+  left: 50%;
+  top: 332px;
+  width: 78%;
+  height: 24px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, color-mix(in srgb, var(--soul) 42%, transparent), transparent 72%);
+  filter: blur(5px);
+}
+
+.cin-art-card {
+  position: absolute;
+  z-index: -1;
+  width: 88px;
+  height: 112px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.025));
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 18px 42px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.12);
+  opacity: .84;
+}
+.cin-art-card img { width: 82px; height: 92px; object-fit: contain; filter: drop-shadow(0 0 18px color-mix(in srgb, var(--soul) 34%, transparent)); }
+.cin-art-1 { left: 13px; top: 92px; transform: rotate(-10deg); }
+.cin-art-2 { right: 13px; top: 112px; transform: rotate(9deg); }
+.cin-art-3 { left: 50%; bottom: 170px; transform: translateX(-50%) rotate(2deg); opacity: .42; width: 138px; height: 138px; border-radius: 50%; }
+.cin-art-3 img { width: 128px; height: 128px; }
+
+.cin-identity { position: relative; z-index: 4; text-align: center; }
+.cin-kicker { font-size: 8px; letter-spacing: 2.8px; color: rgba(255,255,255,.35); text-transform: uppercase; }
+.cin-identity h1 { margin: 6px 0 0; font-family: 'Ma Shan Zheng', serif; font-size: 34px; letter-spacing: 5px; text-shadow: 0 0 26px color-mix(in srgb, var(--soul) 48%, transparent); }
+.cin-tags { display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.cin-tags span { padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.055); color: rgba(255,255,255,.68); font-size: 9px; }
+
+.cin-stage { position: relative; z-index: 3; height: 290px; display: grid; place-items: center; }
+.cin-ring-orbit { position: absolute; width: 250px; height: 250px; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--soul) 26%, transparent); animation: cinSlowSpin 34s linear infinite; }
+@keyframes cinSlowSpin { to { transform: rotate(360deg); } }
+.cin-ring-node { position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px; display: grid; place-items: center; border-radius: 50%; transform: rotate(var(--deg)) translateX(125px) rotate(calc(var(--deg) * -1)); background: radial-gradient(circle, rgba(255,255,255,.07), rgba(0,0,0,.28)); border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.42); font-size: 8px; }
+.cin-ring-node.filled { background: radial-gradient(circle at 35% 30%, #fff, var(--ring) 38%, rgba(0,0,0,.78) 76%); color: #120d03; font-weight: 900; border-color: rgba(255,255,255,.32); box-shadow: 0 0 16px var(--ring); }
+.cin-ring-node span { transform: rotate(calc(var(--deg) * -1)); }
+.cin-stage .soul-orbit { min-height: 215px !important; width: 215px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--soul) 12%, transparent), transparent 62%); }
+.cin-stage .sol-icon .soul-icon,
+.cin-stage .sol-icon img { width: min(172px, 46vw) !important; height: min(172px, 46vw) !important; object-fit: contain; }
+
+.cin-dashboard { position: relative; z-index: 5; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 2px; }
+.cin-dashboard div,
+.cin-deck-card { padding: 10px 8px; border-radius: 16px; background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.085); box-shadow: inset 0 1px 0 rgba(255,255,255,.07); }
+.cin-dashboard span,
+.cin-deck-card span { display: block; color: rgba(255,255,255,.36); font-size: 8px; letter-spacing: 1px; }
+.cin-dashboard b,
+.cin-deck-card b { display: block; margin-top: 3px; color: #fff4bf; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cin-attrs { position: relative; z-index: 5; display: flex; justify-content: center; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.cin-attrs span { padding: 5px 10px; border-radius: 10px; color: rgba(255,255,255,.72); background: color-mix(in srgb, var(--soul) 12%, rgba(255,255,255,.04)); border: 1px solid color-mix(in srgb, var(--soul) 24%, rgba(255,255,255,.08)); font-size: 10px; }
+.cin-actions { position: relative; z-index: 5; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.cin-actions button,
+.cin-panel-head button,
+.cin-awaken-empty button,
+.cin-text-btn { cursor: pointer; border: 1px solid rgba(246,211,118,.22); color: var(--gl); background: linear-gradient(180deg, rgba(246,211,118,.12), rgba(255,255,255,.03)); border-radius: 14px; }
+.cin-actions button { min-height: 48px; display: flex; align-items: center; justify-content: center; gap: 7px; font-size: 11px; }
+.cin-actions i { font-style: normal; font-size: 15px; filter: drop-shadow(0 0 8px currentColor); }
+
+.cin-panel,
+.cin-deck { position: relative; margin-top: 10px; }
+.cin-panel { padding: 13px; border-radius: 22px; background: linear-gradient(145deg, rgba(255,255,255,.075), rgba(255,255,255,.025)); border: 1px solid var(--cin-line); box-shadow: 0 18px 46px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.08); }
+.cin-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 11px; }
+.cin-panel-head span { display: block; font-size: 8px; letter-spacing: 2px; color: rgba(255,255,255,.32); }
+.cin-panel-head h2 { margin: 2px 0 0; font-family: 'Ma Shan Zheng', serif; color: var(--gl); font-size: 18px; letter-spacing: 2px; }
+.cin-panel-head b { color: #fff4bf; font-size: 12px; }
+.cin-panel-head button { flex-shrink: 0; padding: 7px 10px; font-size: 10px; }
+.cin-realm-track { height: 7px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.07); }
+.cin-realm-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--gd), var(--gl), #fff2a8); box-shadow: 0 0 14px rgba(240,208,96,.5); }
+.cin-realm-copy { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; font-size: 10px; color: var(--cin-text-soft); }
+.cin-realm-copy em { color: rgba(255,255,255,.36); font-style: normal; text-align: right; }
+
+.cin-ring-list { display: flex; flex-direction: column; gap: 7px; }
+.cin-ring-row { display: grid; grid-template-columns: 12px 1fr auto; gap: 9px; align-items: center; padding: 8px 9px; border-radius: 13px; background: rgba(0,0,0,.16); border: 1px solid rgba(255,255,255,.055); }
+.cin-ring-row i { width: 10px; height: 10px; border-radius: 50%; background: var(--ring); box-shadow: 0 0 12px var(--ring); }
+.cin-ring-main b { display: block; color: rgba(255,255,255,.82); font-size: 11px; }
+.cin-ring-main span { display: block; margin-top: 2px; color: rgba(255,255,255,.34); font-size: 9px; }
+.cin-ring-row em { color: var(--gl); font-style: normal; font-size: 10px; }
+.cin-empty-row { padding: 12px; border-radius: 14px; color: rgba(255,255,255,.42); background: rgba(255,255,255,.035); border: 1px dashed rgba(255,255,255,.1); font-size: 10px; text-align: center; }
+.cin-text-btn { margin-top: 3px; padding: 8px 10px; font-size: 10px; }
+
+.cin-deck { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.cin-deck-card small { display: block; margin-top: 3px; color: rgba(255,255,255,.36); font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cin-skill-grid { display: grid; gap: 8px; }
+.cin-skill-card { display: grid; grid-template-columns: 34px 1fr; gap: 9px; align-items: center; padding: 9px; border-radius: 15px; background: rgba(0,0,0,.16); border: 1px solid rgba(255,255,255,.06); }
+.cin-skill-mark { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 12px; color: var(--gl); background: rgba(240,208,96,.09); border: 1px solid rgba(240,208,96,.18); font-weight: 800; }
+.cin-skill-card b { display: block; color: rgba(255,255,255,.84); font-size: 11px; }
+.cin-skill-card span { display: block; margin-top: 3px; color: rgba(255,255,255,.42); font-size: 9px; line-height: 1.45; }
+
+.cin-awaken-empty { min-height: calc(100vh - 160px); margin: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; border-radius: 30px; background: radial-gradient(circle at 50% 30%, rgba(124,58,237,.2), transparent 34%), linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border: 1px solid rgba(246,211,118,.18); box-shadow: var(--cin-shadow); }
+.cin-empty-sigil { font-size: 54px; filter: drop-shadow(0 0 22px rgba(124,58,237,.6)); }
+.cin-awaken-empty h2 { margin-top: 12px; font-family: 'Ma Shan Zheng', serif; color: var(--gl); letter-spacing: 3px; }
+.cin-awaken-empty p { margin-top: 8px; color: rgba(255,255,255,.45); font-size: 11px; }
+.cin-awaken-empty button { margin-top: 18px; padding: 10px 22px; }
+
+.trial-hero-cinematic {
+  position: relative;
+  min-height: 188px;
+  margin: 0 0 12px;
+  padding: 16px;
+  overflow: hidden;
+  border-radius: 26px;
+  border: 1px solid rgba(96,231,255,.18);
+  background: linear-gradient(150deg, rgba(9,14,34,.96), rgba(5,7,18,.96));
+  box-shadow: var(--cin-shadow), inset 0 1px 0 rgba(255,255,255,.08);
+}
+.trial-hero-cinematic::before { content: ''; position: absolute; right: -40px; top: -20px; width: 220px; height: 220px; border-radius: 50%; background: conic-gradient(from 210deg, transparent, rgba(96,231,255,.28), transparent 38%, rgba(168,85,247,.32), transparent 70%); filter: blur(.2px); opacity: .85; }
+.trial-hero-cinematic::after { content: '魂兽疆域'; position: absolute; right: 14px; bottom: 12px; font-family: 'Ma Shan Zheng', serif; font-size: 36px; letter-spacing: 5px; color: rgba(255,255,255,.14); }
+.trial-hero-copy { position: relative; z-index: 1; max-width: 260px; }
+.trial-hero-copy span { font-size: 8px; letter-spacing: 2.8px; color: rgba(96,231,255,.75); }
+.trial-hero-copy h2 { margin: 7px 0 0; font-family: 'Ma Shan Zheng', serif; font-size: 29px; letter-spacing: 4px; color: #fff4bf; text-shadow: 0 0 22px rgba(240,208,96,.32); }
+.trial-hero-copy p { margin-top: 8px; color: rgba(232,223,192,.62); font-size: 11px; line-height: 1.7; }
+.trial-hero-badges { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 13px; }
+.trial-hero-badges b { font-size: 9px; padding: 5px 9px; border-radius: 999px; color: rgba(255,255,255,.76); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1); }
+
+.hunt-zones-25d .zone-card-25d,
+.godpath-card-25d,
+.lot-banner-outer-25d,
+.cult-widget,
+.sb-banner,
+.lot-panel,
+.lot-rates,
+.lot-hist-wrap { box-shadow: 0 18px 48px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.08); }
+
+@media (max-width: 380px) {
+  .cin-hero { min-height: 590px; padding-left: 11px; padding-right: 11px; }
+  .cin-identity h1 { font-size: 30px; letter-spacing: 3px; }
+  .cin-art-card { width: 76px; height: 98px; }
+  .cin-art-card img { width: 72px; height: 82px; }
+  .cin-ring-orbit { width: 226px; height: 226px; }
+  .cin-ring-node { transform: rotate(var(--deg)) translateX(113px) rotate(calc(var(--deg) * -1)); }
+}

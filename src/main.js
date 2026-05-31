@@ -9,6 +9,7 @@ import './style.css';
 import './modules/ui/soul-icon-effects.css';
 import './modules/fx/effects.css';
 import './modules/ui/page-25d.css';
+import './modules/ui/cinematic-interface.css';
 
 // 导入统一的模块索引
 import * as Modules from './modules/index.js';
@@ -240,11 +241,16 @@ window.initPage25D = Modules.initPage25D;
 window.destroyPage25D = Modules.destroyPage25D;
 
 // ──── UI模块 ────
+window.navTo = Modules.navTo;
 window.renderNavigation = Modules.navTo;
 window.switchPage = Modules.navTo;
 window.updateNavigation = Modules.updateNavActive;
 
 window.renderSoulPage = Modules.renderSoulPage;
+window.doSecondAwaken = Modules.doSecondAwaken;
+window.openSoulResonance = Modules.openSoulResonance;
+window.openSoulEvolution = Modules.openSoulEvolution;
+window.openSoulDetail = Modules.openSoulDetail;
 window.selectSoul = Modules.openSoulDetail || function(){};
 window.upgradeSoul = Modules.doSecondAwaken || function(){};
 window.renderSoulDetails = Modules.openSoulDetail || function(){};
