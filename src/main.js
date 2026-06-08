@@ -343,6 +343,7 @@ window.powerManager = Modules.powerManager;
 window.resourceManager = Modules.resourceManager;
 window.soulManager = Modules.soulManager;
 window.ringManager = Modules.ringManager;
+window.uiManager = Modules.uiManager;
 
 // ──── 事件系统 ────
 window.gameEvents = {

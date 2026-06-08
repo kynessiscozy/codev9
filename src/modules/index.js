@@ -24,6 +24,7 @@ export { powerManager, PowerManager, initPowerManager } from "./core/power-manag
 export { resourceManager, ResourceManager, initResourceManager } from "./core/resource-manager.js";
 export { soulManager, SoulManager, initSoulManager } from "./core/soul-manager.js";
 export { ringManager, RingManager, initRingManager } from "./core/ring-manager.js";
+export { uiManager, UIManager } from "./core/ui-manager.js";
 
 // ──── 配置模块 ────
 export { QC, getQualityConfig, getQualityName, getQualityColor } from "./config/quality.js";
@@ -133,7 +134,7 @@ export function initializeGameModules() {
   console.log("🎮 武魂模拟器模块系统初始化...");
   console.log("📦 已加载模块：");
   console.log("   ✅ 核心基础设施 (7个): events, state, utils, power, resonance, exp, notify");
-  console.log("   ✅ 管理器模块 (5个): state-manager, power-manager, resource-manager, soul-manager, ring-manager");
+  console.log("   ✅ 管理器模块 (6个): state-manager, power-manager, resource-manager, soul-manager, ring-manager, ui-manager");
   console.log("   ✅ 配置模块 (7个): quality, realms, talents, achievements, luck, calendar, arena");
   console.log("   ✅ 数据模块 (4个): souls, rings, bones, items");
   console.log("   ✅ 系统模块 (9个): awakening, hunt, lottery, fusion, god, world, abyss, tasks, seasons");
@@ -141,7 +142,7 @@ export function initializeGameModules() {
   console.log("   ✅ 特效模块 (3个): particles, 3d-effects, audio");
   console.log("   ✅ GM模块 (1个): console");
   console.log("");
-  console.log("🎉 模块化完成！共 42 个模块文件");
+  console.log("🎉 模块化完成！共 43 个模块文件");
 
   // 初始化管理器
   setupManagers();
@@ -173,6 +174,9 @@ function setupManagers() {
   initResourceManager(G);
   initSoulManager(G);
   initRingManager(G);
+  
+  // 初始化UI管理器
+  uiManager.init();
   
   console.log("🔧 管理器模块已初始化");
 }
@@ -310,6 +314,7 @@ export function createGameAPI() {
       resource: resourceManager,
       soul: soulManager,
       ring: ringManager,
+      ui: uiManager,
     },
 
     // UI更新
