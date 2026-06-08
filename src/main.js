@@ -337,6 +337,13 @@ window.executeGMCommand = Modules.executeGMCommand;
 window.showGMConsole = Modules.showGMConsole;
 window.initGMShortcut = Modules.initGMShortcut;
 
+// ──── 管理器模块 ────
+window.gameState = Modules.gameState;
+window.powerManager = Modules.powerManager;
+window.resourceManager = Modules.resourceManager;
+window.soulManager = Modules.soulManager;
+window.ringManager = Modules.ringManager;
+
 // ──── 事件系统 ────
 window.gameEvents = {
   on: Modules.on,
