@@ -12,7 +12,18 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false,
     minify: 'terser',
-    chunkSizeWarningLimit: 1500
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      input: 'index.html',
+      output: {
+        manualChunks: {
+          vendor: ['src/modules/core/state.js', 'src/modules/core/utils.js'],
+          systems: ['src/modules/systems/hunt.js', 'src/modules/systems/lottery.js', 'src/modules/systems/fusion.js']
+        }
+      }
+    },
+    target: 'esnext',
+    cssCodeSplit: true
   },
   server: {
     port: 3000,
